@@ -36,9 +36,9 @@ jobs:
         $gb = "${{ github.ref }}".Replace("refs/heads/", "");
         $b = [int]${{ github.run_number }};
         $bn = [datetime]::Now.Date.ToString("yyyyMMdd") + "." + [string]::Format("{0:000}", $b);
-        write-host "::set-output name=buildNumber::$bn";
-        write-host "::set-output name=branchName::$gb";
-        write-host "::set-output name=commit::${{ github.sha }}";
+        echo "::set-output name=buildNumber::" + $bn;
+        echo "::set-output name=branchName::" + $gb;
+        echo "::set-output name=commit::${{ github.sha }}";
 
     - name: Show variables
       run: |
