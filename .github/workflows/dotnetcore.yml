@@ -32,13 +32,9 @@ jobs:
 
     - name: Show Variables
       run: |
-        write-host "Commit: $($env.GITHUB_SHA)";
-        write-host "Branch: $($env.GITHUB_REF)";
-        write-host "Build: $($env.GITHUB_RUN_NUMBER)";
-      env: 
-        GITHUB_SHA = ${{ stages.GITHUB_SHA }}
-        GITHUB_REF = ${{ stages.GITHUB_REF }}
-        GITHUB_RUN_NUMBER = ${{ stages.GITHUB_RUN_NUMBER }}
+        write-host "Commit: ${{ github.sha }}";
+        write-host "Branch: ${{ github.ref }}";
+        write-host "Build:  ${{ github.run_number }}";
       
 #    - name: Install dependencies
 #      run: dotnet restore --packages ./packages --verbosity minimal --no-cache --ignore-failed-sources
