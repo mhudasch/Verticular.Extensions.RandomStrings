@@ -61,7 +61,7 @@ jobs:
       run: dotnet test --configuration CI --no-restore --no-build --verbosity normal --logger trx --collect "Code Coverage" --results-directory "${{ github.workspace }}/TestResults" --runtime win
 
     - name: Pack nuget packages
-      run: dotnet pack --configuration CI --no-build --verbosity minimal --servicable --output "${{ github.workspace }}/nuget" -p:GitRevisionNumber="${{ steps.bootstrap.outputs.commit }}" -p:GitBranchName="${{ steps.bootstrap.outputs.branchName }}" -p:BuildNumber="${{ steps.bootstrap.outputs.buildNumber }}" -p:CIBuilder="VSTS" -p:AppendRuntimeToOutputPath=false --runtime win
+      run: dotnet pack --configuration CI --no-build --verbosity minimal --serviceable --output "${{ github.workspace }}/nuget" -p:GitRevisionNumber="${{ steps.bootstrap.outputs.commit }}" -p:GitBranchName="${{ steps.bootstrap.outputs.branchName }}" -p:BuildNumber="${{ steps.bootstrap.outputs.buildNumber }}" -p:CIBuilder="VSTS" -p:AppendRuntimeToOutputPath=false --runtime win
 
     
   sonar:
@@ -78,11 +78,29 @@ jobs:
       with:
         dotnet-version: 3.1.101
 
+    - id: bootstrap
+      name: Bootstrap variables
+      shell: pwsh
+      run: |
+        $gb = "${{ github.ref }}".Replace("refs/heads/", "");
+        $b = [int]${{ github.run_number }};
+        $bn = [datetime]::Now.Date.ToString("yyyyMMdd") + "." + [string]::Format("{0:000}", $b);
+        Write-Host "::set-output name=commit::${{ github.sha }}"
+        Write-Host "::set-output name=branchName::$gb"
+        Write-Host "::set-output name=buildNumber::$bn"
+
+    - name: Show variables
+      shell: pwsh
+      run: |
+        Write-Host "Commit: ${{ steps.bootstrap.outputs.commit }}"
+        Write-Host "Branch: ${{ steps.bootstrap.outputs.branchName }}"
+        Write-Host "Build: ${{ steps.bootstrap.outputs.buildNumber }}"        
+
     - name: Sonarscanner for dotnet
       uses: Secbyte/dotnet-sonarscanner@v2.2
       with:
-        buildCommand: dotnet build --configuration CI --no-restore --verbosity minimal --no-incremental -p:GitRevisionNumber="${{ steps.bootstrap.outputs.commit }}" -p:GitBranchName="${{ steps.bootstrap.outputs.branchName }}" -p:BuildNumber="${{ steps.bootstrap.outputs.buildNumber }}" -p:CIBuilder="VSTS" -p:AppendRuntimeToOutputPath=true -p:IncludeFullFramework=false
-        testCommand: dotnet test --configuration CI --no-restore --no-build --verbosity normal --logger trx --collect "Code Coverage" --results-directory "$pwd/TestResults" --runtime win -p:IncludeFullFramework=false
+        buildCommand: dotnet build --configuration CI --verbosity minimal --no-incremental -p:GitRevisionNumber="${{ steps.bootstrap.outputs.commit }}" -p:GitBranchName="${{ steps.bootstrap.outputs.branchName }}" -p:BuildNumber="${{ steps.bootstrap.outputs.buildNumber }}" -p:CIBuilder="VSTS" -p:AppendRuntimeToOutputPath=true -p:IncludeFullFramework=false --runtime linux-x64
+        testCommand: dotnet test --configuration CI --no-build --verbosity normal --logger trx --collect "Code Coverage" --results-directory "${{ github.workspace }}/TestResults" --runtime linux-x64 -p:IncludeFullFramework=false
         projectKey: mhudasch_verticular.extensions.randomstrings
         projectName: verticular.extensions.randomstrings
         sonarOrganisation: mhudasch-github
@@ -93,3 +111,4 @@ jobs:
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        DOTNET_CLI_TELEMETRY_OPTOUT: 1
