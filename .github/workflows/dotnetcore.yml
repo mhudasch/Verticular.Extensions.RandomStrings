@@ -38,13 +38,15 @@ jobs:
         $b = [int]${{ github.run_number }};
         $bn = [datetime]::Now.Date.ToString("yyyyMMdd") + "." + [string]::Format("{0:000}", $b);
         Write-Host "::set-output name=commit::${{ github.sha }}"
-        Write-Host "::set-output name=branchNames::$gb"
+        Write-Host "::set-output name=branchName::$gb"
         Write-Host "::set-output name=buildNumber::$bn"
 
     - name: Check outputs
       shell: pwsh
       run: |
-        Write-Host "${{ steps.bootstrap.outputs.commit }}"
+        Write-Host "Commit: ${{ steps.bootstrap.outputs.commit }}"
+        Write-Host "Branch: ${{ steps.bootstrap.outputs.branchName }}"
+        Write-Host "Build: ${{ steps.bootstrap.outputs.buildNumber }}"
       
 #    - name: Install dependencies
 #      run: dotnet restore --packages ./packages --verbosity minimal --no-cache --ignore-failed-sources
