@@ -35,13 +35,14 @@ jobs:
         $gb = "${{ github.ref }}".Replace("refs/heads/", "");
         $b = [int]${{ github.run_number }};
         $bn = [datetime]::Now.Date.ToString("yyyyMMdd") + "." + [string]::Format("{0:000}", $b);
-        write-host "::set-env name=github.buildNumber::$bn";
-        write-host "::set-env name=github.branchName::$gb"
+        write-host "::set-env name=buildNumber::$bn";
+        write-host "::set-env name=branchName::$gb";
+
     - name: Show variables
       run: |
         write-host "Commit: ${{ github.sha }}";
-        write-host "Branch: ${{ env.github.branchName }}";
-        write-host "Build:  ${{ env.github.buildName }}";
+        write-host "Branch: ${{ branchName }}";
+        write-host "Build:  ${{ buildNumber }}";
       
 #    - name: Install dependencies
 #      run: dotnet restore --packages ./packages --verbosity minimal --no-cache --ignore-failed-sources
