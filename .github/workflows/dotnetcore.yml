@@ -102,7 +102,7 @@ jobs:
     - name: Sonarscanner for dotnet
       uses: Secbyte/dotnet-sonarscanner@v2.2
       with:
-        buildCommand: dotnet build --configuration CI --verbosity minimal --no-incremental -p:GitRevisionNumber="${{ GIT_COMMIT }}" -p:GitBranchName="${{ GIT_BRANCH }}" -p:BuildNumber="${{ BUILD_NR }}" -p:CIBuilder="VSTS" -p:AppendRuntimeToOutputPath=true -p:IncludeFullFramework=false --runtime linux-x64
+        buildCommand: dotnet build --configuration CI --verbosity minimal --no-incremental -p:GitRevisionNumber="${{ env.GIT_COMMIT }}" -p:GitBranchName="${{ env.GIT_BRANCH }}" -p:BuildNumber="${{ env.BUILD_NR }}" -p:CIBuilder="VSTS" -p:AppendRuntimeToOutputPath=true -p:IncludeFullFramework=false --runtime linux-x64
         testCommand: dotnet test --configuration CI --no-build --verbosity normal --logger trx --collect "Code Coverage" --results-directory "${{ github.workspace }}/TestResults" --runtime linux-x64 -p:IncludeFullFramework=false
         projectKey: mhudasch_verticular.extensions.randomstrings
         projectName: verticular.extensions.randomstrings
