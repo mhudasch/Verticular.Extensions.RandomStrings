@@ -21,7 +21,7 @@
 
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <TargetLatestRuntimePatch>true</TargetLatestRuntimePatch>
-    <RuntimeIdentifiers>win</RuntimeIdentifiers>
+    <RuntimeIdentifier Condition="$(RuntimeIdentifier) == ''">win</RuntimeIdentifier>
     <SolutionDir Condition="'$(SolutionDir)' == ''">$(MSBuildThisFileDirectory)</SolutionDir>
     <LangVersion Condition="'$(LangVersion)' == ''">latest</LangVersion>
   </PropertyGroup>
