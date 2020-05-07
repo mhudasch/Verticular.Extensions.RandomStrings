@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="$(MSBuildThisFileDirectory)..\dir.props" />
+  <PropertyGroup>
+    <TargetFrameworks>$(TargetFrameworks);net45;net451;net452</TargetFrameworks>
+    <TargetFrameworks>$(TargetFrameworks);net46;net461;net462</TargetFrameworks>
+    <TargetFrameworks>$(TargetFrameworks);net47;net471;net472</TargetFrameworks>
+    <TargetFrameworks>$(TargetFrameworks);netcoreapp2.0;netcoreapp2.1;netcoreapp2.2</TargetFrameworks>
+    <TargetFrameworks Condition="'$(IncludeLatestFullFramework)' == 'true'">$(TargetFrameworks);net48;net50</TargetFrameworks>
+    <TargetFrameworks Condition="'$(IncludeLatestCoreFramework)' == 'true'">$(TargetFramewoks);netcoreapp3.0;netcoreapp3.1</TargetFrameworks>
+    <Configurations>Debug;Release;CI</Configurations>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
+    <PackageReference Include="MSTest.TestAdapter" Version="2.1.0" />
+    <PackageReference Include="MSTest.TestFramework" Version="2.1.0" />
+    <PackageReference Include="coverlet.collector" Version="1.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Verticular.Extensions.RandomStrings\Verticular.Extensions.RandomStrings.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="$(MSBuildThisFileDirectory)..\dir.props" />
+  <PropertyGroup>
+    <TargetFrameworks>$(TargetFrameworks);net45;net451;net452</TargetFrameworks>
+    <TargetFrameworks>$(TargetFrameworks);net46;net461;net462</TargetFrameworks>
+    <TargetFrameworks>$(TargetFrameworks);net47;net471;net472</TargetFrameworks>
+    <TargetFrameworks>$(TargetFrameworks);netstandard2.0</TargetFrameworks>
+    <TargetFrameworks Condition="'$(IncludeLatestFullFramework)' == 'true'">$(TargetFrameworks);net48;net50</TargetFrameworks>
+    <TargetFrameworks Condition="'$(IncludeLatestStandardFramework)' == 'true'">$(TargetFrameworks);netstandard2.1</TargetFrameworks>
+    <Configurations>Debug;Release;CI</Configurations>
+    <ProjectGuid>{3AD9B722-6AFC-409F-8ACB-82007C0C8DA7}</ProjectGuid>
+    
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <RootNamespace>Verticular.Extensions.RandomStrings</RootNamespace>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+</Project>

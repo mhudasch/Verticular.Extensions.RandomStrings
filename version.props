@@ -1,0 +1,27 @@
+<Project>
+  <PropertyGroup>
+    <SemVerLevel Condition=" '$(SemVerLevel)' == '' ">1</SemVerLevel>
+    <GitRevisionNumber Condition=" '$(GitRevisionNumber)' == '' "></GitRevisionNumber>
+    <GitShortRevisionNumber Condition=" '$(GitShortRevisionNumber)' == '' AND '$(GitRevisionNumber)' != '' ">$(GitRevisionNumber.Substring(0, 7))</GitShortRevisionNumber>
+    <GitBranchName Condition=" '$(GitBranchName)' == '' "></GitBranchName>
+    <IsFinalBuild
+      Condition="'$(IsFinalBuild)' == '' AND ( $(GitBranchName.Contains('master')) OR $(GitBranchName.Contains('rtm')) OR $(GitBranchName.Contains('nuget')) )">true</IsFinalBuild>
+
+    <VersionPrefix Condition="'$(VersionPrefix)' == ''">1.0.0</VersionPrefix>
+    <VersionSuffix Condition=" $(GitBranchName.Contains('master')) OR $(GitBranchName.Contains('rtm')) ">rtm</VersionSuffix>
+    <VersionSuffix Condition="'$(VersionSuffix)' == ''">alpha01</VersionSuffix>
+    <BuildNumber Condition="'$(BuildNumber)' == ''">1</BuildNumber>
+
+    <BuildSuffix
+      Condition="'$(BuildSuffix)' == '' AND ('$(CIBuilder)' == 'APPVEYOR' OR '$(CIBuilder)' == 'BAMBOO' OR '$(CIBuilder)' == '')">$([System.String]::Format('t{0:000}', $([System.Int32]::Parse($(BuildNumber)))))</BuildSuffix>
+    <BuildSuffix Condition="'$(BuildSuffix)' == '' AND ('$(CIBuilder)' == 'VSTS')">$([System.String]::Format('t{0}', $(BuildNumber)))</BuildSuffix>
+
+    <VersionMetadataSuffix Condition="'$(VersionMetadataSuffix)' == ''">+branch-$(GitBranchName).rev-$(GitShortRevisionNumber)</VersionMetadataSuffix>
+
+    <PackageVersionMetadataSuffix Condition="'$(PackageVersionMetadataSuffix)' == '' AND 'SemVerLevel' == '2' ">$(VersionMetadataSuffix)</PackageVersionMetadataSuffix>
+    <PackageVersion Condition="'$(IsFinalBuild)' == 'true' AND '$(VersionSuffix)' == 'rtm' ">$(VersionPrefix)$(PackageVersionMetadataSuffix)</PackageVersion>
+    <PackageVersion Condition="'$(IsFinalBuild)' == 'true' AND '$(VersionSuffix)' != 'rtm' ">$(VersionPrefix)-$(VersionSuffix)-final$(PackageVersionMetadataSuffix)</PackageVersion>
+    <PackageVersion Condition="'$(IsFinalBuild)' != 'true'">$(VersionPrefix)-$(VersionSuffix)-$(BuildSuffix)$(PackageVersionMetadataSuffix)</PackageVersion>
+    <SemanticAssemblyVersion Condition="'$(SemanticAssemblyVersion)' == ''">$(VersionPrefix)-$(VersionSuffix)-$(BuildSuffix)$(VersionMetadataSuffix)</SemanticAssemblyVersion>
+  </PropertyGroup>
+</Project>

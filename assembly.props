@@ -1,0 +1,59 @@
+<Project>
+  <Import Project="$(MSBuildThisFileDirectory)version.props" />
+  <PropertyGroup>
+    <RepositoryUrl>https://github.com/mhudasch/Verticular.Extensions.RandomStrings</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryRoot>$(MSBuildThisFileDirectory)</RepositoryRoot>
+
+    <Authors>Martin Hudasch</Authors>
+    <Company/>
+    <Copyright/>
+    <Description>Helps creating random strings.</Description>
+    <PackageTags>Random String FileName FolderName Name</PackageTags>
+    <PackageProjectUrl>https://github.com/mhudasch/Verticular.Extensions.RandomStrings</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/mhudasch/Verticular.Extensions.RandomStrings/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageReleaseNotes/>
+
+    <AssemblyVersion>$(VersionPrefix).0</AssemblyVersion>
+    <FileVersion>$(VersionPrefix).0</FileVersion>
+    <InformationalVersion>$(SemanticAssemblyVersion)</InformationalVersion>
+
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <TargetLatestRuntimePatch>true</TargetLatestRuntimePatch>
+    <RuntimeIdentifiers>win</RuntimeIdentifiers>
+    <SolutionDir Condition="'$(SolutionDir)' == ''">$(MSBuildThisFileDirectory)</SolutionDir>
+    <LangVersion Condition="'$(LangVersion)' == ''">latest</LangVersion>
+  </PropertyGroup>
+
+  <PropertyGroup
+    Condition="$([System.Text.RegularExpressions.Regex]::IsMatch($(TargetFramework), `^net(?:20|35|40|4[567][12]?|48)$`))">
+    <DefineConstants>$(DefineConstants);NETFULL;NET;NF</DefineConstants>
+    <IsNetStandardTarget>false</IsNetStandardTarget>
+    <IsNetFrameworkTarget>true</IsNetFrameworkTarget>
+    <IsNetCoreTarget>false</IsNetCoreTarget>
+  </PropertyGroup>
+  <PropertyGroup
+    Condition="$([System.Text.RegularExpressions.Regex]::IsMatch($(TargetFramework), `^netstandard(?:1\.[0-6]|2\.[0-1])$`))">
+    <DefineConstants>$(DefineConstants);NETSTANDARD;NS</DefineConstants>
+    <IsNetStandardTarget>true</IsNetStandardTarget>
+    <IsNetFrameworkTarget>false</IsNetFrameworkTarget>
+    <IsNetCoreTarget>false</IsNetCoreTarget>
+  </PropertyGroup>
+  <PropertyGroup
+    Condition="$([System.Text.RegularExpressions.Regex]::IsMatch($(TargetFramework), `^netcoreapp(?:1\.[01]|2\.[012]|3\.[0])$`))">
+    <DefineConstants>$(DefineConstants);NETCOREAPP;NETCORE;NC</DefineConstants>
+    <IsNetStandardTarget>false</IsNetStandardTarget>
+    <IsNetFrameworkTarget>false</IsNetFrameworkTarget>
+    <IsNetCoreTarget>true</IsNetCoreTarget>
+  </PropertyGroup>
+
+  <!-- Ignore NU5105 ignore NuGet-Clients that do not support semver 2.0.0 -->
+  <PropertyGroup>
+    <NoWarn>$(NoWarn);NU5105;NU1701;NU1702;NU1705</NoWarn>
+  </PropertyGroup>
+  <!-- Build Server Ignores -->
+  <PropertyGroup Condition="'$(Configuration)' == 'CI'">
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
+  </PropertyGroup>
+</Project>
