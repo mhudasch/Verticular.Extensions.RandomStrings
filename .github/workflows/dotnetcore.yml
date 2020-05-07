@@ -9,14 +9,21 @@ on:
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
     - uses: actions/checkout@v2
-    - name: Setup .NET Core
+    - name: Setup .NET Core (3.1)
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 3.1.101
+    - name: Setup .NET Core (2.2)
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 2.1.805
+    - name: Setup .NET Full Framework
+      uses: auycro/netframework-action-template@v0.0.2
+      
     - name: Install dependencies
       run: dotnet restore --packages ./packages --verbosity minimal --no-cache --ignore-failed-sources
     - name: Build (bin)
