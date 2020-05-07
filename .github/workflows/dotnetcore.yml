@@ -36,9 +36,9 @@ jobs:
         write-host "Branch: $($env.GITHUB_REF)";
         write-host "Build: $($env.GITHUB_RUN_NUMBER)";
       env: 
-        GITHUB_SHA = ${{ GITHUB_SHA }}
-        GITHUB_REF = ${{ GITHUB_REF }}
-        GITHUB_RUN_NUMBER = ${{ GITHUB_RUN_NUMBER }}
+        GITHUB_SHA = ${{ stage.GITHUB_SHA }}
+        GITHUB_REF = ${{ stage.GITHUB_REF }}
+        GITHUB_RUN_NUMBER = ${{ stage.GITHUB_RUN_NUMBER }}
       
 #    - name: Install dependencies
 #      run: dotnet restore --packages ./packages --verbosity minimal --no-cache --ignore-failed-sources
