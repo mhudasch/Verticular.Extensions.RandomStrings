@@ -13,9 +13,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-      with:
-        # Disabling shallow clone is recommended for improving relevancy of reporting
-        fetch-depth: 0
 
     - name: Setup .NET Core (3.1)
       uses: actions/setup-dotnet@v1
@@ -51,6 +48,7 @@ jobs:
     - name: Install dependencies
       shell: pwsh
       run: dotnet restore --packages ./packages --verbosity minimal --no-cache --ignore-failed-sources
+        env: DOTNET_CLI_TELEMETRY_OPTOUT = 1
    
     - name: Build (bin)
       run: dotnet build --configuration CI --no-restore --verbosity minimal --no-incremental -p:GitRevisionNumber="${{ steps.bootstrap.outputs.commit }}" -p:GitBranchName="${{ steps.bootstrap.outputs.branchName }}" -p:BuildNumber="${{ steps.bootstrap.outputs.buildNumber }}" -p:CIBuilder="VSTS" -p:AppendRuntimeToOutputPath=true --runtime win
@@ -59,10 +57,34 @@ jobs:
       run: dotnet build --configuration CI --no-restore --verbosity minimal --no-incremental -p:GitRevisionNumber="${{ steps.bootstrap.outputs.commit }}" -p:GitBranchName="${{ steps.bootstrap.outputs.branchName }}" -p:BuildNumber="${{ steps.bootstrap.outputs.buildNumber }}" -p:CIBuilder="VSTS" -p:AppendRuntimeToOutputPath=false --runtime win
     
     - name: Test
-      run: dotnet test --configuration CI --no-restore --no-build --verbosity normal --logger trx --collect "Code Coverage" --results-directory ./TestResults --runtime win
+      run: dotnet test --configuration CI --no-restore --no-build --verbosity normal --logger trx --collect "Code Coverage" --results-directory "$pwd/TestResults" --runtime win
 
-    - name: SonarCloud Scan
-      uses: sonarsource/sonarcloud-github-action@master
+  sonar:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        # Disabling shallow clone is recommended for improving relevancy of reporting
+        fetch-depth: 0
+
+    - name: Setup .NET Core (3.1)
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.101
+
+    - name: Sonarscanner for dotnet
+      uses: Secbyte/dotnet-sonarscanner@v2.2
+      with:
+        buildCommand: dotnet build --configuration CI --no-restore --verbosity minimal --no-incremental -p:GitRevisionNumber="${{ steps.bootstrap.outputs.commit }}" -p:GitBranchName="${{ steps.bootstrap.outputs.branchName }}" -p:BuildNumber="${{ steps.bootstrap.outputs.buildNumber }}" -p:CIBuilder="VSTS" -p:AppendRuntimeToOutputPath=true --runtime win
+        testCommand: dotnet test --configuration CI --no-restore --no-build --verbosity normal --logger trx --collect "Code Coverage" --results-directory "$pwd/TestResults" --runtime win
+        projectKey: mhudasch_verticular.extensions.randomstrings
+        projectName: verticular.extensions.randomstrings
+        sonarOrganisation: mhudasch-github
+        beginArguments: >
+            /d:sonar.verbose="true"
+            /d:sonar.cs.opencover.reportsPaths='"/path/to/coverage.xml","/path/to/coverage.2.xml"'
+            /d:sonar.coverage.exclusions='"**/*.cs","**/*.md"'
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
