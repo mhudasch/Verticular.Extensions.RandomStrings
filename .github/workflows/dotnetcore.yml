@@ -59,6 +59,10 @@ jobs:
     - name: Test
       run: dotnet test --configuration CI --no-restore --no-build --verbosity normal --logger trx --collect "Code Coverage" --results-directory "$pwd/TestResults" --runtime win
 
+    - name: Pack nuget packages
+      run: dotnet pack --configuration CI --no-build --verbosity minimal --servicable --output "$pwd/nuget" -p:GitRevisionNumber="${{ steps.bootstrap.outputs.commit }}" -p:GitBranchName="${{ steps.bootstrap.outputs.branchName }}" -p:BuildNumber="${{ steps.bootstrap.outputs.buildNumber }}" -p:CIBuilder="VSTS" -p:AppendRuntimeToOutputPath=false --runtime win
+
+    
   sonar:
     runs-on: windows-latest
 
