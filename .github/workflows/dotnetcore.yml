@@ -17,18 +17,18 @@ jobs:
         # Disabling shallow clone is recommended for improving relevancy of reporting
         fetch-depth: 0
 
-#    - name: Setup .NET Core (3.1)
-#      uses: actions/setup-dotnet@v1
-#      with:
-#        dotnet-version: 3.1.101
+    - name: Setup .NET Core (3.1)
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.101
 
-#    - name: Setup .NET Core (2.2)
-#      uses: actions/setup-dotnet@v1
-#      with:
-#        dotnet-version: 2.1.805
+    - name: Setup .NET Core (2.2)
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 2.1.805
 
-#    - name: Setup .NET Full Framework
-#      uses: warrenbuckley/Setup-MSBuild@v1
+    - name: Setup .NET Full Framework
+      uses: warrenbuckley/Setup-MSBuild@v1
 
     - id: bootstrap
       name: Bootstrap variables
@@ -48,18 +48,19 @@ jobs:
         Write-Host "Branch: ${{ steps.bootstrap.outputs.branchName }}"
         Write-Host "Build: ${{ steps.bootstrap.outputs.buildNumber }}"
       
-#    - name: Install dependencies
-#      run: dotnet restore --packages ./packages --verbosity minimal --no-cache --ignore-failed-sources
-#    
-#    - name: Build (bin)
-#      run: dotnet build --configuration CI --no-restore --verbosity minimal --no-incremental -p:GitRevisionNumber="$($env.GITHUB_SHA)" -p:GitBranchName="$($env.GITHUB_REF)" -p:BuildNumber="$($env.GITHUB_RUN_NUMBER)" -p:CIBuilder="VSTS" -p:AppendRuntimeToOutputPath=true --runtime win 
-#    
-#    - name: Build (for pack)
-#      run: dotnet build --configuration CI --no-restore --verbosity minimal --no-incremental -p:GitRevisionNumber="$($env.GITHUB_SHA)" -p:GitBranchName="$($env.GITHUB_REF)" -p:BuildNumber="$($env.GITHUB_RUN_NUMBER)" -p:CIBuilder="VSTS" -p:AppendRuntimeToOutputPath=false --runtime win 
-#    
-#    - name: Test
-#      run: dotnet test --configuration CI --no-restore --no-build --verbosity normal --logger trx --collect "Code Coverage" --runtime win
-#
+    - name: Install dependencies
+      shell: pwsh
+      run: dotnet restore --packages ./packages --verbosity minimal --no-cache --ignore-failed-sources
+   
+    - name: Build (bin)
+      run: dotnet build --configuration CI --no-restore --verbosity minimal --no-incremental -p:GitRevisionNumber="${{ steps.bootstrap.outputs.commit }}" -p:GitBranchName="${{ steps.bootstrap.outputs.branchName }}" -p:BuildNumber="${{ steps.bootstrap.outputs.buildNumber }}" -p:CIBuilder="VSTS" -p:AppendRuntimeToOutputPath=true --runtime win
+    
+    - name: Build (for pack)
+      run: dotnet build --configuration CI --no-restore --verbosity minimal --no-incremental -p:GitRevisionNumber="${{ steps.bootstrap.outputs.commit }}" -p:GitBranchName="${{ steps.bootstrap.outputs.branchName }}" -p:BuildNumber="${{ steps.bootstrap.outputs.buildNumber }}" -p:CIBuilder="VSTS" -p:AppendRuntimeToOutputPath=false --runtime win
+    
+    - name: Test
+      run: dotnet test --configuration CI --no-restore --no-build --verbosity normal --logger trx --collect "Code Coverage" --runtime win
+
 #    - name: SonarCloud Scan
 #      uses: sonarsource/sonarcloud-github-action@master
 #      env:
