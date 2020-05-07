@@ -65,21 +65,19 @@ jobs:
       run: dotnet pack --configuration CI --no-build --verbosity minimal --serviceable --output "${{ github.workspace }}/nuget" -p:GitRevisionNumber="${{ steps.bootstrap.outputs.commit }}" -p:GitBranchName="${{ steps.bootstrap.outputs.branchName }}" -p:BuildNumber="${{ steps.bootstrap.outputs.buildNumber }}" -p:CIBuilder="VSTS" -p:AppendRuntimeToOutputPath=false --runtime win
 
     - name: Push generated package to GitHub registry
-      run: dotnet nuget push "${{ github.workspace }}/nuget/*.nupkg" --skip-duplicate --source https://nuget.pkg.github.com/mhudasch/index.json
-      env:
-          NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: dotnet nuget push **/*.nupkg --skip-duplicate --source https://nuget.pkg.github.com/mhudasch/index.json --api-key ${{ secrets.GITHUB_TOKEN }}
 
     - name: Upload nuget artifact
       uses: actions/upload-artifact@v2
       with:
         name: nuget
-        path: ${{ github.workspace }}/nuget/*.nupkg
+        path: **/*.nupkg
 
     - name: Upload test results
       uses: actions/upload-artifact@v2
       with:
-        name: nuget
-        path: ${{ github.workspace }}/TestResults/
+        name: test results
+        path: **/TestResults/
 
   sonar:
     runs-on: ubuntu-latest
@@ -118,12 +116,12 @@ jobs:
       with:
         buildCommand: dotnet build --configuration CI --verbosity minimal --no-incremental -p:GitRevisionNumber="${{ env.GIT_COMMIT }}" -p:GitBranchName="${{ env.GIT_BRANCH }}" -p:BuildNumber="${{ env.BUILD_NR }}" -p:CIBuilder="VSTS" -p:AppendRuntimeToOutputPath=true -p:IncludeFullFramework=false --runtime linux-x64
         testCommand: dotnet test --configuration CI --no-build --verbosity normal --logger trx --collect "Code Coverage" --results-directory "${{ github.workspace }}/TestResults" --runtime linux-x64 -p:IncludeFullFramework=false
-        projectKey: mhudasch_verticular.extensions.randomstrings
+        projectKey: mhudasch:verticular.extensions.randomstrings
         projectName: verticular.extensions.randomstrings
         sonarOrganisation: mhudasch-github
         beginArguments: >
             /d:sonar.verbose="true"
-            /d:sonar.projectVersion="1.0.0-alpha01"
+            /v:"1.0.0-alpha01"
 
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
