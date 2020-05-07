@@ -37,16 +37,16 @@ jobs:
         $gb = "${{ github.ref }}".Replace("refs/heads/", "");
         $b = [int]${{ github.run_number }};
         $bn = [datetime]::Now.Date.ToString("yyyyMMdd") + "." + [string]::Format("{0:000}", $b);
-        echo "::set-output name=buildNumber::sample1;
-        echo "::set-output name=branchName::sample2";
-        echo "::set-output name=commit::sample3";
+        echo "::set-output name=buildNumber::sample1"
+        echo "::set-output name=branchName::sample2"
+        echo "::set-output name=commit::sample3"
 
     - name: Show variables
       shell: pwsh
       run: |
-        echo Commit: ${{ steps.boostrap.outputs.commit }}
-        echo Branch: ${{ steps.boostrap.outputs.branchName }}
-        echo Build:  ${{ steps.boostrap.outputs.buildNumber }}
+        echo "Commit: ${{ steps.boostrap.outputs.commit }}"
+        echo "Branch: ${{ steps.boostrap.outputs.branchName }}"
+        echo "Build:  ${{ steps.boostrap.outputs.buildNumber }}"
       
 #    - name: Install dependencies
 #      run: dotnet restore --packages ./packages --verbosity minimal --no-cache --ignore-failed-sources
