@@ -1,9 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <Import Project="$(MSBuildThisFileDirectory)..\dir.props" />
   <PropertyGroup>
-    <TargetFrameworks>$(TargetFrameworks);net45;net451;net452</TargetFrameworks>
-    <TargetFrameworks>$(TargetFrameworks);net46;net461;net462</TargetFrameworks>
-    <TargetFrameworks>$(TargetFrameworks);net47;net471;net472</TargetFrameworks>
+    <TargetFrameworks Condition="'$(IncludeFullFramework)' == 'true'">$(TargetFrameworks);net45;net451;net452</TargetFrameworks>
+    <TargetFrameworks Condition="'$(IncludeFullFramework)' == 'true'">$(TargetFrameworks);net46;net461;net462</TargetFrameworks>
+    <TargetFrameworks Condition="'$(IncludeFullFramework)' == 'true'">$(TargetFrameworks);net47;net471;net472</TargetFrameworks>
     <TargetFrameworks>$(TargetFrameworks);netcoreapp2.1</TargetFrameworks>
     <TargetFrameworks Condition="'$(IncludeLatestFullFramework)' == 'true'">$(TargetFrameworks);net48;net50</TargetFrameworks>
     <TargetFrameworks Condition="'$(IncludeLatestCoreFramework)' == 'true'">$(TargetFramewoks);netcoreapp3.0;netcoreapp3.1</TargetFrameworks>

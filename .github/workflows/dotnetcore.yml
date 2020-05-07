@@ -7,7 +7,7 @@ on:
     branches: [ master ]
 
 jobs:
-  build:
+  build_pack_and_publish:
 
     runs-on: windows-latest
 
@@ -65,7 +65,7 @@ jobs:
 
     
   sonar:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v2
@@ -81,7 +81,7 @@ jobs:
     - name: Sonarscanner for dotnet
       uses: Secbyte/dotnet-sonarscanner@v2.2
       with:
-        buildCommand: dotnet build --configuration CI --no-restore --verbosity minimal --no-incremental -p:GitRevisionNumber="${{ steps.bootstrap.outputs.commit }}" -p:GitBranchName="${{ steps.bootstrap.outputs.branchName }}" -p:BuildNumber="${{ steps.bootstrap.outputs.buildNumber }}" -p:CIBuilder="VSTS" -p:AppendRuntimeToOutputPath=true --runtime win
+        buildCommand: dotnet build --configuration CI --no-restore --verbosity minimal --no-incremental -p:GitRevisionNumber="${{ steps.bootstrap.outputs.commit }}" -p:GitBranchName="${{ steps.bootstrap.outputs.branchName }}" -p:BuildNumber="${{ steps.bootstrap.outputs.buildNumber }}" -p:CIBuilder="VSTS" -p:AppendRuntimeToOutputPath=true
         testCommand: dotnet test --configuration CI --no-restore --no-build --verbosity normal --logger trx --collect "Code Coverage" --results-directory "$pwd/TestResults" --runtime win
         projectKey: mhudasch_verticular.extensions.randomstrings
         projectName: verticular.extensions.randomstrings
