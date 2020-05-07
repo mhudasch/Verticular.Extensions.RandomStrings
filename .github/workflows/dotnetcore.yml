@@ -32,7 +32,7 @@ jobs:
 
     - name: Bootstrap variables
       run: |
-        $gb = "${{ github.ref }}".Relace("refs/heads/", "");
+        $gb = "${{ github.ref }}".Replace("refs/heads/", "");
         $b = [int]${{ github.run_number }};
         $bn = [datetime]::Now.Date.ToString("yyyyMMdd") + "." + [string]::Format("{0:000}", $b);
         write-host "::set-env name=github.buildNumber::$bn";
