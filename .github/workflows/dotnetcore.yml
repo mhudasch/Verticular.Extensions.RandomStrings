@@ -48,7 +48,8 @@ jobs:
     - name: Install dependencies
       shell: pwsh
       run: dotnet restore --packages ./packages --verbosity minimal --no-cache --ignore-failed-sources
-        env: DOTNET_CLI_TELEMETRY_OPTOUT = 1
+      env: 
+        DOTNET_CLI_TELEMETRY_OPTOUT: 1
    
     - name: Build (bin)
       run: dotnet build --configuration CI --no-restore --verbosity minimal --no-incremental -p:GitRevisionNumber="${{ steps.bootstrap.outputs.commit }}" -p:GitBranchName="${{ steps.bootstrap.outputs.branchName }}" -p:BuildNumber="${{ steps.bootstrap.outputs.buildNumber }}" -p:CIBuilder="VSTS" -p:AppendRuntimeToOutputPath=true --runtime win
