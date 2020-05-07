@@ -30,11 +30,18 @@ jobs:
 #    - name: Setup .NET Full Framework
 #      uses: warrenbuckley/Setup-MSBuild@v1
 
-    - name: Show Variables
+    - name: Bootstrap variables
+      run: |
+        $gb = "${{ github.ref }}".Relace("refs/heads/", "");
+        $b = [int]${{ github.run_number }};
+        $bn = [datetime]::Now.Date.ToString("yyyyMMdd") + "." + [string]::Format("{0:000}", $b);
+        write-host "::set-env name=github.buildNumber::$bn";
+        write-host "::set-env name=github.branchName::$gb"
+    - name: Show variables
       run: |
         write-host "Commit: ${{ github.sha }}";
-        write-host "Branch: ${{ github.ref }}";
-        write-host "Build:  ${{ github.run_number }}";
+        write-host "Branch: ${{ github.branchName }}";
+        write-host "Build:  ${{ github.buildName }}";
       
 #    - name: Install dependencies
 #      run: dotnet restore --packages ./packages --verbosity minimal --no-cache --ignore-failed-sources
