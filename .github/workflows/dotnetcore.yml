@@ -64,8 +64,11 @@ jobs:
     - name: Pack nuget packages
       run: dotnet pack --configuration CI --no-build --verbosity minimal --serviceable --output "${{ github.workspace }}/nuget" -p:GitRevisionNumber="${{ steps.bootstrap.outputs.commit }}" -p:GitBranchName="${{ steps.bootstrap.outputs.branchName }}" -p:BuildNumber="${{ steps.bootstrap.outputs.buildNumber }}" -p:CIBuilder="VSTS" -p:AppendRuntimeToOutputPath=false --runtime win
 
+    #- name: Push generated package to GitHub registry
+    #  run: dotnet nuget push **/*.nupkg --skip-duplicate --source https://nuget.pkg.github.com/mhudasch/index.json --api-key ${{ secrets.GITHUB_TOKEN }}
+
     - name: Push generated package to GitHub registry
-      run: dotnet nuget push **/*.nupkg --skip-duplicate --source https://nuget.pkg.github.com/mhudasch/index.json --api-key ${{ secrets.GITHUB_TOKEN }}
+      run: dotnet nuget push **/*.nupkg --skip-duplicate --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_ORG_TOKEN }}
 
     - name: Upload nuget artifact
       uses: actions/upload-artifact@v2
@@ -122,6 +125,7 @@ jobs:
         beginArguments: >
             /d:sonar.verbose="true"
             /v:"1.0.0-alpha01"
+            /d:sonar.branch.name="${{ steps.bootstrap.outputs.branchName }}"
 
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
