@@ -41,7 +41,7 @@ jobs:
         Write-Host "::set-output name=branchName::$gb"
         Write-Host "::set-output name=buildNumber::$bn"
 
-    - name: Check outputs
+    - name: Show variables
       shell: pwsh
       run: |
         Write-Host "Commit: ${{ steps.bootstrap.outputs.commit }}"
@@ -59,10 +59,10 @@ jobs:
       run: dotnet build --configuration CI --no-restore --verbosity minimal --no-incremental -p:GitRevisionNumber="${{ steps.bootstrap.outputs.commit }}" -p:GitBranchName="${{ steps.bootstrap.outputs.branchName }}" -p:BuildNumber="${{ steps.bootstrap.outputs.buildNumber }}" -p:CIBuilder="VSTS" -p:AppendRuntimeToOutputPath=false --runtime win
     
     - name: Test
-      run: dotnet test --configuration CI --no-restore --no-build --verbosity normal --logger trx --collect "Code Coverage" --runtime win
+      run: dotnet test --configuration CI --no-restore --no-build --verbosity normal --logger trx --collect "Code Coverage" --results-directory ./TestResults --runtime win
 
-#    - name: SonarCloud Scan
-#      uses: sonarsource/sonarcloud-github-action@master
-#      env:
-#        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+    - name: SonarCloud Scan
+      uses: sonarsource/sonarcloud-github-action@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
