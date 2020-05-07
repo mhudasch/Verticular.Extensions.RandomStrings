@@ -67,6 +67,18 @@ jobs:
     - name: Push generated package to GitHub registry
       run: dotnet nuget push "${{ github.workspace }}/nuget/*.nupkg" --skip-duplicate
 
+    - name: Upload nuget artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: nuget
+        path: ${{ github.workspace }}/nuget/*.nupkg
+
+    - name: Upload test results
+      uses: actions/upload-artifact@v2
+      with:
+        name: nuget
+        path: ${{ github.workspace }}/TestResults/
+
   sonar:
     runs-on: ubuntu-latest
 
