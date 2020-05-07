@@ -1,4 +1,4 @@
-name: .NET Core
+name: Verticular.AllDotNet.CI
 
 on:
   push:
@@ -13,22 +13,37 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+      with:
+        # Disabling shallow clone is recommended for improving relevancy of reporting
+        fetch-depth: 0
+
     - name: Setup .NET Core (3.1)
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 3.1.101
+
     - name: Setup .NET Core (2.2)
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 2.1.805
+
     - name: Setup .NET Full Framework
       uses: warrenbuckley/Setup-MSBuild@v1
       
     - name: Install dependencies
       run: dotnet restore --packages ./packages --verbosity minimal --no-cache --ignore-failed-sources
+    
     - name: Build (bin)
-      run: dotnet build --configuration CI --no-restore --verbosity minimal --no-incremental -p:GitRevisionNumber="$GITHUB_SHA" -p:GitBranchName="$GITHUB_REF" -p:BuildNumber="$GITHUB_RUN_NUMBER" -p:CIBuilder="VSTS" -p:AppendRuntimeToOutputPath=true --runtime win 
+      run: dotnet build --configuration CI --no-restore --verbosity minimal --no-incremental -p:GitRevisionNumber="${GITHUB_SHA}" -p:GitBranchName="${GITHUB_REF##*/}" -p:BuildNumber="${GITHUB_RUN_NUMBER}" -p:CIBuilder="VSTS" -p:AppendRuntimeToOutputPath=true --runtime win 
+    
     - name: Build (for pack)
-      run: dotnet build --configuration CI --no-restore --verbosity minimal --no-incremental -p:GitRevisionNumber="$GITHUB_SHA" -p:GitBranchName="$GITHUB_REF" -p:BuildNumber="$GITHUB_RUN_NUMBER" -p:CIBuilder="VSTS" -p:AppendRuntimeToOutputPath=false --runtime win 
+      run: dotnet build --configuration CI --no-restore --verbosity minimal --no-incremental -p:GitRevisionNumber="${GITHUB_SHA}" -p:GitBranchName="${GITHUB_REF##*/}" -p:BuildNumber="${GITHUB_RUN_NUMBER}" -p:CIBuilder="VSTS" -p:AppendRuntimeToOutputPath=false --runtime win 
+    
     - name: Test
-      run: dotnet test --configuration CI --no-restore --no-build --verbosity normal --logger trx --collect "Code Coverage" --runtime win --results-directory ./tr
+      run: dotnet test --configuration CI --no-restore --no-build --verbosity normal --logger trx --collect "Code Coverage" --runtime win
+#
+#    - name: SonarCloud Scan
+#      uses: sonarsource/sonarcloud-github-action@master
+#      env:
+#        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
