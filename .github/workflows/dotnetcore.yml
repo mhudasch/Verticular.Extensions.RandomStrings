@@ -7,61 +7,14 @@ on:
     branches: [ master ]
 
 jobs:
-  build:
-
+  windows-test:
     runs-on: windows-latest
-
     steps:
-    - uses: actions/checkout@v2
-      with:
-        # Disabling shallow clone is recommended for improving relevancy of reporting
-        fetch-depth: 0
-
-#    - name: Setup .NET Core (3.1)
-#      uses: actions/setup-dotnet@v1
-#      with:
-#        dotnet-version: 3.1.101
-
-#    - name: Setup .NET Core (2.2)
-#      uses: actions/setup-dotnet@v1
-#      with:
-#        dotnet-version: 2.1.805
-
-#    - name: Setup .NET Full Framework
-#      uses: warrenbuckley/Setup-MSBuild@v1
-
-    - id: bootstrap
-      name: Bootstrap variables
-      shell: pwsh
-      run: |
-        $gb = "${{ github.ref }}".Replace("refs/heads/", "");
-        $b = [int]${{ github.run_number }};
-        $bn = [datetime]::Now.Date.ToString("yyyyMMdd") + "." + [string]::Format("{0:000}", $b);
-        echo "::set-output name=buildNumber::sample1"
-        echo "::set-output name=branchName::sample2"
-        echo "::set-output name=commit::sample3"
-
-    - name: Show variables
-      shell: pwsh
-      run: |
-        echo "Commit: ${{ steps.boostrap.outputs.commit }}"
-        echo "Branch: ${{ steps.boostrap.outputs.branchName }}"
-        echo "Build:  ${{ steps.boostrap.outputs.buildNumber }}"
-      
-#    - name: Install dependencies
-#      run: dotnet restore --packages ./packages --verbosity minimal --no-cache --ignore-failed-sources
-#    
-#    - name: Build (bin)
-#      run: dotnet build --configuration CI --no-restore --verbosity minimal --no-incremental -p:GitRevisionNumber="$($env.GITHUB_SHA)" -p:GitBranchName="$($env.GITHUB_REF)" -p:BuildNumber="$($env.GITHUB_RUN_NUMBER)" -p:CIBuilder="VSTS" -p:AppendRuntimeToOutputPath=true --runtime win 
-#    
-#    - name: Build (for pack)
-#      run: dotnet build --configuration CI --no-restore --verbosity minimal --no-incremental -p:GitRevisionNumber="$($env.GITHUB_SHA)" -p:GitBranchName="$($env.GITHUB_REF)" -p:BuildNumber="$($env.GITHUB_RUN_NUMBER)" -p:CIBuilder="VSTS" -p:AppendRuntimeToOutputPath=false --runtime win 
-#    
-#    - name: Test
-#      run: dotnet test --configuration CI --no-restore --no-build --verbosity normal --logger trx --collect "Code Coverage" --runtime win
-#
-#    - name: SonarCloud Scan
-#      uses: sonarsource/sonarcloud-github-action@master
-#      env:
-#        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      - uses: actions/checkout@v1
+      - name: Set outputs
+        id: vars
+        shell: pwsh
+        run: echo "::set-output name=production::true"
+      - name: Check outputs
+        shell: pwsh
+        run: echo ${{ steps.vars.outputs.production }}
