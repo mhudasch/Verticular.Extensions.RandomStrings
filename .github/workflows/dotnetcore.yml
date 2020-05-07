@@ -37,7 +37,7 @@ jobs:
         $gb = "${{ github.ref }}".Replace("refs/heads/", "");
         $b = [int]${{ github.run_number }};
         $bn = [datetime]::Now.Date.ToString("yyyyMMdd") + "." + [string]::Format("{0:000}", $b);
-        echo "::set-output name=production::true"
+        Write-Host "::set-output name=production::$gb"
 
     - name: Check outputs
       shell: pwsh
