@@ -37,12 +37,13 @@ jobs:
         $bn = [datetime]::Now.Date.ToString("yyyyMMdd") + "." + [string]::Format("{0:000}", $b);
         write-host "::set-env name=buildNumber::$bn";
         write-host "::set-env name=branchName::$gb";
+        write-host "::set-env name=commit::${{ github.sha }}";
 
     - name: Show variables
       run: |
-        write-host "Commit: ${{ github.sha }}";
-        write-host "Branch: ${{ branchName }}";
-        write-host "Build:  ${{ buildNumber }}";
+        write-host "Commit: $env.commit";
+        write-host "Branch: $env.branchName";
+        write-host "Build:  $env.buildNumber";
       
 #    - name: Install dependencies
 #      run: dotnet restore --packages ./packages --verbosity minimal --no-cache --ignore-failed-sources
