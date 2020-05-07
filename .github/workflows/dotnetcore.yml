@@ -22,7 +22,7 @@ jobs:
       with:
         dotnet-version: 2.1.805
     - name: Setup .NET Full Framework
-      uses: auycro/netframework-action-template@v0.0.2
+      uses: warrenbuckley/Setup-MSBuild@v1
       
     - name: Install dependencies
       run: dotnet restore --packages ./packages --verbosity minimal --no-cache --ignore-failed-sources
