@@ -71,13 +71,13 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: nuget
-        path: **/*.nupkg
+        path: ${{ github.workspace }}/nuget/*.nupkg
 
     - name: Upload test results
       uses: actions/upload-artifact@v2
       with:
-        name: test results
-        path: **/TestResults/
+        name: nuget
+        path: ${{ github.workspace }}/TestResults/
 
   sonar:
     runs-on: ubuntu-latest
