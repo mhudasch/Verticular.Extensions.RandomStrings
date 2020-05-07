@@ -2,9 +2,9 @@ name: Verticular.AllDotNet.CI
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master, dev ]
   pull_request:
-    branches: [ master ]
+    branches: [ master, dev ]
 
 jobs:
   build_pack_and_publish:
@@ -50,6 +50,7 @@ jobs:
       run: dotnet restore --packages "${{ github.workspace }}/packages" --verbosity minimal --no-cache --ignore-failed-sources
       env: 
         DOTNET_CLI_TELEMETRY_OPTOUT: 1
+        DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
    
     - name: Build (bin)
       run: dotnet build --configuration CI --no-restore --verbosity minimal --no-incremental -p:GitRevisionNumber="${{ steps.bootstrap.outputs.commit }}" -p:GitBranchName="${{ steps.bootstrap.outputs.branchName }}" -p:BuildNumber="${{ steps.bootstrap.outputs.buildNumber }}" -p:CIBuilder="VSTS" -p:AppendRuntimeToOutputPath=true --runtime win
@@ -63,7 +64,9 @@ jobs:
     - name: Pack nuget packages
       run: dotnet pack --configuration CI --no-build --verbosity minimal --serviceable --output "${{ github.workspace }}/nuget" -p:GitRevisionNumber="${{ steps.bootstrap.outputs.commit }}" -p:GitBranchName="${{ steps.bootstrap.outputs.branchName }}" -p:BuildNumber="${{ steps.bootstrap.outputs.buildNumber }}" -p:CIBuilder="VSTS" -p:AppendRuntimeToOutputPath=false --runtime win
 
-    
+    - name: Push generated package to GitHub registry
+      run: dotnet nuget push "${{ github.workspace }}/nuget/*.nupkg" --skip-duplicate
+
   sonar:
     runs-on: ubuntu-latest
 
@@ -94,21 +97,25 @@ jobs:
       run: |
         Write-Host "Commit: ${{ steps.bootstrap.outputs.commit }}"
         Write-Host "Branch: ${{ steps.bootstrap.outputs.branchName }}"
-        Write-Host "Build: ${{ steps.bootstrap.outputs.buildNumber }}"        
+        Write-Host "Build: ${{ steps.bootstrap.outputs.buildNumber }}"
 
     - name: Sonarscanner for dotnet
       uses: Secbyte/dotnet-sonarscanner@v2.2
       with:
-        buildCommand: dotnet build --configuration CI --verbosity minimal --no-incremental -p:GitRevisionNumber="${{ steps.bootstrap.outputs.commit }}" -p:GitBranchName="${{ steps.bootstrap.outputs.branchName }}" -p:BuildNumber="${{ steps.bootstrap.outputs.buildNumber }}" -p:CIBuilder="VSTS" -p:AppendRuntimeToOutputPath=true -p:IncludeFullFramework=false --runtime linux-x64
+        buildCommand: dotnet build --configuration CI --verbosity minimal --no-incremental -p:GitRevisionNumber="${{ GIT_COMMIT }}" -p:GitBranchName="${{ GIT_BRANCH }}" -p:BuildNumber="${{ BUILD_NR }}" -p:CIBuilder="VSTS" -p:AppendRuntimeToOutputPath=true -p:IncludeFullFramework=false --runtime linux-x64
         testCommand: dotnet test --configuration CI --no-build --verbosity normal --logger trx --collect "Code Coverage" --results-directory "${{ github.workspace }}/TestResults" --runtime linux-x64 -p:IncludeFullFramework=false
         projectKey: mhudasch_verticular.extensions.randomstrings
         projectName: verticular.extensions.randomstrings
         sonarOrganisation: mhudasch-github
         beginArguments: >
             /d:sonar.verbose="true"
-            /d:sonar.cs.opencover.reportsPaths='"/path/to/coverage.xml","/path/to/coverage.2.xml"'
-            /d:sonar.coverage.exclusions='"**/*.cs","**/*.md"'
+
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         DOTNET_CLI_TELEMETRY_OPTOUT: 1
+        DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
+        GIT_COMMIT: ${{ steps.bootstrap.outputs.commit }}
+        GIT_BRANCH: ${{ steps.bootstrap.outputs.branchName }}
+        BUILD_NR: ${{ steps.bootstrap.outputs.buildNumber }} 
+
