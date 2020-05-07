@@ -28,18 +28,23 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Verticular.Extensions.Rando
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{1CAF8EDE-371A-47EC-BC19-EDCB25DBB45B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Verticular.Extensions.RandomStrings.UnitTests", "test\Verticular.Extensions.RandomStrings.UnitTests\Verticular.Extensions.RandomStrings.UnitTests.csproj", "{C3C06834-9508-46B9-9F4D-57FF14BFF16C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Verticular.Extensions.RandomStrings.UnitTests", "test\Verticular.Extensions.RandomStrings.UnitTests\Verticular.Extensions.RandomStrings.UnitTests.csproj", "{C3C06834-9508-46B9-9F4D-57FF14BFF16C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		CI|Any CPU = CI|Any CPU
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3AD9B722-6AFC-409F-8ACB-82007C0C8DA7}.CI|Any CPU.ActiveCfg = CI|Any CPU
+		{3AD9B722-6AFC-409F-8ACB-82007C0C8DA7}.CI|Any CPU.Build.0 = CI|Any CPU
 		{3AD9B722-6AFC-409F-8ACB-82007C0C8DA7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3AD9B722-6AFC-409F-8ACB-82007C0C8DA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3AD9B722-6AFC-409F-8ACB-82007C0C8DA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3AD9B722-6AFC-409F-8ACB-82007C0C8DA7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C3C06834-9508-46B9-9F4D-57FF14BFF16C}.CI|Any CPU.ActiveCfg = CI|Any CPU
+		{C3C06834-9508-46B9-9F4D-57FF14BFF16C}.CI|Any CPU.Build.0 = CI|Any CPU
 		{C3C06834-9508-46B9-9F4D-57FF14BFF16C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C3C06834-9508-46B9-9F4D-57FF14BFF16C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C3C06834-9508-46B9-9F4D-57FF14BFF16C}.Release|Any CPU.ActiveCfg = Release|Any CPU
