@@ -125,7 +125,6 @@ jobs:
         beginArguments: >
             /d:sonar.verbose="true"
             /v:"1.0.0-alpha01"
-            /d:sonar.branch.name="${{ steps.bootstrap.outputs.branchName }}"
 
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
