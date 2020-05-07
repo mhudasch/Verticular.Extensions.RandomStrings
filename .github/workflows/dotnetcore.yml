@@ -33,7 +33,7 @@ jobs:
       run: |
         $gb = "${{ github.ref }}".Replace("refs/heads/", "");
         $b = [int]${{ github.run_number }};
-        $bn = [datetime]::Now.Date.ToString("yyyyMMdd") + "." + [string]::Format("{0:000}", $b);
+        $bn = [datetime]::Now.Date.ToString("yyyyMMdd") + [string]::Format("{0:000}", $b);
         Write-Host "::set-output name=commit::${{ github.sha }}"
         Write-Host "::set-output name=branchName::$gb"
         Write-Host "::set-output name=buildNumber::$bn"
@@ -99,7 +99,7 @@ jobs:
       run: |
         $gb = "${{ github.ref }}".Replace("refs/heads/", "");
         $b = [int]${{ github.run_number }};
-        $bn = [datetime]::Now.Date.ToString("yyyyMMdd") + "." + [string]::Format("{0:000}", $b);
+        $bn = [datetime]::Now.Date.ToString("yyyyMMdd") + [string]::Format("{0:000}", $b);
         Write-Host "::set-output name=commit::${{ github.sha }}"
         Write-Host "::set-output name=branchName::$gb"
         Write-Host "::set-output name=buildNumber::$bn"
