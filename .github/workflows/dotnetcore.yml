@@ -29,15 +29,21 @@ jobs:
 
     - name: Setup .NET Full Framework
       uses: warrenbuckley/Setup-MSBuild@v1
+
+    - name: Show Variables
+      run: |
+        write-host "Commit: $($env.GITHUB_SHA)";
+        write-host "Branch: $($env.GITHUB_REF)";
+        write-host "Build: $($env.GITHUB_RUN_NUMBER)";
       
     - name: Install dependencies
       run: dotnet restore --packages ./packages --verbosity minimal --no-cache --ignore-failed-sources
     
     - name: Build (bin)
-      run: dotnet build --configuration CI --no-restore --verbosity minimal --no-incremental -p:GitRevisionNumber="${GITHUB_SHA}" -p:GitBranchName="${GITHUB_REF##*/}" -p:BuildNumber="${GITHUB_RUN_NUMBER}" -p:CIBuilder="VSTS" -p:AppendRuntimeToOutputPath=true --runtime win 
+      run: dotnet build --configuration CI --no-restore --verbosity minimal --no-incremental -p:GitRevisionNumber="$($env.GITHUB_SHA)" -p:GitBranchName="$($env.GITHUB_REF)" -p:BuildNumber="$($env.GITHUB_RUN_NUMBER)" -p:CIBuilder="VSTS" -p:AppendRuntimeToOutputPath=true --runtime win 
     
     - name: Build (for pack)
-      run: dotnet build --configuration CI --no-restore --verbosity minimal --no-incremental -p:GitRevisionNumber="${GITHUB_SHA}" -p:GitBranchName="${GITHUB_REF##*/}" -p:BuildNumber="${GITHUB_RUN_NUMBER}" -p:CIBuilder="VSTS" -p:AppendRuntimeToOutputPath=false --runtime win 
+      run: dotnet build --configuration CI --no-restore --verbosity minimal --no-incremental -p:GitRevisionNumber="$($env.GITHUB_SHA)" -p:GitBranchName="$($env.GITHUB_REF)" -p:BuildNumber="$($env.GITHUB_RUN_NUMBER)" -p:CIBuilder="VSTS" -p:AppendRuntimeToOutputPath=false --runtime win 
     
     - name: Test
       run: dotnet test --configuration CI --no-restore --no-build --verbosity normal --logger trx --collect "Code Coverage" --runtime win
