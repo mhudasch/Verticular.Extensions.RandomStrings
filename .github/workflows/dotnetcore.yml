@@ -65,7 +65,9 @@ jobs:
       run: dotnet pack --configuration CI --no-build --verbosity minimal --serviceable --output "${{ github.workspace }}/nuget" -p:GitRevisionNumber="${{ steps.bootstrap.outputs.commit }}" -p:GitBranchName="${{ steps.bootstrap.outputs.branchName }}" -p:BuildNumber="${{ steps.bootstrap.outputs.buildNumber }}" -p:CIBuilder="VSTS" -p:AppendRuntimeToOutputPath=false --runtime win
 
     - name: Push generated package to GitHub registry
-      run: dotnet nuget push "${{ github.workspace }}/nuget/*.nupkg" --skip-duplicate
+      run: dotnet nuget push "${{ github.workspace }}/nuget/*.nupkg" --skip-duplicate --source https://nuget.pkg.github.com/mhudasch/index.json
+      env:
+          NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Upload nuget artifact
       uses: actions/upload-artifact@v2
@@ -121,6 +123,7 @@ jobs:
         sonarOrganisation: mhudasch-github
         beginArguments: >
             /d:sonar.verbose="true"
+            /d:sonar.projectVersion="1.0.0-alpha01"
 
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
