@@ -119,12 +119,13 @@ jobs:
       with:
         buildCommand: dotnet build --configuration CI --verbosity minimal --no-incremental -p:GitRevisionNumber="${{ env.GIT_COMMIT }}" -p:GitBranchName="${{ env.GIT_BRANCH }}" -p:BuildNumber="${{ env.BUILD_NR }}" -p:CIBuilder="VSTS" -p:AppendRuntimeToOutputPath=true -p:IncludeFullFramework=false --runtime linux-x64
         testCommand: dotnet test --configuration CI --no-build --verbosity normal --logger trx --collect "Code Coverage" --results-directory "${{ github.workspace }}/TestResults" --runtime linux-x64 -p:IncludeFullFramework=false
-        projectKey: mhudasch:verticular.extensions.randomstrings
-        projectName: verticular.extensions.randomstrings
+        projectKey: mhudasch_Verticular.Extensions.RandomStrings
+        projectName: Verticular.Extensions.RandomStrings
         sonarOrganisation: mhudasch-github
         beginArguments: >
             /d:sonar.verbose="true"
             /v:"1.0.0-alpha01"
+            /d:sonar.branch.name="${{ steps.bootstrap.outputs.branchName }}"
 
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
