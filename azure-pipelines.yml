@@ -74,3 +74,51 @@ steps:
     projects: '**/test/**/*.csproj'
     publishTestResults: true
     arguments: '--configuration $(buildConfiguration) --collect "Code coverage" --no-build --no-restore'
+
+
+- task: CopyFiles@2
+  displayName: 'copy test results for publishing'
+  inputs:
+    SourceFolder: '$(agent.TempDirectory)'
+    Contents: |
+      **/*.trx
+      **/*.coverage
+    TargetFolder: '$(agent.DefaultWorkingDirectory)/TestResults'
+
+
+#######################################################
+# HERE BEGINS THE SONAR BLOCK
+#######################################################
+
+- task: SonarCloudPrepare@1
+  displayName: 'begin analysis (sonar)'
+  #condition: and(succeeded(), or(contains(variables['Build.SourceBranchName'], 'master'), contains(variables['Build.SourceBranchName'], 'sonar')))
+  inputs:
+    SonarCloud: 'mhudasch-github'
+    organization: 'mhudasch-github'
+    scannerMode: 'MSBuild'
+    projectKey: '$(Build.Sonar.ProjectKey)'
+    projectName: '$(Build.Sonar.ProjectName)'
+    projectVersion: '$(targetVersion)'
+    extraProperties: |
+      sonar.verbose=false
+
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet build (sonar)'
+  #condition: and(succeeded(), or(contains(variables['Build.SourceBranchName'], 'master'), contains(variables['Build.SourceBranchName'], 'sonar')))
+  inputs:
+    command: 'build'
+    projects: '**/*.csproj'
+    arguments: '--configuration $(buildConfiguration) --no-restore --no-incremental -p:GitRevisionNumber="$(Build.SourceVersion)" -p:GitBranchName="$(Build.SourceBranchName)" -p:BuildNumber="$(Build.BuildNumber)" -p:CIBuilder="VSTS" -p:IncludeFullFramework="false"'
+
+- task: SonarCloudAnalyze@1
+  displayName: 'execute analysis (sonar)'
+  #condition: and(succeeded(), or(contains(variables['Build.SourceBranchName'], 'master'), contains(variables['Build.SourceBranchName'], 'sonar')))
+
+- task: SonarCloudPublish@1
+  displayName: 'end analysis (sonar)'
+  #condition: and(succeeded(), or(contains(variables['Build.SourceBranchName'], 'master'), contains(variables['Build.SourceBranchName'], 'sonar')))
+  inputs:
+    pollingTimeoutSec: '300'
+    
+
