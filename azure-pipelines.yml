@@ -130,14 +130,10 @@ steps:
 - task: DotNetCoreCLI@2
   displayName: 'dotnet pack'
   inputs:
-    command: 'pack'
-    packagesToPack: '**/*.csproj'
-    arguments: '--serviceable --output "$(System.DefaultWorkingDirectory)/nuget" -p:GitRevisionNumber="$(Build.SourceVersion)" -p:GitBranchName="$(Build.SourceBranchName)" -p:BuildNumber="$(Build.BuildNumber)" -p:CIBuilder="VSTS" -p:AppendRuntimeToOutputPath=false'
-    nobuild: true
-    includesymbols: true
-    includesource: true
-    versioningScheme: 'off'
-    verbosityPack: 'Minimal'
+    command: 'custom'
+    projects: '**/*.csproj'
+    custom: 'pack'
+    arguments: '--configuration $(Build.Configuration) --no-build --include-symbols --include-source --verbosity minimal --serviceable --output "$(System.DefaultWorkingDirectory)/nuget" -p:GitRevisionNumber="$(Build.SourceVersion)" -p:GitBranchName="$(Build.SourceBranchName)" -p:BuildNumber="$(Build.BuildNumber)" -p:CIBuilder="VSTS" -p:AppendRuntimeToOutputPath=false'
 
 #######################################################
 # PUT TOGETHER ARTIFACTS
