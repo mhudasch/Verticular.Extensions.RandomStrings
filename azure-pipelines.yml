@@ -17,10 +17,9 @@ pool:
 
 variables:
   solution: '**/*.sln'
-  buildPlatform: 'Any CPU'
-  buildConfiguration: CI
-  buildRuntime: win
-  targetVersion: '1.0.0-alpha1'
+  Build.Platform: 'Any CPU'
+  Build.Configuration: CI
+  Build.TargetRuntime: win
   Build.IncludeLatestCoreFramework: 'true'
   Build.IncludeLatestFullFramework: 'false'
   Build.IncludeLatestStandardFramework: 'true'
@@ -29,6 +28,7 @@ variables:
   Build.Sonar.Organization: mhudasch-github
   Build.Sonar.ProjectKey: mhudasch_verticular.extensions.randomstrings
   Build.Sonar.ProjectName: verticular.extensions.randomstrings
+  Build.Sonar.AnalyzedVersion: '1.0.0-alpha1'
   # nuget stuff
   DOTNET_CLI_TELEMETRY_OPTOUT: 1
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
@@ -44,7 +44,7 @@ steps:
   inputs:
     command: 'restore'
     projects: '**/*.csproj'
-    restoreArguments: '--no-cache --runtime $(buildRuntime) -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)"'
+    restoreArguments: '--no-cache --runtime $(Build.TargetRuntime) -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)"'
     feedsToUse: 'select'
     verbosityRestore: Minimal
 
@@ -57,14 +57,14 @@ steps:
   inputs:
     command: 'build'
     projects: '**/*.csproj'
-    arguments: '--configuration $(buildConfiguration) --no-restore --no-incremental --runtime $(buildRuntime) -p:GitRevisionNumber="$(Build.SourceVersion)" -p:GitBranchName="$(Build.SourceBranchName)" -p:BuildNumber="$(Build.BuildNumber)" -p:CIBuilder="VSTS" -p:AppendRuntimeToOutputPath=true -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)"'
+    arguments: '--configuration $(Build.Configuration) --no-restore --no-incremental --runtime $(Build.TargetRuntime) -p:GitRevisionNumber="$(Build.SourceVersion)" -p:GitBranchName="$(Build.SourceBranchName)" -p:BuildNumber="$(Build.BuildNumber)" -p:CIBuilder="VSTS" -p:AppendRuntimeToOutputPath=true -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)"'
 
 - task: DotNetCoreCLI@2
   displayName: 'dotnet build (for pack)'
   inputs:
     command: 'build'
     projects: '**/*.csproj'
-    arguments: '--configuration $(buildConfiguration) --no-restore --no-incremental --runtime $(buildRuntime) -p:GitRevisionNumber="$(Build.SourceVersion)" -p:GitBranchName="$(Build.SourceBranchName)" -p:BuildNumber="$(Build.BuildNumber)" -p:CIBuilder="VSTS" -p:AppendRuntimeToOutputPath=false -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)"'
+    arguments: '--configuration $(Build.Configuration) --no-restore --no-incremental --runtime $(Build.TargetRuntime) -p:GitRevisionNumber="$(Build.SourceVersion)" -p:GitBranchName="$(Build.SourceBranchName)" -p:BuildNumber="$(Build.BuildNumber)" -p:CIBuilder="VSTS" -p:AppendRuntimeToOutputPath=false -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)"'
 
 #######################################################
 # DOTNET TEST
@@ -76,7 +76,7 @@ steps:
     command: 'test'
     projects: '**/test/**/*.csproj'
     publishTestResults: true
-    arguments: '--configuration $(buildConfiguration) --collect "Code coverage" --no-build --no-restore --runtime $(buildRuntime)'
+    arguments: '--configuration $(Build.Configuration) --collect "Code coverage" --no-build --no-restore --runtime $(Build.TargetRuntime)'
 
 
 - task: CopyFiles@2
@@ -101,7 +101,7 @@ steps:
     scannerMode: 'MSBuild'
     projectKey: '$(Build.Sonar.ProjectKey)'
     projectName: '$(Build.Sonar.ProjectName)'
-    projectVersion: '$(targetVersion)'
+    projectVersion: '$(Build.Sonar.AnalyzedVersion)'
     extraProperties: |
       sonar.verbose=true
 
@@ -111,7 +111,7 @@ steps:
   inputs:
     command: 'build'
     projects: '**/*.csproj'
-    arguments: '--configuration $(buildConfiguration) --no-restore --no-incremental --runtime $(buildRuntime) -p:GitRevisionNumber="$(Build.SourceVersion)" -p:GitBranchName="$(Build.SourceBranchName)" -p:BuildNumber="$(Build.BuildNumber)" -p:CIBuilder="VSTS" -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)"'
+    arguments: '--configuration $(Build.Configuration) --no-restore --no-incremental --runtime $(Build.TargetRuntime) -p:GitRevisionNumber="$(Build.SourceVersion)" -p:GitBranchName="$(Build.SourceBranchName)" -p:BuildNumber="$(Build.BuildNumber)" -p:CIBuilder="VSTS" -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)"'
 
 - task: SonarCloudAnalyze@1
   displayName: 'execute analysis (sonar)'
@@ -131,7 +131,42 @@ steps:
   displayName: 'dotnet pack'
   inputs:
     command: 'pack'
-    projects: '**/src/*.csproj'
-    arguments: '--configuration $(buildConfiguration) --no-build --serviceable --output "$(System.DefaultWorkingDirectory)/nuget" -p:GitRevisionNumber="$(Build.SourceVersion)" -p:GitBranchName="$(Build.SourceBranchName)" -p:BuildNumber="$(Build.BuildNumber)" -p:CIBuilder="VSTS" -p:AppendRuntimeToOutputPath=false'
-    verbosityPack: Minimal
-    
+    packagesToPack: '**/src/*.csproj'
+    arguments: '--serviceable --output "$(System.DefaultWorkingDirectory)/nuget" -p:GitRevisionNumber="$(Build.SourceVersion)" -p:GitBranchName="$(Build.SourceBranchName)" -p:BuildNumber="$(Build.BuildNumber)" -p:CIBuilder="VSTS" -p:AppendRuntimeToOutputPath=false'
+    nobuild: true
+    includesymbols: true
+    includesource: true
+    versioningScheme: 'off'
+    verbosityPack: 'Minimal'
+
+#######################################################
+# PUT TOGETHER ARTIFACTS
+#######################################################
+
+- task: CopyFiles@2
+  displayName: 'stage nugets'
+  inputs:
+    SourceFolder: '$(System.DefaultWorkingDirectory)/nuget'
+    Contents: '**'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)/nuget'
+    CleanTargetFolder: true
+    OverWrite: true
+    flattenFolders: true
+    preserveTimestamp: true
+
+- task: CopyFiles@2
+  displayName: 'stage test results'
+  inputs:
+    SourceFolder: '$(System.DefaultWorkingDirectory)/TestResults'
+    Contents: '**'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)/tr'
+    CleanTargetFolder: true
+    OverWrite: true
+    flattenFolders: true
+    preserveTimestamp: true
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
