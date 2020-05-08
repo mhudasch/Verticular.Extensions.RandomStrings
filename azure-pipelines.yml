@@ -1,0 +1,126 @@
+# ASP.NET Core (.NET Framework)
+# Build and test ASP.NET Core projects targeting the full .NET Framework.
+# Add steps that publish symbols, save build artifacts, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
+
+trigger:
+- master
+
+name: $(Date:yyyyMMdd)$(Rev:-r)
+
+resources:
+- repo: self
+  clean: true
+
+pool:
+  vmImage: 'windows-latest'
+
+variables:
+  solution: '**/*.sln'
+  buildPlatform: 'Any CPU'
+  buildConfiguration: CI
+  buildRuntime: win
+  targetVersion: '1.0.0-alpha1'
+  Build.IncludeLatestCoreFramework: 'true'
+  Build.IncludeLatestFullFramework: 'false'
+  Build.IncludeLatestStandardFramework: 'true'
+  # sonar.io stuff
+  Build.Sonar.Host: https://sonarcloud.io
+  Build.Sonar.Organization: mhudasch-github
+  Build.Sonar.ProjectKey: mhudasch_verticular.extensions.randomstrings
+  Build.Sonar.ProjectName: verticular.extensions.randomstrings
+  # nuget stuff
+  DOTNET_CLI_TELEMETRY_OPTOUT: 1
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
+
+steps:
+
+#######################################################
+# DOTNET RESTORE
+#######################################################
+
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet restore'
+  inputs:
+    command: 'restore'
+    projects: '**/*.csproj'
+    restoreArguments: '--no-cache --runtime $(buildRuntime) -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)"'
+    feedsToUse: 'select'
+    verbosityRestore: Minimal
+
+#######################################################
+# DOTNET BUILD 
+#######################################################
+
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet build (binaries)'
+  inputs:
+    command: 'build'
+    projects: '**/*.csproj'
+    arguments: '--configuration $(buildConfiguration) --no-restore --no-incremental --runtime $(buildRuntime) -p:GitRevisionNumber="$(Build.SourceVersion)" -p:GitBranchName="$(Build.SourceBranchName)" -p:BuildNumber="$(Build.BuildNumber)" -p:CIBuilder="VSTS" -p:AppendRuntimeToOutputPath=true -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)"'
+
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet build (for pack)'
+  inputs:
+    command: 'build'
+    projects: '**/*.csproj'
+    arguments: '--configuration $(buildConfiguration) --no-restore --no-incremental --runtime $(buildRuntime) -p:GitRevisionNumber="$(Build.SourceVersion)" -p:GitBranchName="$(Build.SourceBranchName)" -p:BuildNumber="$(Build.BuildNumber)" -p:CIBuilder="VSTS" -p:AppendRuntimeToOutputPath=false -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)"'
+
+#######################################################
+# DOTNET TEST
+#######################################################
+
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet test'
+  inputs:
+    command: 'test'
+    projects: '**/test/**/*.csproj'
+    publishTestResults: true
+    arguments: '--configuration $(buildConfiguration) --collect "Code coverage" --no-build --no-restore --runtime $(buildRuntime)'
+
+
+- task: CopyFiles@2
+  displayName: 'copy test results for publishing'
+  inputs:
+    SourceFolder: '$(agent.TempDirectory)'
+    Contents: |
+      **/*.trx
+      **/*.coverage
+    TargetFolder: '$(System.DefaultWorkingDirectory)/TestResults'
+
+
+#######################################################
+# HERE BEGINS THE SONAR BLOCK
+#######################################################
+
+- task: SonarCloudPrepare@1
+  displayName: 'begin analysis (sonar)'
+  #condition: and(succeeded(), or(contains(variables['Build.SourceBranchName'], 'master'), contains(variables['Build.SourceBranchName'], 'sonar')))
+  inputs:
+    SonarCloud: 'mhudasch-sonar'
+    organization: 'mhudasch-github'
+    scannerMode: 'MSBuild'
+    projectKey: '$(Build.Sonar.ProjectKey)'
+    projectName: '$(Build.Sonar.ProjectName)'
+    projectVersion: '$(targetVersion)'
+    extraProperties: |
+      sonar.verbose=true
+
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet build (sonar)'
+  #condition: and(succeeded(), or(contains(variables['Build.SourceBranchName'], 'master'), contains(variables['Build.SourceBranchName'], 'sonar')))
+  inputs:
+    command: 'build'
+    projects: '**/*.csproj'
+    arguments: '--configuration $(buildConfiguration) --no-restore --no-incremental --runtime $(buildRuntime) -p:GitRevisionNumber="$(Build.SourceVersion)" -p:GitBranchName="$(Build.SourceBranchName)" -p:BuildNumber="$(Build.BuildNumber)" -p:CIBuilder="VSTS" -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)" -p:IncludeFullFramework="false"'
+
+- task: SonarCloudAnalyze@1
+  displayName: 'execute analysis (sonar)'
+  #condition: and(succeeded(), or(contains(variables['Build.SourceBranchName'], 'master'), contains(variables['Build.SourceBranchName'], 'sonar')))
+
+- task: SonarCloudPublish@1
+  displayName: 'end analysis (sonar)'
+  #condition: and(succeeded(), or(contains(variables['Build.SourceBranchName'], 'master'), contains(variables['Build.SourceBranchName'], 'sonar')))
+  inputs:
+    pollingTimeoutSec: '300'
+

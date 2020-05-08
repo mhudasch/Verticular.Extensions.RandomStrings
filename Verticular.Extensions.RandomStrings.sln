@@ -30,9 +30,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{1CAF
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Verticular.Extensions.RandomStrings.UnitTests", "test\Verticular.Extensions.RandomStrings.UnitTests\Verticular.Extensions.RandomStrings.UnitTests.csproj", "{C3C06834-9508-46B9-9F4D-57FF14BFF16C}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "github", "github", "{867B100B-95C9-4FFE-9855-D45AB08021B5}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "azure", "azure", "{D13EC6B0-7950-4175-BB12-80BB6D099FF8}"
 	ProjectSection(SolutionItems) = preProject
-		.github\workflows\dotnetcore.yml = .github\workflows\dotnetcore.yml
+		azure-pipelines.yml = azure-pipelines.yml
 	EndProjectSection
 EndProject
 Global
@@ -61,7 +61,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{3AD9B722-6AFC-409F-8ACB-82007C0C8DA7} = {64356445-D9AF-4542-91B8-ABE977D11789}
 		{C3C06834-9508-46B9-9F4D-57FF14BFF16C} = {BAA77219-03C4-4C25-9356-A503BECD4BB7}
-		{867B100B-95C9-4FFE-9855-D45AB08021B5} = {AFB6DAEC-6BDF-43F3-B701-C2541F0FE7EE}
+		{D13EC6B0-7950-4175-BB12-80BB6D099FF8} = {AFB6DAEC-6BDF-43F3-B701-C2541F0FE7EE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C59E5DA9-A370-4C59-83E6-08B3E209F41B}
