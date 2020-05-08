@@ -24,8 +24,8 @@ namespace System
     /// <param name="eachCharacterMustOccurAtLeastOnce">Specifies whether each character in the <paramref name="allowedCharacters"/>
     /// array must occur at least once in the generated random string.</param>
     /// <returns>The generated string.</returns>
-    protected virtual string CoreCreate(int length, CharacterGroup allowedCharacters, bool eachCharacterMustOccurAtLeastOnce) =>
-      this.CoreCreate(length, CharacterGroups.Get(allowedCharacters), eachCharacterMustOccurAtLeastOnce);
+    protected virtual string CoreCreate(int length, CharacterGroups allowedCharacters, bool eachCharacterMustOccurAtLeastOnce) =>
+      this.CoreCreate(length, CharacterGroup.Get(allowedCharacters), eachCharacterMustOccurAtLeastOnce);
 
     /// <summary>
     /// Generates a random string based on specified options.
@@ -59,7 +59,7 @@ namespace System
         }
 
         var availableIndices = Enumerable.Range(0, length).ToList();
-        for(var i = 0; i < length; i++)
+        for (var i = 0; i < length; i++)
         {
           var setIndex = availableIndices.ElementAt(this.randomNumberGenerator.GetNextRandomNumber(availableIndices.Count));
           result[setIndex] = uniqueAllowedCharacters[i % uniqueAllowedCharacters.Length];
@@ -85,7 +85,7 @@ namespace System
     /// array must occur at least once in the generated random string.</param>
     /// <returns>The generated string.</returns>
     public virtual string Generate(int length, char[] allowedCharacters, bool eachCharacterMustOccurAtLeastOnce = false) =>
-      this.CoreCreate((int)length, allowedCharacters, eachCharacterMustOccurAtLeastOnce);
+      this.CoreCreate(length, allowedCharacters, eachCharacterMustOccurAtLeastOnce);
 
     /// <summary>
     /// Generates a random string based on specified options.
@@ -95,8 +95,8 @@ namespace System
     /// <param name="eachCharacterMustOccurAtLeastOnce">Specifies whether each character in the <paramref name="allowedCharacters"/>
     /// array must occur at least once in the generated random string.</param>
     /// <returns>The generated string.</returns>
-    public virtual string Generate(int length, CharacterGroup allowedCharacters, bool eachCharacterMustOccurAtLeastOnce = false) =>
-      this.CoreCreate((int)length, allowedCharacters, eachCharacterMustOccurAtLeastOnce);
+    public virtual string Generate(int length, CharacterGroups allowedCharacters, bool eachCharacterMustOccurAtLeastOnce = false) =>
+      this.CoreCreate(length, allowedCharacters, eachCharacterMustOccurAtLeastOnce);
 
     /// <summary>
     /// Generates a random string based on specified options.

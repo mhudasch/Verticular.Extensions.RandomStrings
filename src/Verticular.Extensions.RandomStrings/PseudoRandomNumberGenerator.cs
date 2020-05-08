@@ -1,4 +1,4 @@
-﻿namespace Verticular.Extensions.RandomStrings
+namespace Verticular.Extensions.RandomStrings
 {
   using System;
 
@@ -13,7 +13,7 @@
 
     public int GetNextRandomNumber(int maxValue)
     {
-      return (int)this.random.Next(maxValue);
+      return this.random.Next(maxValue);
     }
   }
 }

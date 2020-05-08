@@ -1,138 +1,62 @@
-﻿namespace Verticular.Extensions.RandomStrings
+namespace System
 {
-  using System;
-
-  internal static class CharacterGroups
+  /// <summary>
+  /// A shortcut for selecting specific groups of allowed characters.
+  /// </summary>
+  [Flags]
+  public enum CharacterGroups
   {
-    public static readonly char[] UpperCaseLetters =
-    {
-      'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',
-      'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P',
-      'Q', 'R', 'S', 'T', 'U', 'W', 'X', 'Y', 'Z'
-    };
-
-    public static readonly char[] LowerCaseLetters =
-    {
-      'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h',
-      'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p',
-      'q', 'r', 's', 't', 'u', 'w', 'x', 'y', 'z'
-    };
-
-    public static readonly char[] Digits =
-    {
-      '1','2','3','4','5','6','7','8','9','0'
-    };
-
-    public static readonly char[] Minus = { '-' };
-    public static readonly char[] Underscore = { '_' };
-    public static readonly char[] Space = { ' ' };
-    public static readonly char[] Bracket = { '<', '>', '{', '}', '[', ']', '(', ')' };
-    public static readonly char[] SpecialReadableAscriiLetters = { '!', '"', '#', '$', '%', '&', '\'', '*', '+', ',', '.', '/', ':', ';', '=', '?', '@', '\\', '^', '´', '`', '|', '~' };
-
-    public static readonly char[] SimilarLookingCharacters = { '1', 'l', 'I', '|', 'o', 'O', '0' };
-
-    public static char[] Get(CharacterGroup allowedCharacters)
-    {
-      if (allowedCharacters == CharacterGroup.None)
-      {
-        throw new ArgumentOutOfRangeException(nameof(allowedCharacters),
-          "At least one character group is needed to generate a random string.");
-      }
-
-      var allowedCharactersArrayLength = 0;
-      if (allowedCharacters.HasFlag(CharacterGroup.UpperCaseLetters))
-      {
-        allowedCharactersArrayLength += CharacterGroups.UpperCaseLetters.Length;
-      }
-
-      if (allowedCharacters.HasFlag(CharacterGroup.LowerCaseLetters))
-      {
-        allowedCharactersArrayLength += CharacterGroups.LowerCaseLetters.Length;
-      }
-
-      if (allowedCharacters.HasFlag(CharacterGroup.Digits))
-      {
-        allowedCharactersArrayLength += CharacterGroups.Digits.Length;
-      }
-
-      if (allowedCharacters.HasFlag(CharacterGroup.Minus))
-      {
-        allowedCharactersArrayLength += CharacterGroups.Minus.Length;
-      }
-
-      if (allowedCharacters.HasFlag(CharacterGroup.Underscore))
-      {
-        allowedCharactersArrayLength += CharacterGroups.Underscore.Length;
-      }
-
-      if (allowedCharacters.HasFlag(CharacterGroup.Space))
-      {
-        allowedCharactersArrayLength += CharacterGroups.Space.Length;
-      }
-
-      if (allowedCharacters.HasFlag(CharacterGroup.Brackets))
-      {
-        allowedCharactersArrayLength += CharacterGroups.Bracket.Length;
-      }
-
-      if (allowedCharacters.HasFlag(CharacterGroup.SpecialReadableAsciiLetters))
-      {
-        allowedCharactersArrayLength += CharacterGroups.SpecialReadableAscriiLetters.Length;
-      }
-
-      var finalArray = new char[allowedCharactersArrayLength];
-      var offset = 0;
-      const int itemSize = sizeof(char);
-      if (allowedCharacters.HasFlag(CharacterGroup.UpperCaseLetters))
-      {
-        Buffer.BlockCopy(CharacterGroups.UpperCaseLetters, 0, finalArray, offset, CharacterGroups.UpperCaseLetters.Length * itemSize);
-        offset += (CharacterGroups.UpperCaseLetters.Length * sizeof(char));
-      }
-
-      if (allowedCharacters.HasFlag(CharacterGroup.LowerCaseLetters))
-      {
-        Buffer.BlockCopy(CharacterGroups.LowerCaseLetters, 0, finalArray, offset, CharacterGroups.LowerCaseLetters.Length * itemSize);
-        offset += (CharacterGroups.LowerCaseLetters.Length * sizeof(char));
-      }
-
-      if (allowedCharacters.HasFlag(CharacterGroup.Digits))
-      {
-        Buffer.BlockCopy(CharacterGroups.Digits, 0, finalArray, offset, CharacterGroups.Digits.Length * itemSize);
-        offset += (CharacterGroups.Digits.Length * sizeof(char));
-      }
-
-      if (allowedCharacters.HasFlag(CharacterGroup.Minus))
-      {
-        Buffer.BlockCopy(CharacterGroups.Minus, 0, finalArray, offset, CharacterGroups.Minus.Length * itemSize);
-        offset += (CharacterGroups.Minus.Length * sizeof(char));
-      }
-
-      if (allowedCharacters.HasFlag(CharacterGroup.Underscore))
-      {
-        Buffer.BlockCopy(CharacterGroups.Underscore, 0, finalArray, offset, CharacterGroups.Underscore.Length * itemSize);
-        offset += (CharacterGroups.Underscore.Length * sizeof(char));
-      }
-
-      if (allowedCharacters.HasFlag(CharacterGroup.Space))
-      {
-        Buffer.BlockCopy(CharacterGroups.Space, 0, finalArray, offset, CharacterGroups.Space.Length * itemSize);
-        offset += (CharacterGroups.Space.Length * sizeof(char));
-      }
-
-      if (allowedCharacters.HasFlag(CharacterGroup.Brackets))
-      {
-        Buffer.BlockCopy(CharacterGroups.Bracket, 0, finalArray, offset, CharacterGroups.Bracket.Length * itemSize);
-        offset += (CharacterGroups.Bracket.Length * sizeof(char));
-      }
-
-      if (allowedCharacters.HasFlag(CharacterGroup.SpecialReadableAsciiLetters))
-      {
-        Buffer.BlockCopy(CharacterGroups.SpecialReadableAscriiLetters, 0, finalArray,
-          offset, CharacterGroups.SpecialReadableAscriiLetters.Length * itemSize);
-        offset += (CharacterGroups.SpecialReadableAscriiLetters.Length * sizeof(char));
-      }
-
-      return finalArray;
-    }
+    /// <summary>
+    /// No character
+    /// </summary>
+    None = 0,
+    /// <summary>
+    /// Latin upper-case characters A,B,C ...
+    /// </summary>
+    UpperCaseLetters = 1,
+    /// <summary>
+    /// Latin lower-case characters a,b,c ...
+    /// </summary>
+    LowerCaseLetters = 2,
+    /// <summary>
+    /// All latin upper-case and lower-case letters
+    /// </summary>
+    Letters = UpperCaseLetters | LowerCaseLetters,
+    /// <summary>
+    /// Arabic digits 1,2,3 ...
+    /// </summary>
+    Digits = 4,
+    /// <summary>
+    /// All latin upper-case, lower-case letters and digits from 0 to 9.
+    /// </summary>
+    AllAlphaNumeric = Letters | Digits,
+    /// <summary>
+    /// The minus ('-') character
+    /// </summary>
+    Minus = 8,
+    /// <summary>
+    /// The underscore ('_') character 
+    /// </summary>
+    Underscore = 16,
+    /// <summary>
+    /// The space (' ') character
+    /// </summary>
+    Space = 32,
+    /// <summary>
+    /// The characters usable to create names for files or directories.
+    /// </summary>
+    FileSystemSafe = AllAlphaNumeric | Minus | Underscore,
+    /// <summary>
+    /// All bracket characters '&lt;', '&gt;', '{', '}', '[', ']', '(', ')'
+    /// </summary>
+    Brackets = 64,
+    /// <summary>
+    /// All readable special ascii characters - '!', '&quot;', '#', '$', '%', '&amp;', ''', '*', '+', ',', '.', '/', ':', ';', '=', '?', '@', '\', '^', '´', '`', '|', '~'
+    /// </summary>
+    SpecialReadableAsciiLetters = 128,
+    /// <summary>
+    /// All readable ascii characters (code 32 till code 126)
+    /// </summary>
+    AllReadableAsciiLetters = AllAlphaNumeric | Minus | Underscore | Space | Brackets | SpecialReadableAsciiLetters
   }
 }

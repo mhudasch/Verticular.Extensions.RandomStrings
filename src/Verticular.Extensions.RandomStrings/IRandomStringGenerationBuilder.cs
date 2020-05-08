@@ -11,7 +11,7 @@ namespace System
     /// <param name="stringLength">The desired length of the random string.</param>
     /// <returns>The builder.</returns>
     IRandomStringGenerationBuilder WithLength(int stringLength);
-    
+
     /// <summary>
     /// Sets the collection of allowed characters to choose from during string generation.
     /// </summary>
@@ -24,7 +24,7 @@ namespace System
     /// </summary>
     /// <param name="characters">The allowed characters.</param>
     /// <returns>The builder.</returns>
-    IRandomStringGenerationBuilder AllowCharacters(CharacterGroup characters);
+    IRandomStringGenerationBuilder AllowCharacters(CharacterGroups characters);
 
     /// <summary>
     /// Adds additional allowed characters to the allowed characters given to <see cref="AllowCharacters(char[])"/>.
@@ -38,7 +38,7 @@ namespace System
     /// </summary>
     /// <param name="characters">The additional allowed characters.</param>
     /// <returns>The builder.</returns>
-    IRandomStringGenerationBuilder AndAllowCharacters(CharacterGroup characters);
+    IRandomStringGenerationBuilder AndAllowCharacters(CharacterGroups characters);
 
     /// <summary>
     /// Configures the random string generation so that each allowed character must occur at least once.

@@ -12,7 +12,7 @@ namespace System
     /// </summary>
     public static readonly RandomStringGenerationOptions Default =
       new RandomStringGenerationOptions(32,
-        CharacterGroups.Get(CharacterGroup.AllAlphaNumeric | CharacterGroup.Minus | CharacterGroup.Underscore));
+        CharacterGroup.Get(CharacterGroups.AllAlphaNumeric | CharacterGroups.Minus | CharacterGroups.Underscore));
 
     /// <summary>
     /// Initializes a new instance of the <see cref="RandomStringGenerationOptions"/> class.

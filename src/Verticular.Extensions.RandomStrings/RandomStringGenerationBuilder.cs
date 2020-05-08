@@ -35,9 +35,9 @@
       return this;
     }
 
-    public IRandomStringGenerationBuilder AllowCharacters(CharacterGroup characters)
+    public IRandomStringGenerationBuilder AllowCharacters(CharacterGroups characters)
     {
-      this.allowedCharacters = new HashSet<char>(CharacterGroups.Get(characters));
+      this.allowedCharacters = new HashSet<char>(CharacterGroup.Get(characters));
       return this;
     }
 
@@ -50,9 +50,9 @@
       return this;
     }
 
-    public IRandomStringGenerationBuilder AndAllowCharacters(CharacterGroup characters)
+    public IRandomStringGenerationBuilder AndAllowCharacters(CharacterGroups characters)
     {
-      foreach (var c in CharacterGroups.Get(characters))
+      foreach (var c in CharacterGroup.Get(characters))
       {
         this.allowedCharacters.Add(c);
       }
@@ -84,7 +84,7 @@
     {
       if (this.excludeSimilarLookingCharacters)
       {
-        foreach (var c in CharacterGroups.SimilarLookingCharacters)
+        foreach (var c in CharacterGroup.SimilarLookingCharacters)
         {
           this.allowedCharacters.Remove(c);
         }

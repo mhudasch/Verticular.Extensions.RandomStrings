@@ -10,6 +10,7 @@
     <Configurations>Debug;Release;CI</Configurations>
     <ProjectGuid>{C3C06834-9508-46B9-9F4D-57FF14BFF16C}</ProjectGuid>
     <IsPackable>false</IsPackable>
+    
   </PropertyGroup>
 
   <ItemGroup>
