@@ -59,13 +59,6 @@ steps:
     projects: '**/*.csproj'
     arguments: '--configuration $(Build.Configuration) --no-restore --no-incremental --runtime $(Build.TargetRuntime) -p:GitRevisionNumber="$(Build.SourceVersion)" -p:GitBranchName="$(Build.SourceBranchName)" -p:BuildNumber="$(Build.BuildNumber)" -p:CIBuilder="VSTS" -p:AppendRuntimeToOutputPath=true -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)"'
 
-- task: DotNetCoreCLI@2
-  displayName: 'dotnet build (for pack)'
-  inputs:
-    command: 'build'
-    projects: '**/*.csproj'
-    arguments: '--configuration $(Build.Configuration) --no-restore --no-incremental --runtime $(Build.TargetRuntime) -p:GitRevisionNumber="$(Build.SourceVersion)" -p:GitBranchName="$(Build.SourceBranchName)" -p:BuildNumber="$(Build.BuildNumber)" -p:CIBuilder="VSTS" -p:AppendRuntimeToOutputPath=false -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)"'
-
 #######################################################
 # DOTNET TEST
 #######################################################
@@ -77,7 +70,6 @@ steps:
     projects: '**/test/**/*.csproj'
     publishTestResults: true
     arguments: '--configuration $(Build.Configuration) --collect "Code coverage" --no-build --no-restore --runtime $(Build.TargetRuntime)'
-
 
 - task: CopyFiles@2
   displayName: 'copy test results for publishing'
@@ -126,6 +118,13 @@ steps:
 #######################################################
 # DOTNET PACK
 #######################################################
+
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet build (for pack)'
+  inputs:
+    command: 'build'
+    projects: '**/*.csproj'
+    arguments: '--configuration $(Build.Configuration) --no-restore --no-incremental --runtime $(Build.TargetRuntime) -p:GitRevisionNumber="$(Build.SourceVersion)" -p:GitBranchName="$(Build.SourceBranchName)" -p:BuildNumber="$(Build.BuildNumber)" -p:CIBuilder="VSTS" -p:AppendRuntimeToOutputPath=false -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)"'
 
 - task: DotNetCoreCLI@2
   displayName: 'dotnet pack'
