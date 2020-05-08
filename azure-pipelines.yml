@@ -22,7 +22,7 @@ variables:
   buildRuntime: win
   targetVersion: '1.0.0-alpha1'
   Build.IncludeLatestCoreFramework: 'true'
-  Build.IncludeLatestFullFramework: 'true'
+  Build.IncludeLatestFullFramework: 'false'
   Build.IncludeLatestStandardFramework: 'true'
   # sonar.io stuff
   Build.Sonar.Host: https://sonarcloud.io
