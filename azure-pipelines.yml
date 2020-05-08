@@ -7,34 +7,12 @@ trigger:
 - master
 - dev
 - release/*
-pr: 
+pr:
 - master
 - dev
 - release/*
 
 name: $(Date:yyyyMMdd)$(Rev:-r)
-
-resources:
-- repo: self
-  clean: true
-
-variables:
-  #Build.Configuration: CI
-  #Build.TargetRuntime: win
-  #Build.IncludeFullFramework: true
-  #Build.IncludeLatestCoreFramework: true
-  #Build.IncludeLatestFullFramework: false
-  #Build.IncludeLatestStandardFramework: true
-  #Publish.NugetOrg: false
-  
-  #Sonar.Organization: mhudasch-github
-  #Sonar.ProjectKey: mhudasch_verticular.extensions.randomstrings
-  #Sonar.ProjectName: verticular.extensions.randomstrings
-  #Sonar.AnalyzedVersion: '1.0.0-alpha1'
-  #Sonar.Verbose: false
-  # nuget stuff
-  DOTNET_CLI_TELEMETRY_OPTOUT: 1
-  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
 
 pool:
   vmImage: 'windows-latest'
@@ -55,7 +33,7 @@ steps:
     verbosityRestore: Minimal
 
 #######################################################
-# DOTNET BUILD 
+# DOTNET BUILD
 #######################################################
 
 - task: DotNetCoreCLI@2
