@@ -67,7 +67,7 @@ steps:
   displayName: 'dotnet test'
   inputs:
     command: 'test'
-    projects: '**/test/*.csproj'
+    projects: '**/test/**/*.csproj'
     publishTestResults: true
     arguments: '--configuration $(Build.Configuration) --collect "Code coverage" --no-build --no-restore --runtime $(Build.TargetRuntime)'
 
