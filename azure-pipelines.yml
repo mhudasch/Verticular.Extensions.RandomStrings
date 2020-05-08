@@ -24,6 +24,7 @@ variables:
   Build.IncludeLatestCoreFramework: true
   Build.IncludeLatestFullFramework: false
   Build.IncludeLatestStandardFramework: true
+  Build.PushToNugetOrg: false
   # sonar.io stuff
   Build.Sonar.Host: https://sonarcloud.io
   Build.Sonar.Organization: mhudasch-github
@@ -82,6 +83,19 @@ steps:
     TargetFolder: '$(System.DefaultWorkingDirectory)/TestResults'
 
 #######################################################
+# DOTNET TEST
+#######################################################
+
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet pack'
+  inputs:
+    command: 'custom'
+    projects: '**/*.csproj'
+    custom: 'pack'
+    arguments: '--configuration $(Build.Configuration) --no-build --include-symbols --include-source --verbosity minimal --serviceable --output "$(System.DefaultWorkingDirectory)/nuget" -p:GitRevisionNumber="$(Build.SourceVersion)" -p:GitBranchName="$(Build.SourceBranchName)" -p:BuildNumber="$(Build.BuildNumber)" -p:CIBuilder="VSTS" --runtime $(Build.TargetRuntime) -p:IncludeFullFramework="$(Build.IncludeFullFramework)" -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)"'
+
+
+#######################################################
 # HERE BEGINS THE SONAR BLOCK
 #######################################################
 
@@ -117,37 +131,17 @@ steps:
     pollingTimeoutSec: '300'
 
 #######################################################
-# DOTNET PACK
+# DOTNET PUBLISH
 #######################################################
 
 - task: DotNetCoreCLI@2
-  displayName: 'dotnet build (for pack)'
-  inputs:
-    command: 'build'
-    projects: '**/*.csproj'
-    arguments: '--configuration $(Build.Configuration) --no-restore --no-incremental -p:GitRevisionNumber="$(Build.SourceVersion)" -p:GitBranchName="$(Build.SourceBranchName)" -p:BuildNumber="$(Build.BuildNumber)" -p:CIBuilder="VSTS" --runtime $(Build.TargetRuntime) -p:IncludeFullFramework="$(Build.IncludeFullFramework)" -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)"'
-
-- task: DotNetCoreCLI@2
-  displayName: 'dotnet pack'
-  inputs:
-    command: 'custom'
-    projects: '**/*.csproj'
-    custom: 'pack'
-    arguments: '--configuration $(Build.Configuration) --no-build --include-symbols --include-source --verbosity minimal --serviceable --output "$(System.DefaultWorkingDirectory)/nuget" -p:GitRevisionNumber="$(Build.SourceVersion)" -p:GitBranchName="$(Build.SourceBranchName)" -p:BuildNumber="$(Build.BuildNumber)" -p:CIBuilder="VSTS" --runtime $(Build.TargetRuntime) -p:IncludeFullFramework="$(Build.IncludeFullFramework)" -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)"'
-
-- task: NuGetAuthenticate@0
-  inputs:
-    nuGetServiceConnections: 'nuget.org'
-    forceReinstallCredentialProvider: true
-
-- task: DotNetCoreCLI@2
   displayName: 'push to nuget org'
+  condition: and(succeeded(), eq(variables['Build.PushToNugetOrg'], 'true'), or(contains(variables['Build.SourceBranchName'], 'master'), contains(variables['Build.SourceBranchName'], 'release')))
   inputs:
-    command: 'custom'
-    projects: '$(Build.ArtifactStagingDirectory)/*.nupkg'
-    custom: 'nuget push'
-    arguments: '--skip-duplicate --source https://api.nuget.org/v3/index.json'
-    
+    command: 'push'
+    packagesToPush: '$(Build.ArtifactStagingDirectory)/*.nupkg'
+    nuGetFeedType: 'external'
+    publishFeedCredentials: 'nuget.org'
 
 #######################################################
 # PUT TOGETHER ARTIFACTS
