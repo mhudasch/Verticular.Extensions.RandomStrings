@@ -44,7 +44,7 @@ steps:
   inputs:
     command: 'restore'
     projects: '**/*.csproj'
-    restoreArguments: '--no-cache -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)"'
+    restoreArguments: '--no-cache --runtime $(buildRuntime) -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)"'
     feedsToUse: 'select'
     verbosityRestore: Minimal
 
@@ -76,7 +76,7 @@ steps:
     command: 'test'
     projects: '**/test/**/*.csproj'
     publishTestResults: true
-    arguments: '--configuration $(buildConfiguration) --collect "Code coverage" --no-build --no-restore'
+    arguments: '--configuration $(buildConfiguration) --collect "Code coverage" --no-build --no-restore --runtime $(buildRuntime)'
 
 
 - task: CopyFiles@2
@@ -112,7 +112,7 @@ steps:
   inputs:
     command: 'build'
     projects: '**/*.csproj'
-    arguments: '--configuration $(buildConfiguration) --no-restore --no-incremental -p:GitRevisionNumber="$(Build.SourceVersion)" -p:GitBranchName="$(Build.SourceBranchName)" -p:BuildNumber="$(Build.BuildNumber)" -p:CIBuilder="VSTS" -p:IncludeFullFramework="false"'
+    arguments: '--configuration $(buildConfiguration) --no-restore --no-incremental --runtime $(buildRuntime) -p:GitRevisionNumber="$(Build.SourceVersion)" -p:GitBranchName="$(Build.SourceBranchName)" -p:BuildNumber="$(Build.BuildNumber)" -p:CIBuilder="VSTS" -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)" -p:IncludeFullFramework="false"'
 
 - task: SonarCloudAnalyze@1
   displayName: 'execute analysis (sonar)'
