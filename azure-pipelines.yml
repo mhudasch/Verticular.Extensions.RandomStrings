@@ -83,7 +83,7 @@ steps:
     Contents: |
       **/*.trx
       **/*.coverage
-    TargetFolder: '$(agent.DefaultWorkingDirectory)/TestResults'
+    TargetFolder: '$(System.DefaultWorkingDirectory)/TestResults'
 
 
 #######################################################
