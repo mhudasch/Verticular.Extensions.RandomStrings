@@ -21,6 +21,7 @@ variables:
   buildConfiguration: CI
   buildRuntime: win
   targetVersion: '1.0.0-alpha1'
+  Build.IncludeLatestCoreFramework: 'true'
   # sonar.io stuff
   Build.Sonar.Host: https://sonarcloud.io
   Build.Sonar.Organization: mhudasch-github
@@ -54,14 +55,14 @@ steps:
   inputs:
     command: 'build'
     projects: '**/*.csproj'
-    arguments: '--configuration $(buildConfiguration) --no-restore --no-incremental --runtime $(buildRuntime) -p:GitRevisionNumber="$(Build.SourceVersion)" -p:GitBranchName="$(Build.SourceBranchName)" -p:BuildNumber="$(Build.BuildNumber)" -p:CIBuilder="VSTS" -p:AppendRuntimeToOutputPath=true'
+    arguments: '--configuration $(buildConfiguration) --no-restore --no-incremental --runtime $(buildRuntime) -p:GitRevisionNumber="$(Build.SourceVersion)" -p:GitBranchName="$(Build.SourceBranchName)" -p:BuildNumber="$(Build.BuildNumber)" -p:CIBuilder="VSTS" -p:AppendRuntimeToOutputPath=true -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)"'
 
 - task: DotNetCoreCLI@2
   displayName: 'dotnet build (for pack)'
   inputs:
     command: 'build'
     projects: '**/*.csproj'
-    arguments: '--configuration $(buildConfiguration) --no-restore --no-incremental --runtime $(buildRuntime) -p:GitRevisionNumber="$(Build.SourceVersion)" -p:GitBranchName="$(Build.SourceBranchName)" -p:BuildNumber="$(Build.BuildNumber)" -p:CIBuilder="VSTS" -p:AppendRuntimeToOutputPath=false'
+    arguments: '--configuration $(buildConfiguration) --no-restore --no-incremental --runtime $(buildRuntime) -p:GitRevisionNumber="$(Build.SourceVersion)" -p:GitBranchName="$(Build.SourceBranchName)" -p:BuildNumber="$(Build.BuildNumber)" -p:CIBuilder="VSTS" -p:AppendRuntimeToOutputPath=false -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)"'
 
 #######################################################
 # DOTNET TEST
@@ -120,5 +121,4 @@ steps:
   #condition: and(succeeded(), or(contains(variables['Build.SourceBranchName'], 'master'), contains(variables['Build.SourceBranchName'], 'sonar')))
   inputs:
     pollingTimeoutSec: '300'
-    
 
