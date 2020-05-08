@@ -57,7 +57,7 @@ steps:
   inputs:
     command: 'build'
     projects: '**/*.csproj'
-    arguments: '--configuration $(Build.Configuration) --no-restore --no-incremental --runtime $(Build.TargetRuntime) -p:GitRevisionNumber="$(Build.SourceVersion)" -p:GitBranchName="$(Build.SourceBranchName)" -p:BuildNumber="$(Build.BuildNumber)" -p:CIBuilder="VSTS" -p:AppendRuntimeToOutputPath=true -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)"'
+    arguments: '--configuration $(Build.Configuration) --no-restore --no-incremental --runtime $(Build.TargetRuntime) -p:GitRevisionNumber="$(Build.SourceVersion)" -p:GitBranchName="$(Build.SourceBranchName)" -p:BuildNumber="$(Build.BuildNumber)" -p:CIBuilder="VSTS" -p:AppendRuntimeToOutputPath=false -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)"'
 
 #######################################################
 # DOTNET TEST
@@ -124,7 +124,7 @@ steps:
   inputs:
     command: 'build'
     projects: '**/*.csproj'
-    arguments: '--configuration $(Build.Configuration) --no-restore --no-incremental --runtime $(Build.TargetRuntime) -p:GitRevisionNumber="$(Build.SourceVersion)" -p:GitBranchName="$(Build.SourceBranchName)" -p:BuildNumber="$(Build.BuildNumber)" -p:CIBuilder="VSTS" -p:AppendRuntimeToOutputPath=false -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)"'
+    arguments: '--configuration $(Build.Configuration) --no-restore --no-incremental --runtime $(Build.TargetRuntime) -p:GitRevisionNumber="$(Build.SourceVersion)" -p:GitBranchName="$(Build.SourceBranchName)" -p:BuildNumber="$(Build.BuildNumber)" -p:CIBuilder="VSTS" -p:AppendRuntimeToOutputPath=true -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)"'
 
 - task: DotNetCoreCLI@2
   displayName: 'dotnet pack'
@@ -133,6 +133,20 @@ steps:
     projects: '**/*.csproj'
     custom: 'pack'
     arguments: '--configuration $(Build.Configuration) --no-build --include-symbols --include-source --verbosity minimal --serviceable --output "$(System.DefaultWorkingDirectory)/nuget" -p:GitRevisionNumber="$(Build.SourceVersion)" -p:GitBranchName="$(Build.SourceBranchName)" -p:BuildNumber="$(Build.BuildNumber)" -p:CIBuilder="VSTS" -p:AppendRuntimeToOutputPath=false'
+
+- task: NuGetAuthenticate@0
+  inputs:
+    nuGetServiceConnections: 'nuget.org'
+    forceReinstallCredentialProvider: true
+
+- task: DotNetCoreCLI@2
+  displayName: 'push to nuget org'
+  inputs:
+    command: 'custom'
+    projects: '$(Build.ArtifactStagingDirectory)/*.nupkg'
+    custom: 'nuget push'
+    arguments: '--skip-duplicate --source https://api.nuget.org/v3/index.json'
+    
 
 #######################################################
 # PUT TOGETHER ARTIFACTS
