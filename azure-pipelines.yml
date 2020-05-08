@@ -101,7 +101,7 @@ steps:
     projectName: '$(Build.Sonar.ProjectName)'
     projectVersion: '$(targetVersion)'
     extraProperties: |
-      sonar.verbose=false
+      sonar.verbose=true
 
 - task: DotNetCoreCLI@2
   displayName: 'dotnet build (sonar)'
