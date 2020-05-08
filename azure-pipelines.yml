@@ -19,6 +19,7 @@ variables:
   solution: '**/*.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: CI
+  buildRuntime: win
   targetVersion: '1.0.0-alpha1'
   # sonar.io stuff
   Build.Sonar.Host: https://sonarcloud.io
@@ -40,6 +41,15 @@ steps:
   inputs:
     command: 'restore'
     projects: '**/*.csproj'
-    restoreArguments: '--no-cache --verbosity normal'
+    restoreArguments: '--no-cache'
     feedsToUse: 'select'
 
+#######################################################
+# DOTNET BUILD 
+#######################################################
+
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'build'
+    projects: '**/*.csproj'
+    arguments: '--configuration $(buildConfiguration) --no-restore --no-increment --runtime $(buildRuntime) -p:GitRevisionNumber="$(Build.SourceVersion)" -p:GitBranchName="$(Build.SourceBranchName)" -p:BuildNumber="$(Build.BuildNumber)" -p:CIBuilder="VSTS" -p:AppendRuntimeToOutputPath=true'
