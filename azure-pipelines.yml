@@ -94,7 +94,7 @@ steps:
   displayName: 'begin analysis (sonar)'
   #condition: and(succeeded(), or(contains(variables['Build.SourceBranchName'], 'master'), contains(variables['Build.SourceBranchName'], 'sonar')))
   inputs:
-    SonarCloud: 'mhudasch-github'
+    SonarCloud: 'mhudasch-sonar'
     organization: 'mhudasch-github'
     scannerMode: 'MSBuild'
     projectKey: '$(Build.Sonar.ProjectKey)'
