@@ -131,7 +131,7 @@ steps:
   displayName: 'dotnet pack'
   inputs:
     command: 'pack'
-    packagesToPack: '**/src/*.csproj'
+    packagesToPack: '**/*.csproj'
     arguments: '--serviceable --output "$(System.DefaultWorkingDirectory)/nuget" -p:GitRevisionNumber="$(Build.SourceVersion)" -p:GitBranchName="$(Build.SourceBranchName)" -p:BuildNumber="$(Build.BuildNumber)" -p:CIBuilder="VSTS" -p:AppendRuntimeToOutputPath=false'
     nobuild: true
     includesymbols: true
