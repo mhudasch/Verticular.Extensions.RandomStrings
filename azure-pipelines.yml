@@ -1,0 +1,45 @@
+# ASP.NET Core (.NET Framework)
+# Build and test ASP.NET Core projects targeting the full .NET Framework.
+# Add steps that publish symbols, save build artifacts, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
+
+trigger:
+- master
+
+name: $(Date:yyyyMMdd)$(Rev:.r)
+
+resources:
+- repo: self
+  clean: true
+
+pool:
+  vmImage: 'windows-latest'
+
+variables:
+  solution: '**/*.sln'
+  buildPlatform: 'Any CPU'
+  buildConfiguration: CI
+  targetVersion: '1.0.0-alpha1'
+  # sonar.io stuff
+  Build.Sonar.Host: https://sonarcloud.io
+  Build.Sonar.Organization: mhudasch-github
+  Build.Sonar.ProjectKey: mhudasch_verticular.extensions.randomstrings
+  Build.Sonar.ProjectName: verticular.extensions.randomstrings
+  # nuget stuff
+  DOTNET_CLI_TELEMETRY_OPTOUT: 1
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
+
+steps:
+
+#######################################################
+# DOTNET RESTORE
+#######################################################
+
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet restore'
+  inputs:
+    command: 'restore'
+    projects: '**/*.csproj'
+    restoreArguments: '--configuration $(buildConfiguration) --no-cache --verbosity normal'
+    feedsToUse: 'select'
+
