@@ -43,13 +43,34 @@ steps:
     projects: '**/*.csproj'
     restoreArguments: '--no-cache'
     feedsToUse: 'select'
+    verbosityRestore: Minimal
 
 #######################################################
 # DOTNET BUILD 
 #######################################################
 
 - task: DotNetCoreCLI@2
+  displayName: 'dotnet build (binaries)'
   inputs:
     command: 'build'
     projects: '**/*.csproj'
-    arguments: '--configuration $(buildConfiguration) --no-restore --no-increment --runtime $(buildRuntime) -p:GitRevisionNumber="$(Build.SourceVersion)" -p:GitBranchName="$(Build.SourceBranchName)" -p:BuildNumber="$(Build.BuildNumber)" -p:CIBuilder="VSTS" -p:AppendRuntimeToOutputPath=true'
+    arguments: '--configuration $(buildConfiguration) --no-restore --no-incremental --runtime $(buildRuntime) -p:GitRevisionNumber="$(Build.SourceVersion)" -p:GitBranchName="$(Build.SourceBranchName)" -p:BuildNumber="$(Build.BuildNumber)" -p:CIBuilder="VSTS" -p:AppendRuntimeToOutputPath=true'
+
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet build (for pack)'
+  inputs:
+    command: 'build'
+    projects: '**/*.csproj'
+    arguments: '--configuration $(buildConfiguration) --no-restore --no-incremental --runtime $(buildRuntime) -p:GitRevisionNumber="$(Build.SourceVersion)" -p:GitBranchName="$(Build.SourceBranchName)" -p:BuildNumber="$(Build.BuildNumber)" -p:CIBuilder="VSTS" -p:AppendRuntimeToOutputPath=false'
+
+#######################################################
+# DOTNET TEST
+#######################################################
+
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet test'
+  inputs:
+    command: 'test'
+    projects: '**/test/**/*.csproj'
+    publishTestResults: true
+    arguments: '--configuration $(buildConfiguration) --collect "Code coverage" --no-build --no-restore'
