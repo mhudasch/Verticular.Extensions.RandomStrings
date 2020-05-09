@@ -41,7 +41,7 @@ steps:
   inputs:
     command: 'build'
     projects: '**/*.csproj'
-    arguments: '--configuration $(Build.Configuration) --no-restore --no-incremental -p:GitRevisionNumber="$(Build.SourceVersion)" -p:GitBranchName="$(Build.SourceBranchName)" -p:BuildNumber="$(Build.BuildNumber)" -p:CIBuilder="VSTS" --runtime $(Build.TargetRuntime) -p:IncludeFullFramework="$(Build.IncludeFullFramework)" -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)"'
+    arguments: '--configuration $(Build.Configuration) --no-restore --no-incremental -p:GitRevisionNumber="$(Build.SourceVersion)" -p:GitBranch="$(Build.SourceBranch)" -p:BuildNumber="$(Build.BuildNumber)" -p:CIBuilder="VSTS" --runtime $(Build.TargetRuntime) -p:IncludeFullFramework="$(Build.IncludeFullFramework)" -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)"'
 
 #######################################################
 # DOTNET TEST
@@ -74,7 +74,7 @@ steps:
     command: 'custom'
     projects: '**/*.csproj'
     custom: 'pack'
-    arguments: '--configuration $(Build.Configuration) --no-build --include-symbols --include-source --verbosity minimal --serviceable --output "$(System.DefaultWorkingDirectory)/nuget" -p:GitRevisionNumber="$(Build.SourceVersion)" -p:GitBranchName="$(Build.SourceBranchName)" -p:BuildNumber="$(Build.BuildNumber)" -p:CIBuilder="VSTS" --runtime $(Build.TargetRuntime) -p:IncludeFullFramework="$(Build.IncludeFullFramework)" -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)"'
+    arguments: '--configuration $(Build.Configuration) --no-build --include-symbols --include-source --verbosity minimal --serviceable --output "$(System.DefaultWorkingDirectory)/nuget" -p:GitRevisionNumber="$(Build.SourceVersion)" -p:GitBranch="$(Build.SourceBranch)" -p:BuildNumber="$(Build.BuildNumber)" -p:CIBuilder="VSTS" --runtime $(Build.TargetRuntime) -p:IncludeFullFramework="$(Build.IncludeFullFramework)" -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)"'
 
 
 #######################################################
@@ -83,7 +83,7 @@ steps:
 
 - task: SonarCloudPrepare@1
   displayName: 'begin analysis (sonar)'
-  condition: and(succeeded(), or(contains(variables['Build.SourceBranchName'], 'master'), contains(variables['Build.SourceBranchName'], 'release')))
+  condition: and(succeeded(), or(contains(variables['Build.SourceBranch'], 'master'), contains(variables['Build.SourceBranch'], 'release')))
   inputs:
     SonarCloud: 'mhudasch-sonar'
     organization: '$(Sonar.Organization)'
@@ -96,19 +96,19 @@ steps:
 
 - task: DotNetCoreCLI@2
   displayName: 'dotnet build (sonar)'
-  condition: and(succeeded(), or(contains(variables['Build.SourceBranchName'], 'master'), contains(variables['Build.SourceBranchName'], 'release')))
+  condition: and(succeeded(), or(contains(variables['Build.SourceBranch'], 'master'), contains(variables['Build.SourceBranch'], 'release')))
   inputs:
     command: 'build'
     projects: '**/*.csproj'
-    arguments: '--configuration $(Build.Configuration) --no-restore --no-incremental --runtime $(Build.TargetRuntime) -p:GitRevisionNumber="$(Build.SourceVersion)" -p:GitBranchName="$(Build.SourceBranchName)" -p:BuildNumber="$(Build.BuildNumber)" -p:CIBuilder="VSTS" -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)"'
+    arguments: '--configuration $(Build.Configuration) --no-restore --no-incremental --runtime $(Build.TargetRuntime) -p:GitRevisionNumber="$(Build.SourceVersion)" -p:GitBranch="$(Build.SourceBranch)" -p:BuildNumber="$(Build.BuildNumber)" -p:CIBuilder="VSTS" -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)"'
 
 - task: SonarCloudAnalyze@1
   displayName: 'execute analysis (sonar)'
-  condition: and(succeeded(), or(contains(variables['Build.SourceBranchName'], 'master'), contains(variables['Build.SourceBranchName'], 'release')))
+  condition: and(succeeded(), or(contains(variables['Build.SourceBranch'], 'master'), contains(variables['Build.SourceBranch'], 'release')))
 
 - task: SonarCloudPublish@1
   displayName: 'end analysis (sonar)'
-  condition: and(succeeded(), or(contains(variables['Build.SourceBranchName'], 'master'), contains(variables['Build.SourceBranchName'], 'release')))
+  condition: and(succeeded(), or(contains(variables['Build.SourceBranch'], 'master'), contains(variables['Build.SourceBranch'], 'release')))
   inputs:
     pollingTimeoutSec: '300'
 
@@ -118,7 +118,7 @@ steps:
 
 - task: DotNetCoreCLI@2
   displayName: 'push to nuget org'
-  condition: and(succeeded(), eq(variables['Publish.NugetOrg'], 'true'), or(contains(variables['Build.SourceBranchName'], 'master'), contains(variables['Build.SourceBranchName'], 'release')))
+  condition: and(succeeded(), eq(variables['Publish.NugetOrg'], 'true'), or(contains(variables['Build.SourceBranch'], 'master'), contains(variables['Build.SourceBranch'], 'release')))
   inputs:
     command: 'push'
     packagesToPush: '$(Build.ArtifactStagingDirectory)/*.nupkg'

@@ -3,7 +3,9 @@
     <SemVerLevel Condition=" '$(SemVerLevel)' == '' ">1</SemVerLevel>
     <GitRevisionNumber Condition=" '$(GitRevisionNumber)' == '' "></GitRevisionNumber>
     <GitShortRevisionNumber Condition=" '$(GitShortRevisionNumber)' == '' AND '$(GitRevisionNumber)' != '' ">$(GitRevisionNumber.Substring(0, 7))</GitShortRevisionNumber>
-    <GitBranchName Condition=" '$(GitBranchName)' == '' "></GitBranchName>
+
+    <GitBranch Condition=" '$(GitBranch)' == '' "></GitBranch>
+    <GitBranchName Condition=" '$(GitBranchName)' == '' AND '$(GitBranch)' != '' ">$(GitBranch.Replace('refs/heads/', ''))</GitBranchName>
     
     <IsFinalBuild Condition="'$(IsFinalBuild)' == '' AND ( $(GitBranchName.Contains('master')) OR $(GitBranchName.Contains('rtm')) OR $(GitBranchName.Contains('nuget')) )">true</IsFinalBuild>
 
