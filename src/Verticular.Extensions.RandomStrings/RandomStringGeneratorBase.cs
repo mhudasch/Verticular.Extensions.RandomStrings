@@ -7,7 +7,7 @@ namespace System
   /// <summary>
   /// The base class for generating a random string.
   /// </summary>
-  public abstract class RandomStringGeneratorBase
+  public abstract class RandomStringGeneratorBase : IRandomStringGenerator
   {
     private readonly IRandomNumberGenerator randomNumberGenerator;
 

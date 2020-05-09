@@ -14,6 +14,12 @@ namespace Verticular.Extensions.RandomStrings.UnitTests
       // act
       var random = RandomString.PseudoRandom.Generate();
 
+      RandomString.PseudoRandom.Generate(builder => builder
+        .WithLength(12)
+        .AllowCharacters(CharacterGroups.Letters | CharacterGroups.AllReadableAsciiLetters)
+        .ExcludeSimilarLookingCharacters()
+        .EachCharacterMustOccurAtLeastOnce());
+
       // assert
       Assert.IsNotNull(random);
       StringAssert.Matches(random, new Regex("^[A-Za-z0-9_\\-]{32}$"));
