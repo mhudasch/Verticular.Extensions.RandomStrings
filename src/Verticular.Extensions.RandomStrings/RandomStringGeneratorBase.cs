@@ -48,7 +48,6 @@ namespace System
       }
 
       var result = new char[length];
-      var uniqueAllowedCharacters = new List<char>(allowedCharacters).ToArray();
       if (eachCharacterMustOccurAtLeastOnce)
       {
         if (allowedCharacters.Length > length)
@@ -57,19 +56,17 @@ namespace System
             $"random string must be at least as long as the number of allowed characters (requested length: {length} - minimum required length: {allowedCharacters.Length}).");
         }
 
-        var availableIndices = Enumerable.Range(0, length).ToList();
+        var randomizedIndizes = Enumerable.Range(0, length).OrderBy(_ => this.randomNumberGenerator.GetNextRandomNumber(length)).ToArray();
         for (var i = 0; i < length; i++)
         {
-          var setIndex = availableIndices.ElementAt(this.randomNumberGenerator.GetNextRandomNumber(availableIndices.Count));
-          result[setIndex] = uniqueAllowedCharacters[i % uniqueAllowedCharacters.Length];
-          availableIndices.Remove(setIndex);
+          result[randomizedIndizes[i]] = allowedCharacters[i % allowedCharacters.Length];
         }
       }
       else
       {
         for (var i = 0; i < length; i++)
         {
-          result[i] = uniqueAllowedCharacters[this.randomNumberGenerator.GetNextRandomNumber(uniqueAllowedCharacters.Length)];
+          result[i] = allowedCharacters[this.randomNumberGenerator.GetNextRandomNumber(allowedCharacters.Length)];
         }
       }
       return new string(result);
