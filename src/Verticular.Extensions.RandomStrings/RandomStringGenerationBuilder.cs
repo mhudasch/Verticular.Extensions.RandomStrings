@@ -106,10 +106,10 @@ namespace Verticular.Extensions.RandomStrings
       }
 
       if (this.eachCharacterMustOccurAtLeastOnce
-        && (this.allowedCharacters.Count() > this.stringLength))
+        && (this.allowedCharacters.Count > this.stringLength))
       {
         throw new InvalidOperationException("When the flag for 'each character must occur at least once' is used the desired length of the " +
-          $"random string must be at least as long as the number of allowed characters (requested length: {this.stringLength} - minimum required length: {this.allowedCharacters.Count()}).");
+          $"random string must be at least as long as the number of allowed characters (requested length: {this.stringLength} - minimum required length: {this.allowedCharacters.Count}).");
       }
 
       return new RandomStringGenerationOptions(this.stringLength,

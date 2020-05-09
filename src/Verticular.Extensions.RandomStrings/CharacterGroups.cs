@@ -1,5 +1,3 @@
-using Verticular.Extensions.RandomStrings;
-
 namespace System
 {
   /// <summary>
