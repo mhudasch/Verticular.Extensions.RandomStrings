@@ -1,4 +1,4 @@
-﻿namespace Verticular.Extensions.RandomStrings
+namespace Verticular.Extensions.RandomStrings
 {
   using System;
   using System.Collections.Generic;
@@ -7,13 +7,13 @@
   internal class RandomStringGenerationBuilder : IRandomStringGenerationBuilder
   {
     private int stringLength;
-    private HashSet<char> allowedCharacters;
+    private List<char> allowedCharacters;
     private bool eachCharacterMustOccurAtLeastOnce;
     private bool excludeSimilarLookingCharacters;
 
     public RandomStringGenerationBuilder()
     {
-      this.allowedCharacters = new HashSet<char>(RandomStringGenerationOptions.Default.AllowedCharacters);
+      this.allowedCharacters = new List<char>(RandomStringGenerationOptions.Default.AllowedCharacters);
       this.stringLength = RandomStringGenerationOptions.Default.StringLength;
     }
 
@@ -31,18 +31,28 @@
 
     public IRandomStringGenerationBuilder AllowCharacters(params char[] characters)
     {
-      this.allowedCharacters = new HashSet<char>(characters);
+      if (characters is null)
+      {
+        throw new ArgumentNullException(nameof(characters));
+      }
+
+      this.allowedCharacters = new List<char>(characters);
       return this;
     }
 
     public IRandomStringGenerationBuilder AllowCharacters(CharacterGroups characters)
     {
-      this.allowedCharacters = new HashSet<char>(CharacterGroup.Get(characters));
+      this.allowedCharacters = new List<char>(CharacterGroup.Get(characters));
       return this;
     }
 
     public IRandomStringGenerationBuilder AndAllowCharacters(params char[] characters)
     {
+      if (characters is null)
+      {
+        throw new ArgumentNullException(nameof(characters));
+      }
+
       foreach (var c in characters)
       {
         this.allowedCharacters.Add(c);
@@ -61,6 +71,11 @@
 
     public IRandomStringGenerationBuilder ExcludeCharacters(params char[] characters)
     {
+      if (characters is null)
+      {
+        throw new ArgumentNullException(nameof(characters));
+      }
+
       foreach (var c in characters)
       {
         this.allowedCharacters.Remove(c);
@@ -91,16 +106,15 @@
       }
 
       if (this.eachCharacterMustOccurAtLeastOnce
-        && (this.allowedCharacters.Count > this.stringLength))
+        && (this.allowedCharacters.Count() > this.stringLength))
       {
         throw new InvalidOperationException("When the flag for 'each character must occur at least once' is used the desired length of the " +
-          "random string must be at least as long as the number of allowed characters.");
+          $"random string must be at least as long as the number of allowed characters (requested length: {this.stringLength} - minimum required length: {this.allowedCharacters.Count()}).");
       }
 
       return new RandomStringGenerationOptions(this.stringLength,
         this.allowedCharacters.ToArray(),
         this.eachCharacterMustOccurAtLeastOnce);
-
     }
   }
 }

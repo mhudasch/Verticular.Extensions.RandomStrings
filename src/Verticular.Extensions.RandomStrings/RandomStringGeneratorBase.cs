@@ -48,14 +48,13 @@ namespace System
       }
 
       var result = new char[length];
-      // remove any double occurences of the allowed characters
-      var uniqueAllowedCharacters = new HashSet<char>(allowedCharacters).ToArray();
+      var uniqueAllowedCharacters = new List<char>(allowedCharacters).ToArray();
       if (eachCharacterMustOccurAtLeastOnce)
       {
         if (allowedCharacters.Length > length)
         {
           throw new InvalidOperationException("When the flag for 'each character must occur at least once' is used the desired length of the " +
-            "random string must be at least as long as the number of allowed characters.");
+            $"random string must be at least as long as the number of allowed characters (requested length: {length} - minimum required length: {allowedCharacters.Length}).");
         }
 
         var availableIndices = Enumerable.Range(0, length).ToList();

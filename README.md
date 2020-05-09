@@ -75,8 +75,7 @@ var usingArray = RandomString.PseudoRandom.Generate(12,
 // for a more advanced scenario there is a builder available to control the
 // options for generating random strings
 // with the most amount of freedom this allows you to take a character group
-// then combine that with manually additional characters
-// and finally exclude some of them
+// then combine that with manually additional characters and finally exclude some of them
 var withBuilder = RandomString.PseudoRandom.Generate(builder => builder
   .WithLength(12)
   .AllowCharacters(CharacterGroups.AllAlphaNumeric)
@@ -128,6 +127,32 @@ public class SomeClass
       .WithLength(12)
       .AllowCharacters(CharacterGroups.AllReadableAsciiLetters)
       .ExcludeSimilarLookingCharacters());
+  }
+}
+
+```
+
+Another example would be to even inject the options for random string generation.
+
+```cs
+
+// during dependency injection setup
+...
+services.Configure<RandomStringGenerationOptions>(c =>
+  {
+    c.StringLength = 23;
+    c.AllowCharacters = CharacterGroups.AllAlphaNumeric.ToCharArray();
+  });
+services.AddTransient<IRandomStringGenerator, CryptographicRandomStringGenerator>();
+...
+
+// and than later use it
+public class SomeClass
+{
+  public SomeClass(IRandomStringGenerator generator,
+    IOptions<RandomStringGenerationOptions> passwordRules)
+  {
+    var password = RandomString.CryptographicRandom.Generate(passwordRules.Value);
   }
 }
 

@@ -28,24 +28,34 @@ namespace System
       bool eachCharacterMustOccurAtLeastOnce = false)
     {
       this.StringLength = desiredStringLength;
-      this.AllowedCharacters = allowedCharacters;
+      this.AllowedCharacters = allowedCharacters ?? throw new ArgumentNullException(nameof(allowedCharacters));
       this.EachCharacterMustOccurAtLeastOnce = eachCharacterMustOccurAtLeastOnce;
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="RandomStringGenerationOptions"/> class using default values.
+    /// </summary>
+    public RandomStringGenerationOptions()
+    {
+      this.StringLength = Default.StringLength;
+      this.AllowedCharacters = Default.AllowedCharacters;
+      this.EachCharacterMustOccurAtLeastOnce = Default.EachCharacterMustOccurAtLeastOnce;
     }
 
     /// <summary>
     /// Gets the desired length of the generated string.
     /// </summary>
-    public int StringLength { get; internal set; }
+    public int StringLength { get; set; }
 
     /// <summary>
     /// Gets the allowed characters used for string generation.
     /// </summary>
-    public char[] AllowedCharacters { get; internal set; }
+    public char[] AllowedCharacters { get; set; }
 
     /// <summary>
     /// Gets the flag specifying whether each character in the <see cref="AllowedCharacters"/>
     /// array must occur at least once in the generated random string.
     /// </summary>
-    public bool EachCharacterMustOccurAtLeastOnce { get; internal set; }
+    public bool EachCharacterMustOccurAtLeastOnce { get; set; }
   }
 }
