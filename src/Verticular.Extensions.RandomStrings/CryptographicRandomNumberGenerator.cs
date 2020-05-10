@@ -15,9 +15,9 @@ namespace Verticular.Extensions.RandomStrings
     public int GetNextRandomNumber(int maxValue)
     {
       var processed = false;
+#if !(NET45 || NET451 || NET452)
       var count = (int)Math.Ceiling(Math.Log(maxValue, 2) / 8.0);
       var max = (int)(Math.Pow(2, count * 8) / maxValue) * maxValue;
-#if !(NET45 || NET451 || NET452)
       var offset = BitConverter.IsLittleEndian ? 0 : sizeof(uint) - count;
 #endif
       var result = -1;

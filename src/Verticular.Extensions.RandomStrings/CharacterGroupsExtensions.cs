@@ -1,7 +1,7 @@
-﻿using Verticular.Extensions.RandomStrings;
-
 namespace System
 {
+  using Verticular.Extensions.RandomStrings;
+
   /// <summary>
   /// Wraps the conversion from character groups to a character array.
   /// </summary>

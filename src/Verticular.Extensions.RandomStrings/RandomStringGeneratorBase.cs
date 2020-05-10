@@ -1,6 +1,5 @@
 namespace System
 {
-  using System.Collections.Generic;
   using System.Linq;
   using Verticular.Extensions.RandomStrings;
 
@@ -13,7 +12,7 @@ namespace System
 
     internal RandomStringGeneratorBase(Func<IRandomNumberGenerator> randomNumberGeneratorFactory)
     {
-      this.randomNumberGeneratorFactory = randomNumberGeneratorFactory 
+      this.randomNumberGeneratorFactory = randomNumberGeneratorFactory
         ?? throw new ArgumentNullException(nameof(randomNumberGeneratorFactory));
     }
 
@@ -52,7 +51,7 @@ namespace System
       var randomNumberGenerator = this.randomNumberGeneratorFactory();
 
       var result = new char[length];
-      
+
       if (eachCharacterMustOccurAtLeastOnce)
       {
         if (allowedCharacters.Length > length)
@@ -68,9 +67,9 @@ namespace System
         {
           // use all allowed characters once an place them at a rantom index
           // in the target array
-          if(i < allowedCharacters.Length)
+          if (i < allowedCharacters.Length)
           {
-            result[randomizedIndizes[i]] = allowedCharacters[i]; 
+            result[randomizedIndizes[i]] = allowedCharacters[i];
           }
           else
           {

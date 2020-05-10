@@ -2,7 +2,6 @@ namespace Verticular.Extensions.RandomStrings
 {
   using System;
   using System.Collections.Generic;
-  using System.Linq;
 
   internal class RandomStringGenerationBuilder : IRandomStringGenerationBuilder
   {
