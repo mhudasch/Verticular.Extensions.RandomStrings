@@ -65,16 +65,26 @@ steps:
     TargetFolder: '$(System.DefaultWorkingDirectory)/TestResults'
 
 #######################################################
-# DOTNET TEST
+# DOTNET PACK
 #######################################################
 
 - task: DotNetCoreCLI@2
-  displayName: 'dotnet pack'
+  displayName: 'dotnet pack (specific version)'
+  condition: and(succeeded(), ne(variables['Publish.TargetVersion'], ''))
   inputs:
     command: 'custom'
     projects: '**/*.csproj'
     custom: 'pack'
     arguments: '--configuration $(Build.Configuration) --no-build --include-symbols --include-source --verbosity minimal --serviceable --output "$(System.DefaultWorkingDirectory)/nuget" -p:GitRevisionNumber="$(Build.SourceVersion)" -p:GitBranch="$(Build.SourceBranch)" -p:BuildNumber="$(Build.BuildNumber)" -p:CIBuilder="VSTS" -p:PackageVersion="$(Publish.TargetVersion)" --runtime $(Build.TargetRuntime) -p:IncludeFullFramework="$(Build.IncludeFullFramework)" -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)"'
+
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet pack'
+  condition: and(succeeded(), eq(variables['Publish.TargetVersion'], ''))
+  inputs:
+    command: 'custom'
+    projects: '**/*.csproj'
+    custom: 'pack'
+    arguments: '--configuration $(Build.Configuration) --no-build --include-symbols --include-source --verbosity minimal --serviceable --output "$(System.DefaultWorkingDirectory)/nuget" -p:GitRevisionNumber="$(Build.SourceVersion)" -p:GitBranch="$(Build.SourceBranch)" -p:BuildNumber="$(Build.BuildNumber)" -p:CIBuilder="VSTS" --runtime $(Build.TargetRuntime) -p:IncludeFullFramework="$(Build.IncludeFullFramework)" -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)"'
 
 
 #######################################################
