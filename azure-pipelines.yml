@@ -162,11 +162,33 @@ steps:
 # DOTNET PUBLISH
 #######################################################
 
+#- task: DotNetCoreCLI@2
+#  displayName: 'push to nuget org'
+#  condition: and(succeeded(), eq(variables['Publish.NugetOrg'], 'true'))
+#  inputs:
+#    command: 'push'
+#    packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg'
+#   nuGetFeedType: 'external'
+#    publishFeedCredentials: 'nuget.org'
+
 - task: DotNetCoreCLI@2
-  displayName: 'push to nuget org'
-  condition: and(succeeded(), eq(variables['Publish.NugetOrg'], 'true'))
+  displayName: 'push to nuget org (binaries)'
+  condition: and(succeeded(), eq(variables['Publish.NugetOrg'], 'true'), ne(variables['Publish.NugetOrg.ApiKey'], ''))
   inputs:
-    command: 'push'
-    packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg'
-    nuGetFeedType: 'external'
-    publishFeedCredentials: 'nuget.org'
+    command: custom
+    custom: nuget
+    arguments: >
+      push $(Build.ArtifactStagingDirectory)/**/*.nupkg
+      -s "https://api.nuget.org/v3/index.json"
+      -k "$(Publish.NugetOrg.ApiKey)"
+
+- task: DotNetCoreCLI@2
+  displayName: 'push to nuget org (symbols)'
+  condition: and(succeeded(), eq(variables['Publish.NugetOrg'], 'true'), ne(variables['Publish.NugetOrg.ApiKey'], ''))
+  inputs:
+    command: custom
+    custom: nuget
+    arguments: >
+      push $(Build.ArtifactStagingDirectory)/**/*.snupkg
+      -s "https://api.nuget.org/v3/index.json"
+      -k "$(Publish.NugetOrg.ApiKey)"
