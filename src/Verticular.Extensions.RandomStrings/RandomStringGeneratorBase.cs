@@ -9,11 +9,12 @@ namespace System
   /// </summary>
   public abstract class RandomStringGeneratorBase : IRandomStringGenerator
   {
-    private readonly IRandomNumberGenerator randomNumberGenerator;
+    private readonly Func<IRandomNumberGenerator> randomNumberGeneratorFactory;
 
-    internal RandomStringGeneratorBase(IRandomNumberGenerator randomNumberGenerator)
+    internal RandomStringGeneratorBase(Func<IRandomNumberGenerator> randomNumberGeneratorFactory)
     {
-      this.randomNumberGenerator = randomNumberGenerator ?? throw new ArgumentNullException(nameof(randomNumberGenerator));
+      this.randomNumberGeneratorFactory = randomNumberGeneratorFactory 
+        ?? throw new ArgumentNullException(nameof(randomNumberGeneratorFactory));
     }
 
     /// <summary>
@@ -47,7 +48,11 @@ namespace System
         throw new ArgumentOutOfRangeException(nameof(allowedCharacters), "There must be at least one allowed character to create a random string.");
       }
 
+      // ensure that every generate call has its own new random number generator instance
+      var randomNumberGenerator = this.randomNumberGeneratorFactory();
+
       var result = new char[length];
+      
       if (eachCharacterMustOccurAtLeastOnce)
       {
         if (allowedCharacters.Length > length)
@@ -56,17 +61,29 @@ namespace System
             $"random string must be at least as long as the number of allowed characters (requested length: {length} - minimum required length: {allowedCharacters.Length}).");
         }
 
-        var randomizedIndizes = Enumerable.Range(0, length).OrderBy(_ => this.randomNumberGenerator.GetNextRandomNumber(length)).ToArray();
+        // shuffle the indizes of the target array so the placing is random when we have to 
+        // use all allowed characters 
+        var randomizedIndizes = Enumerable.Range(0, length).OrderBy(_ => randomNumberGenerator.GetNextRandomNumber(length)).ToArray();
         for (var i = 0; i < length; i++)
         {
-          result[randomizedIndizes[i]] = allowedCharacters[i % allowedCharacters.Length];
+          // use all allowed characters once an place them at a rantom index
+          // in the target array
+          if(i < allowedCharacters.Length)
+          {
+            result[randomizedIndizes[i]] = allowedCharacters[i]; 
+          }
+          else
+          {
+            // when all allowed characters are places once randomize both the index and the used character
+            result[randomizedIndizes[i]] = allowedCharacters[randomNumberGenerator.GetNextRandomNumber(allowedCharacters.Length)];
+          }
         }
       }
       else
       {
         for (var i = 0; i < length; i++)
         {
-          result[i] = allowedCharacters[this.randomNumberGenerator.GetNextRandomNumber(allowedCharacters.Length)];
+          result[i] = allowedCharacters[randomNumberGenerator.GetNextRandomNumber(allowedCharacters.Length)];
         }
       }
       return new string(result);
