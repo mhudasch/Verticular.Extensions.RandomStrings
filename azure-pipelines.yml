@@ -79,7 +79,7 @@ steps:
     command: 'custom'
     projects: '**/*.csproj'
     custom: 'pack'
-    arguments: '--configuration $(Build.Configuration) --no-build --include-symbols --include-source --verbosity minimal --serviceable --output "$(System.DefaultWorkingDirectory)/nuget" -p:GitRevisionNumber="$(Build.SourceVersion)" -p:GitBranch="$(Build.SourceBranch)" -p:BuildNumber="$(Build.BuildNumber)" -p:CIBuilder="VSTS" -p:PackageVersion="$(Publish.TargetVersion)" --runtime $(Build.TargetRuntime) -p:IncludeFullFramework="$(Build.IncludeFullFramework)" -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)"'
+    arguments: '--configuration $(Build.Configuration) --no-build --include-symbols --include-source --verbosity minimal --serviceable --output "$(System.DefaultWorkingDirectory)/nuget" -p:ContinuousIntegrationBuild=true -p:GitRevisionNumber="$(Build.SourceVersion)" -p:GitBranch="$(Build.SourceBranch)" -p:BuildNumber="$(Build.BuildNumber)" -p:CIBuilder="VSTS" -p:PackageVersion="$(Publish.TargetVersion)" --runtime $(Build.TargetRuntime) -p:IncludeFullFramework="$(Build.IncludeFullFramework)" -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)"'
 
 - task: DotNetCoreCLI@2
   displayName: 'dotnet pack'
@@ -88,7 +88,7 @@ steps:
     command: 'custom'
     projects: '**/*.csproj'
     custom: 'pack'
-    arguments: '--configuration $(Build.Configuration) --no-build --include-symbols --include-source --verbosity minimal --serviceable --output "$(System.DefaultWorkingDirectory)/nuget" -p:GitRevisionNumber="$(Build.SourceVersion)" -p:GitBranch="$(Build.SourceBranch)" -p:BuildNumber="$(Build.BuildNumber)" -p:CIBuilder="VSTS" --runtime $(Build.TargetRuntime) -p:IncludeFullFramework="$(Build.IncludeFullFramework)" -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)"'
+    arguments: '--configuration $(Build.Configuration) --no-build --include-symbols --include-source --verbosity minimal --serviceable --output "$(System.DefaultWorkingDirectory)/nuget" -p:ContinuousIntegrationBuild=true -p:GitRevisionNumber="$(Build.SourceVersion)" -p:GitBranch="$(Build.SourceBranch)" -p:BuildNumber="$(Build.BuildNumber)" -p:CIBuilder="VSTS" --runtime $(Build.TargetRuntime) -p:IncludeFullFramework="$(Build.IncludeFullFramework)" -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)"'
 
 
 #######################################################
@@ -182,13 +182,13 @@ steps:
       -s "https://api.nuget.org/v3/index.json"
       -k "$(Publish.NugetOrg.ApiKey)"
 
-- task: DotNetCoreCLI@2
-  displayName: 'push to nuget org (symbols)'
-  condition: and(succeeded(), eq(variables['Publish.NugetOrg'], 'true'), ne(variables['Publish.NugetOrg.ApiKey'], ''))
-  inputs:
-    command: custom
-    custom: nuget
-    arguments: >
-      push $(Build.ArtifactStagingDirectory)/**/*.snupkg
-      -s "https://api.nuget.org/v3/index.json"
-      -k "$(Publish.NugetOrg.ApiKey)"
+#- task: DotNetCoreCLI@2
+#  displayName: 'push to nuget org (symbols)'
+#  condition: and(succeeded(), eq(variables['Publish.NugetOrg'], 'true'), ne(variables['Publish.NugetOrg.ApiKey'], ''))
+#  inputs:
+#    command: custom
+#    custom: nuget
+#    arguments: >
+#      push $(Build.ArtifactStagingDirectory)/**/*.snupkg
+#      -s "https://api.nuget.org/v3/index.json"
+#      -k "$(Publish.NugetOrg.ApiKey)"
