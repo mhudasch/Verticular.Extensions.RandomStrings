@@ -54,10 +54,12 @@
 
   <!-- Ignore NU5105 ignore NuGet-Clients that do not support semver 2.0.0 -->
   <PropertyGroup>
-    <NoWarn>$(NoWarn);NU5105;NU1701;NU1702;NU1705</NoWarn>
+    <NoWarn>$(NoWarn);NU5105;NU1701;NU1702;NU1705;AD1000</NoWarn>
   </PropertyGroup>
   <!-- Build Server Ignores -->
   <PropertyGroup Condition="'$(Configuration)' == 'CI'">
-    <NoWarn>$(NoWarn);CS1591</NoWarn>
+    <!-- Ignore CS1591 missing comments on public apis -->
+    <!-- Ignore CA1303 that wants us to put all exception texts into resources -->
+    <NoWarn>$(NoWarn);CS1591;CA1303</NoWarn>
   </PropertyGroup>
 </Project>

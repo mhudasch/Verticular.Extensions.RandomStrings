@@ -42,6 +42,11 @@ namespace System
         throw new ArgumentOutOfRangeException(nameof(length), "The length of the random string must be a positive non-zero integer.");
       }
 
+      if (allowedCharacters is null)
+      {
+        throw new ArgumentNullException(nameof(allowedCharacters));
+      }
+
       if (allowedCharacters.Length <= 0)
       {
         throw new ArgumentOutOfRangeException(nameof(allowedCharacters), "There must be at least one allowed character to create a random string.");
