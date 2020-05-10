@@ -1,4 +1,4 @@
-﻿namespace Verticular.Extensions.RandomStrings
+namespace Verticular.Extensions.RandomStrings
 {
   using System;
 
@@ -12,7 +12,7 @@
     /// Creates a new instance of the <see cref="CryptographicRandomStringGenerator"/> class.
     /// </summary>
     public CryptographicRandomStringGenerator()
-      : base(new CryptographicRandomNumberGenerator())
+      : base(() => new CryptographicRandomNumberGenerator())
     {
     }
   }
