@@ -17,6 +17,10 @@ name: $(Date:yyyyMMdd)$(Rev:-r)
 pool:
   vmImage: 'windows-latest'
 
+variables:
+  DOTNET_CLI_TELEMETRY_OPTOUT: 1
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
+
 steps:
 
 #######################################################
@@ -123,19 +127,6 @@ steps:
     pollingTimeoutSec: '300'
 
 #######################################################
-# DOTNET PUBLISH
-#######################################################
-
-- task: DotNetCoreCLI@2
-  displayName: 'push to nuget org'
-  condition: and(succeeded(), eq(variables['Publish.NugetOrg'], 'true'), or(contains(variables['Build.SourceBranch'], 'master'), contains(variables['Build.SourceBranch'], 'release')))
-  inputs:
-    command: 'push'
-    packagesToPush: '$(Build.ArtifactStagingDirectory)/*.nupkg'
-    nuGetFeedType: 'external'
-    publishFeedCredentials: 'nuget.org'
-
-#######################################################
 # PUT TOGETHER ARTIFACTS
 #######################################################
 
@@ -166,3 +157,16 @@ steps:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
     ArtifactName: 'drop'
     publishLocation: 'Container'
+
+#######################################################
+# DOTNET PUBLISH
+#######################################################
+
+- task: DotNetCoreCLI@2
+  displayName: 'push to nuget org'
+  condition: and(succeeded(), eq(variables['Publish.NugetOrg'], 'true'))
+  inputs:
+    command: 'push'
+    packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg'
+    nuGetFeedType: 'external'
+    publishFeedCredentials: 'nuget.org'
