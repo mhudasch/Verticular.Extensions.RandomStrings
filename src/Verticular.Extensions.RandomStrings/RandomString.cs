@@ -7,7 +7,7 @@ namespace System
   /// </summary>
   public static class RandomString
   {
-    private static IRandomStringGenerator pseudoRandomStringGenerator;
+    private static IRandomStringGenerator? pseudoRandomStringGenerator;
 
     /// <summary>
     /// Gets a singleton instance that uses the <see cref="Random"/> class to create a random string.
@@ -23,7 +23,7 @@ namespace System
       }
     }
 
-    private static IRandomStringGenerator cryptographicRandomStringGenerator;
+    private static IRandomStringGenerator? cryptographicRandomStringGenerator;
 
     /// <summary>
     /// Gets a singleton instance that uses the <see cref="System.Security.Cryptography.RNGCryptoServiceProvider"/> to create a random string.

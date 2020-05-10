@@ -5,10 +5,18 @@
     <AppendRuntimeIdentifierToOutputPath>true</AppendRuntimeIdentifierToOutputPath>
     <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    
+    <!-- Versioning stuff -->
     <IncludeFullFramework Condition="'$(IncludeFullFramework)' == ''">true</IncludeFullFramework>
     <IncludeLatestFullFramework Condition="'$(IncludeLatestFullFramework)' == ''">false</IncludeLatestFullFramework>
     <IncludeLatestCoreFramework Condition="'$(IncludeLatestCoreFramework)' == ''">false</IncludeLatestCoreFramework>
     <IncludeLatestStandardFramework Condition="'$(IncludeLatestStandardFramework)' == ''">false</IncludeLatestStandardFramework>
+
+    <!-- used dev tool versions -->
+    <MicrosoftCodeAnalysisFxCopAnalyzersPackageVersion>2.9.2</MicrosoftCodeAnalysisFxCopAnalyzersPackageVersion>
+    <MicrosoftSourceLinkGitHubPackageVersion>1.0.0</MicrosoftSourceLinkGitHubPackageVersion>
+    <MicrosoftNetCompilersToolsetPackageVersion>3.3.1</MicrosoftNetCompilersToolsetPackageVersion>
+
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
