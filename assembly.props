@@ -3,14 +3,14 @@
   <PropertyGroup>
     <RepositoryUrl>https://github.com/mhudasch/Verticular.Extensions.RandomStrings.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <PublishRepositoryUrl>true</PublishRepositoryUrl> 
+    <RepositoryRoot>$(MSBuildThisFileDirectory)</RepositoryRoot>
+
     <Authors>Martin Hudasch</Authors>
     <Company/>
     <Copyright>Copyright © 2020 Martin Hudasch</Copyright>
     <Description>Helps creating random strings.</Description>
     <PackageTags>Random String FileName FolderName Name Password Scramble Shuffle</PackageTags>
-    <PackageProjectUrl>https://github.com/mhudasch/Verticular.Extensions.RandomStrings</PackageProjectUrl>
-    
+    <PackageProjectUrl>https://github.com/mhudasch/Verticular.Extensions.RandomStrings</PackageProjectUrl>    
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <!--<PackageIcon>packageIcon.png</PackageIcon>
@@ -28,9 +28,6 @@
     <Nullable>enable</Nullable>
     <LangVersion Condition="'$(LangVersion)' == ''">latest</LangVersion>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <IncludeSymbols>true</IncludeSymbols>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    
   </PropertyGroup>
 
   <PropertyGroup Condition="$([System.Text.RegularExpressions.Regex]::IsMatch($(TargetFramework), `^net(?:20|35|40|4[567][12]?|48)$`))">

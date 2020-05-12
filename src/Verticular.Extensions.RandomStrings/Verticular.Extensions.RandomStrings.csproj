@@ -7,11 +7,9 @@
     <TargetFrameworks Condition="'$(IncludeFullFramework)' == 'true'">$(TargetFrameworks);net47;net471;net472</TargetFrameworks>
     <TargetFrameworks Condition="'$(IncludeLatestFullFramework)' == 'true'">$(TargetFrameworks);net48;net50</TargetFrameworks>
     <TargetFrameworks Condition="'$(IncludeLatestStandardFramework)' == 'true'">$(TargetFrameworks);netstandard2.1</TargetFrameworks>
-    <Configurations>Debug;Release;CI</Configurations>
-    <ProjectGuid>{3AD9B722-6AFC-409F-8ACB-82007C0C8DA7}</ProjectGuid>
+    <Configurations>$(Configurations);CI</Configurations>
     <RootNamespace>Verticular.Extensions.RandomStrings</RootNamespace>
-    <AssemblyName>Verticular.Extensions.RandomStrings</AssemblyName>
-    <Title>Verticular.Extensions.RandomStrings</Title>
+    <ProjectGuid>{3AD9B722-6AFC-409F-8ACB-82007C0C8DA7}</ProjectGuid>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
@@ -27,7 +25,5 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="$(MicrosoftCodeAnalysisFxCopAnalyzersPackageVersion)" PrivateAssets="All" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="$(MicrosoftSourceLinkGitHubPackageVersion)" PrivateAssets="All" />
-    <!-- Compiler to support nullable in non-preview VS2019 -->
-    <PackageReference Include="Microsoft.Net.Compilers.Toolset" Version="$(MicrosoftNetCompilersToolsetPackageVersion)" PrivateAssets="All" />
   </ItemGroup>
 </Project>

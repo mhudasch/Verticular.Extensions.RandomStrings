@@ -90,6 +90,11 @@ namespace System
           result[i] = allowedCharacters[randomNumberGenerator.GetNextRandomNumber(allowedCharacters.Length)];
         }
       }
+
+      if(randomNumberGenerator is IDisposable disposable)
+      {
+        disposable.Dispose();
+      }
       return new string(result);
     }
 

@@ -3,7 +3,7 @@ namespace Verticular.Extensions.RandomStrings
   using System;
   using System.Security.Cryptography;
 
-  internal class CryptographicRandomNumberGenerator : IRandomNumberGenerator
+  internal class CryptographicRandomNumberGenerator : IRandomNumberGenerator, IDisposable
   {
     private readonly RandomNumberGenerator random;
 
@@ -52,6 +52,11 @@ namespace Verticular.Extensions.RandomStrings
       }
 
       return result;
+    }
+
+    public void Dispose()
+    {
+      this.random.Dispose();
     }
   }
 }
