@@ -31,7 +31,7 @@ steps:
   displayName: 'dotnet restore'
   inputs:
     command: 'restore'
-    projects: '**/src/**/*.csproj;**/test/**/*.csproj'
+    projects: '**/*.csproj'
     restoreArguments: '--no-cache -p:IncludeFullFramework="$(Build.IncludeFullFramework)" -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)"'
     feedsToUse: 'select'
     verbosityRestore: Minimal
@@ -44,8 +44,16 @@ steps:
   displayName: 'dotnet build (binaries)'
   inputs:
     command: 'build'
-    projects: '**/src/**/*.csproj;**/test/**/*.csproj'
+    projects: '**/src/**/*.csproj'
     arguments: '--configuration $(Build.Configuration) --no-restore --no-incremental -p:ContinuousIntegrationBuild=true -p:GitRevisionNumber="$(Build.SourceVersion)" -p:GitBranch="$(Build.SourceBranch)" -p:BuildNumber="$(Build.BuildNumber)" -p:CIBuilder="VSTS" -p:IncludeFullFramework="$(Build.IncludeFullFramework)" -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)"'
+
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet build (tests)'
+  inputs:
+    command: 'build'
+    projects: '**/test/**/*.csproj'
+    arguments: '--configuration $(Build.Configuration) --no-restore --no-incremental -p:ContinuousIntegrationBuild=true -p:GitRevisionNumber="$(Build.SourceVersion)" -p:GitBranch="$(Build.SourceBranch)" -p:BuildNumber="$(Build.BuildNumber)" -p:CIBuilder="VSTS" -p:IncludeFullFramework="$(Build.IncludeFullFramework)" -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)"'
+
 
 #######################################################
 # DOTNET TEST
@@ -113,7 +121,7 @@ steps:
   condition: and(succeeded(), or(contains(variables['Build.SourceBranch'], 'master'), contains(variables['Build.SourceBranch'], 'release')))
   inputs:
     command: 'build'
-    projects: '**/src/**/*.csproj;**/test/**/*.csproj'
+    projects: '**/src/**/*.csproj'
     arguments: '--configuration $(Build.Configuration) --no-restore --no-incremental -p:GitRevisionNumber="$(Build.SourceVersion)" -p:GitBranch="$(Build.SourceBranch)" -p:BuildNumber="$(Build.BuildNumber)" -p:CIBuilder="VSTS" -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)"'
 
 - task: SonarCloudAnalyze@1
