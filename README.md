@@ -13,13 +13,14 @@ For this reason the package should result in a nuget package which supports as m
 [![SonarCodeSmells](https://sonarcloud.io/api/project_badges/measure?project=mhudasch_verticular.extensions.randomstrings&metric=code_smells)](https://sonarcloud.io/dashboard?id=mhudasch_verticular.extensions.randomstrings)
 [![SonarDuplicates](https://sonarcloud.io/api/project_badges/measure?project=mhudasch_verticular.extensions.randomstrings&metric=duplicated_lines_density)](https://sonarcloud.io/dashboard?id=mhudasch_verticular.extensions.randomstrings)
 [![SonarDepth](https://sonarcloud.io/api/project_badges/measure?project=mhudasch_verticular.extensions.randomstrings&metric=sqale_index)](https://sonarcloud.io/dashboard?id=mhudasch_verticular.extensions.randomstrings)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=mhudasch_verticular.extensions.randomstrings&metric=coverage)](https://sonarcloud.io/dashboard?id=mhudasch_verticular.extensions.randomstrings)
 
 [![SonarMaintain](https://sonarcloud.io/api/project_badges/measure?project=mhudasch_verticular.extensions.randomstrings&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=mhudasch_verticular.extensions.randomstrings)
 [![SonarRely](https://sonarcloud.io/api/project_badges/measure?project=mhudasch_verticular.extensions.randomstrings&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=mhudasch_verticular.extensions.randomstrings)
 [![SonarSec](https://sonarcloud.io/api/project_badges/measure?project=mhudasch_verticular.extensions.randomstrings&metric=security_rating)](https://sonarcloud.io/dashboard?id=mhudasch_verticular.extensions.randomstrings)
 
-[![NuGet Pre Release](https://img.shields.io/nuget/vpre/Verticular.Extensions.RandomStrings.svg)](https://www.nuget.org/packages/verticular.extensions.randomstrings/)
 
+[![NuGet Badge](https://buildstats.info/nuget/verticular.extensions.randomstrings)](https://www.nuget.org/packages/verticular.extensions.randomstrings/)
 Currently supported frameworks are:
 
 - [x] net45, net451, net452
