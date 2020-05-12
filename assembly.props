@@ -3,15 +3,15 @@
   <PropertyGroup>
     <RepositoryUrl>https://github.com/mhudasch/Verticular.Extensions.RandomStrings.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    
+    <PublishRepositoryUrl>true</PublishRepositoryUrl> 
     <Authors>Martin Hudasch</Authors>
     <Company/>
-    <Copyright/>
+    <Copyright>Copyright © 2020 Martin Hudasch</Copyright>
     <Description>Helps creating random strings.</Description>
     <PackageTags>Random String FileName FolderName Name Password Scramble Shuffle</PackageTags>
     <PackageProjectUrl>https://github.com/mhudasch/Verticular.Extensions.RandomStrings</PackageProjectUrl>
-    <PackageLicenseUrl>https://github.com/mhudasch/Verticular.Extensions.RandomStrings/blob/master/LICENSE</PackageLicenseUrl>
+    
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <!--<PackageIcon>packageIcon.png</PackageIcon>
     <PackageIconFullPath>$(MSBuildThisFileDirectory)packageIcon.png</PackageIconFullPath>-->
@@ -22,7 +22,7 @@
     <FileVersion>$(VersionPrefix).0</FileVersion>
     <InformationalVersion>$(SemanticAssemblyVersion)</InformationalVersion>
 
-    <TargetLatestRuntimePatch>true</TargetLatestRuntimePatch>
+    <TargetLatestRuntimePatch>true</TargetLatestRuntimePatch>    
     <SolutionDir Condition="'$(SolutionDir)' == ''">$(MSBuildThisFileDirectory)</SolutionDir>
 
     <Nullable>enable</Nullable>

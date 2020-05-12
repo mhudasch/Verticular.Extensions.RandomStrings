@@ -5,10 +5,12 @@
     <AppendRuntimeIdentifierToOutputPath>true</AppendRuntimeIdentifierToOutputPath>
     <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
 
+    <!-- Versioning stuff -->
     <IncludeFullFramework Condition="'$(IncludeFullFramework)' == ''">true</IncludeFullFramework>
     <IncludeLatestFullFramework Condition="'$(IncludeLatestFullFramework)' == ''">false</IncludeLatestFullFramework>
     <IncludeLatestCoreFramework Condition="'$(IncludeLatestCoreFramework)' == ''">false</IncludeLatestCoreFramework>
     <IncludeLatestStandardFramework Condition="'$(IncludeLatestStandardFramework)' == ''">false</IncludeLatestStandardFramework>
+    
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
