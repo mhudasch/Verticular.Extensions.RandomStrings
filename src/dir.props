@@ -3,7 +3,7 @@
   <PropertyGroup>
     <AppendTargetFrameworkToOutputPath>true</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>true</AppendRuntimeIdentifierToOutputPath>
-    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+    <!--<GenerateAssemblyInfo>true</GenerateAssemblyInfo>-->
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     
     <!-- Versioning stuff -->
