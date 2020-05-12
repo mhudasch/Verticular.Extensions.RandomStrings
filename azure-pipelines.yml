@@ -31,7 +31,7 @@ steps:
   displayName: 'dotnet restore'
   inputs:
     command: 'restore'
-    projects: '**/*.csproj'
+    projects: '**/src/**/*.csproj;**/test/**/*.csproj'
     restoreArguments: '--no-cache -p:IncludeFullFramework="$(Build.IncludeFullFramework)" -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)"'
     feedsToUse: 'select'
     verbosityRestore: Minimal
@@ -44,7 +44,7 @@ steps:
   displayName: 'dotnet build (binaries)'
   inputs:
     command: 'build'
-    projects: '**/*.csproj'
+    projects: '**/src/**/*.csproj;**/test/**/*.csproj'
     arguments: '--configuration $(Build.Configuration) --no-restore --no-incremental -p:ContinuousIntegrationBuild=true -p:GitRevisionNumber="$(Build.SourceVersion)" -p:GitBranch="$(Build.SourceBranch)" -p:BuildNumber="$(Build.BuildNumber)" -p:CIBuilder="VSTS" -p:IncludeFullFramework="$(Build.IncludeFullFramework)" -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)"'
 
 #######################################################
@@ -77,7 +77,7 @@ steps:
   condition: and(succeeded(), ne(variables['Publish.TargetVersion'], ''))
   inputs:
     command: 'custom'
-    projects: '**/*.csproj'
+    projects: '**/src/**/*.csproj'
     custom: 'pack'
     arguments: '--configuration $(Build.Configuration) --no-build --include-symbols --include-source --verbosity minimal --serviceable --output "$(System.DefaultWorkingDirectory)/nuget" -p:ContinuousIntegrationBuild=true -p:GitRevisionNumber="$(Build.SourceVersion)" -p:GitBranch="$(Build.SourceBranch)" -p:BuildNumber="$(Build.BuildNumber)" -p:CIBuilder="VSTS" -p:PackageVersion="$(Publish.TargetVersion)" -p:IncludeFullFramework="$(Build.IncludeFullFramework)" -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)"'
 
@@ -86,7 +86,7 @@ steps:
   condition: and(succeeded(), eq(variables['Publish.TargetVersion'], ''))
   inputs:
     command: 'custom'
-    projects: '**/*.csproj'
+    projects: '**/src/**/*.csproj'
     custom: 'pack'
     arguments: '--configuration $(Build.Configuration) --no-build --include-symbols --include-source --verbosity minimal --serviceable --output "$(System.DefaultWorkingDirectory)/nuget" -p:ContinuousIntegrationBuild=true -p:GitRevisionNumber="$(Build.SourceVersion)" -p:GitBranch="$(Build.SourceBranch)" -p:BuildNumber="$(Build.BuildNumber)" -p:CIBuilder="VSTS" -p:IncludeFullFramework="$(Build.IncludeFullFramework)" -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)"'
 
@@ -113,7 +113,7 @@ steps:
   condition: and(succeeded(), or(contains(variables['Build.SourceBranch'], 'master'), contains(variables['Build.SourceBranch'], 'release')))
   inputs:
     command: 'build'
-    projects: '**/*.csproj'
+    projects: '**/src/**/*.csproj;**/test/**/*.csproj'
     arguments: '--configuration $(Build.Configuration) --no-restore --no-incremental -p:GitRevisionNumber="$(Build.SourceVersion)" -p:GitBranch="$(Build.SourceBranch)" -p:BuildNumber="$(Build.BuildNumber)" -p:CIBuilder="VSTS" -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)"'
 
 - task: SonarCloudAnalyze@1
