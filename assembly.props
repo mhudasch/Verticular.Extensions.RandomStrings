@@ -1,19 +1,22 @@
 <Project>
   <Import Project="$(MSBuildThisFileDirectory)version.props" />
   <PropertyGroup>
-    <RepositoryUrl>https://github.com/mhudasch/Verticular.Extensions.RandomStrings</RepositoryUrl>
+    <RepositoryUrl>https://github.com/mhudasch/Verticular.Extensions.RandomStrings.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <RepositoryRoot>$(MSBuildThisFileDirectory)</RepositoryRoot>
 
     <Authors>Martin Hudasch</Authors>
     <Company/>
-    <Copyright/>
+    <Copyright>Copyright © 2020 Martin Hudasch</Copyright>
     <Description>Helps creating random strings.</Description>
-    <PackageTags>Random String FileName FolderName Name</PackageTags>
+    <PackageTags>Random String FileName FolderName Name Password Scramble Shuffle</PackageTags>
     <PackageProjectUrl>https://github.com/mhudasch/Verticular.Extensions.RandomStrings</PackageProjectUrl>
-    <PackageLicenseUrl>https://github.com/mhudasch/Verticular.Extensions.RandomStrings/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <!--<PackageIcon>packageIcon.png</PackageIcon>
+    <PackageIconFullPath>$(MSBuildThisFileDirectory)packageIcon.png</PackageIconFullPath>-->
     <PackageReleaseNotes/>
+    <MinClientVersion>2.12</MinClientVersion>
 
     <AssemblyVersion>$(VersionPrefix).0</AssemblyVersion>
     <FileVersion>$(VersionPrefix).0</FileVersion>
@@ -21,25 +24,25 @@
 
     <TargetLatestRuntimePatch>true</TargetLatestRuntimePatch>
     <SolutionDir Condition="'$(SolutionDir)' == ''">$(MSBuildThisFileDirectory)</SolutionDir>
+
+    <Nullable>enable</Nullable>
     <LangVersion Condition="'$(LangVersion)' == ''">latest</LangVersion>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
   </PropertyGroup>
 
-  <PropertyGroup
-    Condition="$([System.Text.RegularExpressions.Regex]::IsMatch($(TargetFramework), `^net(?:20|35|40|4[567][12]?|48)$`))">
+  <PropertyGroup Condition="$([System.Text.RegularExpressions.Regex]::IsMatch($(TargetFramework), `^net(?:20|35|40|4[567][12]?|48)$`))">
     <DefineConstants>$(DefineConstants);NETFULL;NET;NF</DefineConstants>
     <IsNetStandardTarget>false</IsNetStandardTarget>
     <IsNetFrameworkTarget>true</IsNetFrameworkTarget>
     <IsNetCoreTarget>false</IsNetCoreTarget>
   </PropertyGroup>
-  <PropertyGroup
-    Condition="$([System.Text.RegularExpressions.Regex]::IsMatch($(TargetFramework), `^netstandard(?:1\.[0-6]|2\.[0-1])$`))">
+  <PropertyGroup Condition="$([System.Text.RegularExpressions.Regex]::IsMatch($(TargetFramework), `^netstandard(?:1\.[0-6]|2\.[0-1])$`))">
     <DefineConstants>$(DefineConstants);NETSTANDARD;NS</DefineConstants>
     <IsNetStandardTarget>true</IsNetStandardTarget>
     <IsNetFrameworkTarget>false</IsNetFrameworkTarget>
     <IsNetCoreTarget>false</IsNetCoreTarget>
   </PropertyGroup>
-  <PropertyGroup
-    Condition="$([System.Text.RegularExpressions.Regex]::IsMatch($(TargetFramework), `^netcoreapp(?:1\.[01]|2\.[012]|3\.[0])$`))">
+  <PropertyGroup Condition="$([System.Text.RegularExpressions.Regex]::IsMatch($(TargetFramework), `^netcoreapp(?:1\.[01]|2\.[012]|3\.[0])$`))">
     <DefineConstants>$(DefineConstants);NETCOREAPP;NETCORE;NC</DefineConstants>
     <IsNetStandardTarget>false</IsNetStandardTarget>
     <IsNetFrameworkTarget>false</IsNetFrameworkTarget>
@@ -47,11 +50,13 @@
   </PropertyGroup>
 
   <!-- Ignore NU5105 ignore NuGet-Clients that do not support semver 2.0.0 -->
+  <!-- Ignore CA1303 that wants us to put all exception texts into resources -->
   <PropertyGroup>
-    <NoWarn>$(NoWarn);NU5105;NU1701;NU1702;NU1705</NoWarn>
+    <NoWarn>$(NoWarn);NU5105;NU1701;NU1702;NU1705;AD1000;CA1303</NoWarn>
   </PropertyGroup>
   <!-- Build Server Ignores -->
   <PropertyGroup Condition="'$(Configuration)' == 'CI'">
+    <!-- Ignore CS1591 missing comments on public apis -->
     <NoWarn>$(NoWarn);CS1591</NoWarn>
   </PropertyGroup>
 </Project>

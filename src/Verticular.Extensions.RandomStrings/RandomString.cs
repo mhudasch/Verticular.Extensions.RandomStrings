@@ -7,14 +7,14 @@ namespace System
   /// </summary>
   public static class RandomString
   {
-    private static RandomStringGeneratorBase pseudoRandomStringGenerator;
+    private static IRandomStringGenerator? pseudoRandomStringGenerator;
 
     /// <summary>
     /// Gets a singleton instance that uses the <see cref="Random"/> class to create a random string.
-    /// This is a fast generator but should not be used to generate passwords. 
+    /// This is a fast generator but should not be used to generate passwords.
     /// Use <see cref="CryptographicRandom"/> for that purpose.
     /// </summary>
-    public static RandomStringGeneratorBase PseudoRandom
+    public static IRandomStringGenerator PseudoRandom
     {
       get
       {
@@ -23,13 +23,13 @@ namespace System
       }
     }
 
-    private static RandomStringGeneratorBase cryptographicRandomStringGenerator;
+    private static IRandomStringGenerator? cryptographicRandomStringGenerator;
 
     /// <summary>
-    /// Gets a singleton instance that uses the <see cref="System.Security.Cryptography.RNGCryptoServiceProvider"/> to create a random string. 
+    /// Gets a singleton instance that uses the <see cref="System.Security.Cryptography.RNGCryptoServiceProvider"/> to create a random string.
     /// This is a slower generator but can be used for generating passwords.
     /// </summary>
-    public static RandomStringGeneratorBase CryptographicRandom
+    public static IRandomStringGenerator CryptographicRandom
     {
       get
       {

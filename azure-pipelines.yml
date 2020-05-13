@@ -17,6 +17,10 @@ name: $(Date:yyyyMMdd)$(Rev:-r)
 pool:
   vmImage: 'windows-latest'
 
+variables:
+  DOTNET_CLI_TELEMETRY_OPTOUT: 1
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
+
 steps:
 
 #######################################################
@@ -28,7 +32,7 @@ steps:
   inputs:
     command: 'restore'
     projects: '**/*.csproj'
-    restoreArguments: '--no-cache --runtime $(Build.TargetRuntime) -p:IncludeFullFramework="$(Build.IncludeFullFramework)" -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)"'
+    restoreArguments: '--no-cache -p:IncludeFullFramework="$(Build.IncludeFullFramework)" -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)"'
     feedsToUse: 'select'
     verbosityRestore: Minimal
 
@@ -40,8 +44,16 @@ steps:
   displayName: 'dotnet build (binaries)'
   inputs:
     command: 'build'
-    projects: '**/*.csproj'
-    arguments: '--configuration $(Build.Configuration) --no-restore --no-incremental -p:GitRevisionNumber="$(Build.SourceVersion)" -p:GitBranchName="$(Build.SourceBranchName)" -p:BuildNumber="$(Build.BuildNumber)" -p:CIBuilder="VSTS" --runtime $(Build.TargetRuntime) -p:IncludeFullFramework="$(Build.IncludeFullFramework)" -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)"'
+    projects: '**/src/**/*.csproj'
+    arguments: '--configuration $(Build.Configuration) --no-restore --no-incremental -p:ContinuousIntegrationBuild=true -p:GitRevisionNumber="$(Build.SourceVersion)" -p:GitBranch="$(Build.SourceBranch)" -p:BuildNumber="$(Build.BuildNumber)" -p:CIBuilder="VSTS" -p:IncludeFullFramework="$(Build.IncludeFullFramework)" -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)"'
+
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet build (tests)'
+  inputs:
+    command: 'build'
+    projects: '**/test/**/*.csproj'
+    arguments: '--configuration $(Build.Configuration) --no-restore --no-incremental -p:ContinuousIntegrationBuild=true -p:GitRevisionNumber="$(Build.SourceVersion)" -p:GitBranch="$(Build.SourceBranch)" -p:BuildNumber="$(Build.BuildNumber)" -p:CIBuilder="VSTS" -p:IncludeFullFramework="$(Build.IncludeFullFramework)" -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)"'
+
 
 #######################################################
 # DOTNET TEST
@@ -52,7 +64,7 @@ steps:
   inputs:
     command: 'test'
     projects: '**/test/**/*.csproj'
-    arguments: '--configuration $(Build.Configuration) --no-build --no-restore --collect "Code coverage" --results-directory "$(System.DefaultWorkingDirectory)/tr/trx" --logger trx /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOuput=$(System.DefaultWorkingDirectory)/tr/cobertura'
+    arguments: '--configuration $(Build.Configuration) --no-build --no-restore --collect "Code coverage" --results-directory "$(System.DefaultWorkingDirectory)/tr/trx" --logger trx /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOuput=$(System.DefaultWorkingDirectory)/tr/cobertura/cobertura.xml'
 
 - task: PublishTestResults@2
   displayName: 'publish test results'
@@ -86,16 +98,26 @@ steps:
 #    TargetFolder: '$(System.DefaultWorkingDirectory)/TestResults'
 
 #######################################################
-# DOTNET TEST
+# DOTNET PACK
 #######################################################
 
 - task: DotNetCoreCLI@2
-  displayName: 'dotnet pack'
+  displayName: 'dotnet pack (specific version)'
+  condition: and(succeeded(), ne(variables['Publish.TargetVersion'], ''))
   inputs:
     command: 'custom'
-    projects: '**/*.csproj'
+    projects: '**/src/**/*.csproj'
     custom: 'pack'
-    arguments: '--configuration $(Build.Configuration) --no-build --include-symbols --include-source --verbosity minimal --serviceable --output "$(System.DefaultWorkingDirectory)/nuget" -p:GitRevisionNumber="$(Build.SourceVersion)" -p:GitBranchName="$(Build.SourceBranchName)" -p:BuildNumber="$(Build.BuildNumber)" -p:CIBuilder="VSTS" --runtime $(Build.TargetRuntime) -p:IncludeFullFramework="$(Build.IncludeFullFramework)" -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)"'
+    arguments: '--configuration $(Build.Configuration) --no-build --include-symbols --include-source --verbosity minimal --serviceable --output "$(System.DefaultWorkingDirectory)/nuget" -p:ContinuousIntegrationBuild=true -p:GitRevisionNumber="$(Build.SourceVersion)" -p:GitBranch="$(Build.SourceBranch)" -p:BuildNumber="$(Build.BuildNumber)" -p:CIBuilder="VSTS" -p:PackageVersion="$(Publish.TargetVersion)" -p:IncludeFullFramework="$(Build.IncludeFullFramework)" -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)"'
+
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet pack'
+  condition: and(succeeded(), eq(variables['Publish.TargetVersion'], ''))
+  inputs:
+    command: 'custom'
+    projects: '**/src/**/*.csproj'
+    custom: 'pack'
+    arguments: '--configuration $(Build.Configuration) --no-build --include-symbols --include-source --verbosity minimal --serviceable --output "$(System.DefaultWorkingDirectory)/nuget" -p:ContinuousIntegrationBuild=true -p:GitRevisionNumber="$(Build.SourceVersion)" -p:GitBranch="$(Build.SourceBranch)" -p:BuildNumber="$(Build.BuildNumber)" -p:CIBuilder="VSTS" -p:IncludeFullFramework="$(Build.IncludeFullFramework)" -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)"'
 
 
 #######################################################
@@ -104,7 +126,7 @@ steps:
 
 - task: SonarCloudPrepare@1
   displayName: 'begin analysis (sonar)'
-  condition: and(succeeded(), or(contains(variables['Build.SourceBranchName'], 'master'), contains(variables['Build.SourceBranchName'], 'release')))
+  condition: and(succeeded(), or(contains(variables['Build.SourceBranch'], 'master'), contains(variables['Build.SourceBranch'], 'release')))
   inputs:
     SonarCloud: 'mhudasch-sonar'
     organization: '$(Sonar.Organization)'
@@ -119,7 +141,7 @@ steps:
 
 - task: DotNetCoreCLI@2
   displayName: 'dotnet build (sonar)'
-  condition: and(succeeded(), or(contains(variables['Build.SourceBranchName'], 'master'), contains(variables['Build.SourceBranchName'], 'release')))
+  condition: and(succeeded(), or(contains(variables['Build.SourceBranch'], 'master'), contains(variables['Build.SourceBranch'], 'release')))
   inputs:
     command: 'build'
     projects: '**/src/**/*.csproj'
@@ -127,26 +149,13 @@ steps:
 
 - task: SonarCloudAnalyze@1
   displayName: 'execute analysis (sonar)'
-  condition: and(succeeded(), or(contains(variables['Build.SourceBranchName'], 'master'), contains(variables['Build.SourceBranchName'], 'release')))
+  condition: and(succeeded(), or(contains(variables['Build.SourceBranch'], 'master'), contains(variables['Build.SourceBranch'], 'release')))
 
 - task: SonarCloudPublish@1
   displayName: 'end analysis (sonar)'
-  condition: and(succeeded(), or(contains(variables['Build.SourceBranchName'], 'master'), contains(variables['Build.SourceBranchName'], 'release')))
+  condition: and(succeeded(), or(contains(variables['Build.SourceBranch'], 'master'), contains(variables['Build.SourceBranch'], 'release')))
   inputs:
     pollingTimeoutSec: '300'
-
-#######################################################
-# DOTNET PUBLISH
-#######################################################
-
-- task: DotNetCoreCLI@2
-  displayName: 'push to nuget org'
-  condition: and(succeeded(), eq(variables['Publish.NugetOrg'], 'true'), or(contains(variables['Build.SourceBranchName'], 'master'), contains(variables['Build.SourceBranchName'], 'release')))
-  inputs:
-    command: 'push'
-    packagesToPush: '$(Build.ArtifactStagingDirectory)/*.nupkg'
-    nuGetFeedType: 'external'
-    publishFeedCredentials: 'nuget.org'
 
 #######################################################
 # PUT TOGETHER ARTIFACTS
@@ -179,3 +188,38 @@ steps:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
     ArtifactName: 'drop'
     publishLocation: 'Container'
+
+#######################################################
+# DOTNET PUBLISH
+#######################################################
+
+#- task: DotNetCoreCLI@2
+#  displayName: 'push to nuget org'
+#  condition: and(succeeded(), eq(variables['Publish.NugetOrg'], 'true'))
+#  inputs:
+#    command: 'push'
+#    packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg'
+#   nuGetFeedType: 'external'
+#    publishFeedCredentials: 'nuget.org'
+
+- task: DotNetCoreCLI@2
+  displayName: 'push to nuget org (binaries)'
+  condition: and(succeeded(), eq(variables['Publish.NugetOrg'], 'true'), ne(variables['Publish.NugetOrg.ApiKey'], ''))
+  inputs:
+    command: custom
+    custom: nuget
+    arguments: >
+      push $(Build.ArtifactStagingDirectory)/**/*.nupkg
+      -s "https://api.nuget.org/v3/index.json"
+      -k "$(Publish.NugetOrg.ApiKey)"
+
+#- task: DotNetCoreCLI@2
+#  displayName: 'push to nuget org (symbols)'
+#  condition: and(succeeded(), eq(variables['Publish.NugetOrg'], 'true'), ne(variables['Publish.NugetOrg.ApiKey'], ''))
+#  inputs:
+#    command: custom
+#    custom: nuget
+#    arguments: >
+#      push $(Build.ArtifactStagingDirectory)/**/*.snupkg
+#      -s "https://api.nuget.org/v3/index.json"
+#      -k "$(Publish.NugetOrg.ApiKey)"
