@@ -133,10 +133,11 @@ Another example would be to even inject the options for random string generation
 // during dependency injection setup
 ...
 services.Configure<RandomStringGenerationOptions>(c =>
-  {
-    c.StringLength = 23;
-    c.AllowCharacters = CharacterGroups.AllAlphaNumeric.ToCharArray();
-  });
+{
+  c.StringLength = 23;
+  c.AllowCharacters = CharacterGroups.AllAlphaNumeric.ToCharArray();
+});
+
 services.AddTransient<IRandomStringGenerator, CryptographicRandomStringGenerator>();
 ...
 

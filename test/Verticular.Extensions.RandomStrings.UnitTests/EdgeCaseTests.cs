@@ -1,7 +1,6 @@
 namespace Verticular.Extensions.RandomStrings.UnitTests
 {
   using System;
-  using System.Linq;
   using System.Collections.Generic;
   using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -191,7 +190,7 @@ namespace Verticular.Extensions.RandomStrings.UnitTests
     public void OptionsZeroLengthTest()
     {
       // arrange
-      var options = new RandomStringGenerationOptions(0, CharacterGroup.Get(CharacterGroups.AllAlphaNumeric), true);
+      var options = new RandomStringGenerationOptions(0, CharacterGroups.AllAlphaNumeric.ToCharArray(), true);
 
       // assert
       Assert.ThrowsException<ArgumentOutOfRangeException>(() =>

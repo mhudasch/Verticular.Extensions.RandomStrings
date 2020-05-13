@@ -79,7 +79,7 @@ namespace Verticular.Extensions.RandomStrings.UnitTests
     public void SimpleBuilderTest()
     {
       // arrange
-      var allowed = CharacterGroup.Get(CharacterGroups.Letters).Concat(CharacterGroup.Get(CharacterGroups.Digits)).ToArray();
+      var allowed = CharacterGroups.Letters.ToCharArray().Concat(CharacterGroups.Digits.ToCharArray()).ToArray();
 
       // act
       var random = RandomString.PseudoRandom.Generate(builder => builder
@@ -113,7 +113,7 @@ namespace Verticular.Extensions.RandomStrings.UnitTests
     public void SimpleOptionsTest2()
     {
       // arrange
-      var options = new RandomStringGenerationOptions(200, CharacterGroup.Get(CharacterGroups.AllAlphaNumeric), true);
+      var options = new RandomStringGenerationOptions(200, CharacterGroups.AllAlphaNumeric.ToCharArray(), true);
 
       // act
       var random = RandomString.PseudoRandom.Generate(options);
@@ -130,7 +130,7 @@ namespace Verticular.Extensions.RandomStrings.UnitTests
     {
       // arrange
       var length = 2000;
-      var allowed = CharacterGroup.Get(CharacterGroups.AllAlphaNumeric).Except(CharacterGroup.SimilarLookingCharacters).ToArray();
+      var allowed = CharacterGroups.AllAlphaNumeric.ToCharArray().Except(new[] { '1', 'l', 'I', '|', 'o', 'O', '0' }).ToArray();
 
       // act
       var random = RandomString.PseudoRandom.Generate(builder => builder
@@ -150,7 +150,7 @@ namespace Verticular.Extensions.RandomStrings.UnitTests
       char[] additionalCharacters, char[] exclusions)
     {
       // arrange
-      var allowed = CharacterGroup.Get(allowedCharacterGroup).Concat(additionalCharacters).Except(exclusions).ToArray();
+      var allowed = allowedCharacterGroup.ToCharArray().Concat(additionalCharacters).Except(exclusions).ToArray();
 
       // act
       var random = RandomString.PseudoRandom.Generate(builder =>
@@ -184,7 +184,7 @@ namespace Verticular.Extensions.RandomStrings.UnitTests
     {
       // arrange
       var allowed = allowedCharacterGroup
-      .Concat(additionalCharacters.HasValue ? CharacterGroup.Get(additionalCharacters.Value) : Enumerable.Empty<char>())
+      .Concat(additionalCharacters.HasValue ? additionalCharacters.Value.ToCharArray() : Enumerable.Empty<char>())
       .Except(exclusions).ToArray();
 
       // act
@@ -229,17 +229,17 @@ namespace Verticular.Extensions.RandomStrings.UnitTests
 
     public static IEnumerable<object[]> PseudoRandomBuilderArgumentsFromArray()
     {
-      yield return new object[] { new Random().Next(10, 50), CharacterGroup.Get(CharacterGroups.AllAlphaNumeric), (CharacterGroups?)null, Empty };
-      yield return new object[] { new Random().Next(10, 50), CharacterGroup.Get(CharacterGroups.AllReadableAsciiLetters), (CharacterGroups?)null, Empty };
-      yield return new object[] { new Random().Next(10, 50), CharacterGroup.Get(CharacterGroups.Brackets), (CharacterGroups?)null, Empty };
-      yield return new object[] { new Random().Next(10, 50), CharacterGroup.Get(CharacterGroups.Digits), (CharacterGroups?)null, Empty };
-      yield return new object[] { new Random().Next(10, 50), CharacterGroup.Get(CharacterGroups.FileSystemSafe), (CharacterGroups?)null, Empty };
-      yield return new object[] { new Random().Next(10, 50), CharacterGroup.Get(CharacterGroups.Letters), (CharacterGroups?)null, Empty };
-      yield return new object[] { new Random().Next(10, 50), CharacterGroup.Get(CharacterGroups.LowerCaseLetters), (CharacterGroups?)null, Empty };
-      yield return new object[] { new Random().Next(10, 50), CharacterGroup.Get(CharacterGroups.SpecialReadableAsciiLetters), (CharacterGroups?)null, Empty };
+      yield return new object[] { new Random().Next(10, 50), CharacterGroups.AllAlphaNumeric.ToCharArray(), (CharacterGroups?)null, Empty };
+      yield return new object[] { new Random().Next(10, 50), CharacterGroups.AllReadableAsciiLetters.ToCharArray(), (CharacterGroups?)null, Empty };
+      yield return new object[] { new Random().Next(10, 50), CharacterGroups.Brackets.ToCharArray(), (CharacterGroups?)null, Empty };
+      yield return new object[] { new Random().Next(10, 50), CharacterGroups.Digits.ToCharArray(), (CharacterGroups?)null, Empty };
+      yield return new object[] { new Random().Next(10, 50), CharacterGroups.FileSystemSafe.ToCharArray(), (CharacterGroups?)null, Empty };
+      yield return new object[] { new Random().Next(10, 50), CharacterGroups.Letters.ToCharArray(), (CharacterGroups?)null, Empty };
+      yield return new object[] { new Random().Next(10, 50), CharacterGroups.LowerCaseLetters.ToCharArray(), (CharacterGroups?)null, Empty };
+      yield return new object[] { new Random().Next(10, 50), CharacterGroups.SpecialReadableAsciiLetters.ToCharArray(), (CharacterGroups?)null, Empty };
 
-      yield return new object[] { new Random().Next(10, 50), CharacterGroup.Get(CharacterGroups.AllAlphaNumeric), CharacterGroups.Digits, Empty };
-      yield return new object[] { new Random().Next(10, 50), CharacterGroup.Get(CharacterGroups.Letters), (CharacterGroups?)null, new char[] { 'A', 'B', 'C' } };
+      yield return new object[] { new Random().Next(10, 50), CharacterGroups.AllAlphaNumeric.ToCharArray(), CharacterGroups.Digits, Empty };
+      yield return new object[] { new Random().Next(10, 50), CharacterGroups.Letters.ToCharArray(), (CharacterGroups?)null, new char[] { 'A', 'B', 'C' } };
     }
   }
 }

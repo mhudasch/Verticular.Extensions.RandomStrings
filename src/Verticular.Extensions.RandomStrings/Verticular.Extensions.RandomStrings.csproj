@@ -36,10 +36,4 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
   </ItemGroup>
-
-  <ItemGroup>
-    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
-      <_Parameter1>Verticular.Extensions.RandomStrings.UnitTests</_Parameter1>
-    </AssemblyAttribute>
-  </ItemGroup>
 </Project>
