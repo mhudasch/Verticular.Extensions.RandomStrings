@@ -127,7 +127,7 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
-      Get-ChildItem -Path "$(agent.TempDirectory)" -Recurse | Remove-Item -Force;
+      Get-ChildItem -Path "$(agent.TempDirectory)" -Recurse | Remove-Item -Recurse -Force;
 
 - task: SonarCloudPrepare@1
   displayName: 'begin analysis (sonar)'
