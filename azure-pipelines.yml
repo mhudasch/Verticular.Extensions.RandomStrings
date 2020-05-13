@@ -67,14 +67,6 @@ steps:
     publishTestResults: true
     testRunTitle: 'TestRun-$(Build.BuildNumber)'
 
-- task: CopyFiles@2
-  displayName: 'copy test results for publishing'
-  inputs:
-    SourceFolder: '$(agent.TempDirectory)'
-    Contents: |
-      **
-    TargetFolder: '$(System.DefaultWorkingDirectory)/TestResults'
-
 #######################################################
 # DOTNET PACK
 #######################################################
@@ -96,44 +88,6 @@ steps:
     projects: '**/src/**/*.csproj'
     custom: 'pack'
     arguments: '--configuration $(Build.Configuration) --no-build --include-symbols --include-source --verbosity minimal --serviceable --output "$(System.DefaultWorkingDirectory)/nuget" -p:ContinuousIntegrationBuild=true -p:GitRevisionNumber="$(Build.SourceVersion)" -p:GitBranch="$(Build.SourceBranch)" -p:BuildNumber="$(Build.BuildNumber)" -p:CIBuilder="VSTS" -p:IncludeFullFramework="$(Build.IncludeFullFramework)" -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)"'
-
-
-#######################################################
-# HERE BEGINS THE SONAR BLOCK
-#######################################################
-
-- task: SonarCloudPrepare@1
-  displayName: 'begin analysis (sonar)'
-  condition: and(succeeded(), or(contains(variables['Build.SourceBranch'], 'master'), contains(variables['Build.SourceBranch'], 'release')))
-  inputs:
-    SonarCloud: 'mhudasch-sonar'
-    organization: '$(Sonar.Organization)'
-    scannerMode: 'MSBuild'
-    projectKey: '$(Sonar.ProjectKey)'
-    projectName: '$(Sonar.ProjectName)'
-    projectVersion: '$(Sonar.AnalyzedVersion)'
-    extraProperties: |
-      sonar.verbose=$(Sonar.Verbose)
-#      sonar.cs.mstest.reportsPaths=$(agent.TempDirectory)/trx/*.trx
-#      sonar.flex.cobertura.reportPaths=$(agent.TempDirectory)/cobertura/cobertura.net462.xml
-
-- task: DotNetCoreCLI@2
-  displayName: 'dotnet build (sonar)'
-  condition: and(succeeded(), or(contains(variables['Build.SourceBranch'], 'master'), contains(variables['Build.SourceBranch'], 'release')))
-  inputs:
-    command: 'build'
-    projects: '**/src/**/*.csproj'
-    arguments: '--configuration $(Build.Configuration) --no-restore --no-incremental --framework net462 -p:GitRevisionNumber="$(Build.SourceVersion)" -p:GitBranch="$(Build.SourceBranch)" -p:BuildNumber="$(Build.BuildNumber)" -p:CIBuilder="VSTS" -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)"'
-
-- task: SonarCloudAnalyze@1
-  displayName: 'execute analysis (sonar)'
-  condition: and(succeeded(), or(contains(variables['Build.SourceBranch'], 'master'), contains(variables['Build.SourceBranch'], 'release')))
-
-- task: SonarCloudPublish@1
-  displayName: 'end analysis (sonar)'
-  condition: and(succeeded(), or(contains(variables['Build.SourceBranch'], 'master'), contains(variables['Build.SourceBranch'], 'release')))
-  inputs:
-    pollingTimeoutSec: '300'
 
 #######################################################
 # PUT TOGETHER ARTIFACTS
@@ -163,6 +117,56 @@ steps:
     OverWrite: true
     flattenFolders: true
     preserveTimestamp: true
+
+#######################################################
+# HERE BEGINS THE SONAR BLOCK
+#######################################################
+
+- task: PowerShell@2
+  displayName: 'clean the agent temp'
+  inputs:
+    targetType: 'inline'
+    script: |
+      Get-ChildItem -Path "$(agent.TempDirectory)" -Recurse | Remove-Item -Force;
+
+- task: SonarCloudPrepare@1
+  displayName: 'begin analysis (sonar)'
+  condition: and(succeeded(), or(contains(variables['Build.SourceBranch'], 'master'), contains(variables['Build.SourceBranch'], 'release')))
+  inputs:
+    SonarCloud: 'mhudasch-sonar'
+    organization: '$(Sonar.Organization)'
+    scannerMode: 'MSBuild'
+    projectKey: '$(Sonar.ProjectKey)'
+    projectName: '$(Sonar.ProjectName)'
+    projectVersion: '$(Sonar.AnalyzedVersion)'
+    extraProperties: |
+      sonar.verbose=$(Sonar.Verbose)
+
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet build (sonar)'
+  condition: and(succeeded(), or(contains(variables['Build.SourceBranch'], 'master'), contains(variables['Build.SourceBranch'], 'release')))
+  inputs:
+    command: 'build'
+    projects: '**/src/**/*.csproj'
+    arguments: '--configuration $(Build.Configuration) --no-restore --no-incremental --framework net462 -p:GitRevisionNumber="$(Build.SourceVersion)" -p:GitBranch="$(Build.SourceBranch)" -p:BuildNumber="$(Build.BuildNumber)" -p:CIBuilder="VSTS" -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)"'
+
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet test (sonar)'
+  inputs:
+    command: 'test'
+    projects: '**/test/**/*.csproj'
+    arguments: '--configuration $(Build.Configuration) --no-build --no-restore --framework net462 --logger trx --results-directory $(System.DefaultWorkingDirectory)/TestResults --collect "Code coverage" -p:GitRevisionNumber="$(Build.SourceVersion)" -p:GitBranch="$(Build.SourceBranch)" -p:BuildNumber="$(Build.BuildNumber)" -p:CIBuilder="VSTS" -p:IncludeFullFramework="$(Build.IncludeFullFramework)" -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)"'
+    publishTestResults: false
+
+- task: SonarCloudAnalyze@1
+  displayName: 'execute analysis (sonar)'
+  condition: and(succeeded(), or(contains(variables['Build.SourceBranch'], 'master'), contains(variables['Build.SourceBranch'], 'release')))
+
+- task: SonarCloudPublish@1
+  displayName: 'end analysis (sonar)'
+  condition: and(succeeded(), or(contains(variables['Build.SourceBranch'], 'master'), contains(variables['Build.SourceBranch'], 'release')))
+  inputs:
+    pollingTimeoutSec: '300'
 
 #######################################################
 # DOTNET PUBLISH
