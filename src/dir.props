@@ -16,7 +16,8 @@
     <MicrosoftSourceLinkGitHubPackageVersion>1.0.0</MicrosoftSourceLinkGitHubPackageVersion>
 
     <!-- This sdk compiler version is the last to seamlessly compatible with sourcelink -->
-    <MicrosoftNetCompilersToolsetPackageVersion>3.3.0</MicrosoftNetCompilersToolsetPackageVersion>
+    <!-- For upgrades see https://github.com/shiftkey/dotnetcore-sourcelink-test-bug/issues/1 -->
+    <MicrosoftNetCompilersToolsetPackageVersion>3.3.1</MicrosoftNetCompilersToolsetPackageVersion>
 
     <PublishRespositoryUrl>true</PublishRespositoryUrl>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
