@@ -64,7 +64,7 @@ steps:
   inputs:
     command: 'test'
     projects: '**/test/**/*.csproj'
-    arguments: '--configuration $(Build.Configuration) --no-build --no-restore --collect "Code coverage" --results-directory "$(System.DefaultWorkingDirectory)/tr/trx" --logger trx /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOuput=$(System.DefaultWorkingDirectory)/tr/cobertura/cobertura.xml'
+    arguments: '--configuration $(Build.Configuration) --no-build --no-restore --collect "Code coverage" /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=$(System.DefaultWorkingDirectory)/tr/cobertura/cobertura.xml -p:GitRevisionNumber="$(Build.SourceVersion)" -p:GitBranch="$(Build.SourceBranch)" -p:BuildNumber="$(Build.BuildNumber)" -p:CIBuilder="VSTS" -p:IncludeFullFramework="$(Build.IncludeFullFramework)" -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)"'
 
 - task: PublishTestResults@2
   displayName: 'publish test results'
@@ -80,6 +80,7 @@ steps:
     #publishRunAttachments: true # Optional
 
 - task: PublishCodeCoverageResults@1
+  displayName: 'publish test coverage results'
   inputs:
     codeCoverageTool: 'cobertura' # Options: cobertura, jaCoCo
     summaryFileLocation: '$(System.DefaultWorkingDirectory)/tr/cobertura/*.xml'
