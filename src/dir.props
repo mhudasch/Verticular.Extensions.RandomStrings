@@ -4,7 +4,7 @@
     <AppendTargetFrameworkToOutputPath>true</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>true</AppendRuntimeIdentifierToOutputPath>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    
+
     <!-- Versioning stuff -->
     <IncludeFullFramework Condition="'$(IncludeFullFramework)' == ''">true</IncludeFullFramework>
     <IncludeLatestFullFramework Condition="'$(IncludeLatestFullFramework)' == ''">false</IncludeLatestFullFramework>
