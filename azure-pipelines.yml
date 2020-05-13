@@ -76,20 +76,6 @@ steps:
       **
     TargetFolder: '$(System.DefaultWorkingDirectory)/TestResults'
 
-- task: CopyFiles@2
-  displayName: 'stage test results'
-  inputs:
-    SourceFolder: '$(agent.TempDirectory)'
-    Contents: |
-      **/*.trx
-      **/*.coverage
-      **/cobertura/**
-    TargetFolder: '$(Build.ArtifactStagingDirectory)/tr'
-    CleanTargetFolder: true
-    OverWrite: true
-    flattenFolders: true
-    preserveTimestamp: true
-
 #######################################################
 # DOTNET PACK
 #######################################################
@@ -165,12 +151,19 @@ steps:
     flattenFolders: true
     preserveTimestamp: true
 
-- task: PublishBuildArtifacts@1
-  displayName: 'publish build artifacts'
+- task: CopyFiles@2
+  displayName: 'stage test results'
   inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    ArtifactName: 'drop'
-    publishLocation: 'Container'
+    SourceFolder: '$(agent.TempDirectory)'
+    Contents: |
+      **/*.trx
+      **/*.coverage
+      **/cobertura/**
+    TargetFolder: '$(Build.ArtifactStagingDirectory)/tr'
+    CleanTargetFolder: true
+    OverWrite: true
+    flattenFolders: true
+    preserveTimestamp: true
 
 #######################################################
 # DOTNET PUBLISH
@@ -206,3 +199,10 @@ steps:
 #      push $(Build.ArtifactStagingDirectory)/**/*.snupkg
 #      -s "https://api.nuget.org/v3/index.json"
 #      -k "$(Publish.NugetOrg.ApiKey)"
+
+- task: PublishBuildArtifacts@1
+  displayName: 'publish build artifacts'
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
