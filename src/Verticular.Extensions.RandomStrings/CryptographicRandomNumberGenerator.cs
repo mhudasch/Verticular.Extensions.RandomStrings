@@ -54,9 +54,33 @@ namespace Verticular.Extensions.RandomStrings
       return result;
     }
 
+    #region IDisposable Support
+    private bool disposedValue = false; // To detect redundant calls
+
+    /// <summary>
+    /// When overridden in a derived class, releases all resources used by the current
+    /// instance of the <see cref="CryptographicRandomNumberGenerator"/> class.
+    /// </summary>
+    /// <param name="disposing">Indicates that managed resouces get disposed.</param>
+    protected virtual void Dispose(bool disposing)
+    {
+      if (!this.disposedValue)
+      {
+        if (disposing)
+        {
+          this.random.Dispose();
+        }
+
+        this.disposedValue = true;
+      }
+    }
+
+    /// <inheritdoc/>
     public void Dispose()
     {
-      this.random.Dispose();
+      this.Dispose(true);
     }
+    #endregion
+
   }
 }
