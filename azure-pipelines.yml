@@ -64,32 +64,9 @@ steps:
   inputs:
     command: 'test'
     projects: '**/test/**/*.csproj'
-    arguments: '--configuration $(Build.Configuration) --no-build --no-restore --collect "Code coverage" --results-directory "$(System.DefaultWorkingDirectory)/tr/trx" --logger trx /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=$(System.DefaultWorkingDirectory)/tr/cobertura/cobertura.xml -p:GitRevisionNumber="$(Build.SourceVersion)" -p:GitBranch="$(Build.SourceBranch)" -p:BuildNumber="$(Build.BuildNumber)" -p:CIBuilder="VSTS" -p:IncludeFullFramework="$(Build.IncludeFullFramework)" -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)"'
+    arguments: '--configuration $(Build.Configuration) --no-build --no-restore --collect "Code coverage" --results-directory "$(agent.TempDirectory)/trx" --logger trx /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=$(agent.TempDirectory)/cobertura/cobertura.xml -p:GitRevisionNumber="$(Build.SourceVersion)" -p:GitBranch="$(Build.SourceBranch)" -p:BuildNumber="$(Build.BuildNumber)" -p:CIBuilder="VSTS" -p:IncludeFullFramework="$(Build.IncludeFullFramework)" -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)"'
     publishTestResults: false
     testRunTitle: 'TestRun-$(Build.BuildNumber)'
-
-- task: PublishTestResults@2
-  displayName: 'publish test results'
-  inputs:
-    testResultsFormat: 'VSTest' # Options: JUnit, NUnit, VSTest, xUnit, cTest
-    testResultsFiles: '**/*.trx'
-    searchFolder: '$(System.DefaultWorkingDirectory)/tr' # Optional
-    #mergeTestResults: false # Optional
-    failTaskOnFailedTests: true # Optional
-    #testRunTitle: # Optional
-    buildPlatform: 'AnyCPU' # Optional
-    buildConfiguration: '$(Build.Configuration)' # Optional
-    #publishRunAttachments: true # Optional
-
-- task: PublishCodeCoverageResults@1
-  displayName: 'publish test coverage results'
-  inputs:
-    codeCoverageTool: 'cobertura' # Options: cobertura, jaCoCo
-    summaryFileLocation: '$(System.DefaultWorkingDirectory)\tr\cobertura\cobertura.net462.xml'
-    #pathToSources: '$(System.DefaultWorkingDirectory)/src' # Optional
-    #reportDirectory: '$(System.DefaultWorkingDirectory)/tr'
-    #additionalCodeCoverageFiles: # Optional
-    failIfCoverageEmpty: false # Optional
 
 #- task: CopyFiles@2
 #  displayName: 'copy test results for publishing'
@@ -99,6 +76,19 @@ steps:
 #      **/*.trx
 #      **/*.coverage
 #    TargetFolder: '$(System.DefaultWorkingDirectory)/TestResults'
+
+- task: CopyFiles@2
+  displayName: 'stage test results'
+  inputs:
+    SourceFolder: '$(agent.TempDirectory)'
+    Contents: |
+      **/trx/**
+      **/cobertura/**
+    TargetFolder: '$(Build.ArtifactStagingDirectory)/tr'
+    CleanTargetFolder: true
+    OverWrite: true
+    flattenFolders: true
+    preserveTimestamp: true
 
 #######################################################
 # DOTNET PACK
@@ -139,8 +129,8 @@ steps:
     projectVersion: '$(Sonar.AnalyzedVersion)'
     extraProperties: |
       sonar.verbose=$(Sonar.Verbose)
-      sonar.cs.mstest.reportsPaths=$(System.DefaultWorkingDirectory)/tr/trx/*.trx
-      sonar.flex.cobertura.reportPaths=$(System.DefaultWorkingDirectory)/tr/cobertura/*.netcoreapp2.1.xml
+#      sonar.cs.mstest.reportsPaths=$(agent.TempDirectory)/trx/*.trx
+#      sonar.flex.cobertura.reportPaths=$(agent.TempDirectory)/cobertura/cobertura.net462.xml
 
 - task: DotNetCoreCLI@2
   displayName: 'dotnet build (sonar)'
@@ -148,7 +138,7 @@ steps:
   inputs:
     command: 'build'
     projects: '**/src/**/*.csproj'
-    arguments: '--configuration $(Build.Configuration) --no-restore --no-incremental --framework netstandard2.0 -p:GitRevisionNumber="$(Build.SourceVersion)" -p:GitBranch="$(Build.SourceBranch)" -p:BuildNumber="$(Build.BuildNumber)" -p:CIBuilder="VSTS" -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)"'
+    arguments: '--configuration $(Build.Configuration) --no-restore --no-incremental --framework net462 -p:GitRevisionNumber="$(Build.SourceVersion)" -p:GitBranch="$(Build.SourceBranch)" -p:BuildNumber="$(Build.BuildNumber)" -p:CIBuilder="VSTS" -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)"'
 
 - task: SonarCloudAnalyze@1
   displayName: 'execute analysis (sonar)'
@@ -175,18 +165,8 @@ steps:
     flattenFolders: true
     preserveTimestamp: true
 
-- task: CopyFiles@2
-  displayName: 'stage test results'
-  inputs:
-    SourceFolder: '$(System.DefaultWorkingDirectory)/TestResults'
-    Contents: '**'
-    TargetFolder: '$(Build.ArtifactStagingDirectory)/tr'
-    CleanTargetFolder: true
-    OverWrite: true
-    flattenFolders: true
-    preserveTimestamp: true
-
 - task: PublishBuildArtifacts@1
+  displayName: 'publish build artifacts'
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
     ArtifactName: 'drop'
