@@ -184,17 +184,6 @@ steps:
       -s "https://api.nuget.org/v3/index.json"
       -k "$(Publish.NugetOrg.ApiKey)"
 
-#- task: DotNetCoreCLI@2
-#  displayName: 'push to nuget org (symbols)'
-#  condition: and(succeeded(), eq(variables['Publish.NugetOrg'], 'true'), ne(variables['Publish.NugetOrg.ApiKey'], ''))
-#  inputs:
-#    command: custom
-#    custom: nuget
-#    arguments: >
-#      push $(Build.ArtifactStagingDirectory)/**/*.snupkg
-#      -s "https://api.nuget.org/v3/index.json"
-#      -k "$(Publish.NugetOrg.ApiKey)"
-
 - task: PublishBuildArtifacts@1
   displayName: 'publish build artifacts'
   inputs:
