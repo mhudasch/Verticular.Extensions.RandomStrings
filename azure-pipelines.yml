@@ -54,7 +54,6 @@ steps:
     projects: '**/test/**/*.csproj'
     arguments: '--configuration $(Build.Configuration) --no-restore --no-incremental -p:ContinuousIntegrationBuild=true -p:GitRevisionNumber="$(Build.SourceVersion)" -p:GitBranch="$(Build.SourceBranch)" -p:BuildNumber="$(Build.BuildNumber)" -p:CIBuilder="VSTS" -p:IncludeFullFramework="$(Build.IncludeFullFramework)" -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)"'
 
-
 #######################################################
 # DOTNET TEST
 #######################################################
@@ -64,8 +63,8 @@ steps:
   inputs:
     command: 'test'
     projects: '**/test/**/*.csproj'
-    arguments: '--configuration $(Build.Configuration) --no-build --no-restore --collect "Code coverage" --results-directory "$(agent.TempDirectory)" --logger trx /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=$(agent.TempDirectory)/cobertura/cobertura.xml -p:GitRevisionNumber="$(Build.SourceVersion)" -p:GitBranch="$(Build.SourceBranch)" -p:BuildNumber="$(Build.BuildNumber)" -p:CIBuilder="VSTS" -p:IncludeFullFramework="$(Build.IncludeFullFramework)" -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)"'
-    publishTestResults: false
+    arguments: '--configuration $(Build.Configuration) --no-build --no-restore --collect "Code coverage" /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=$(agent.TempDirectory)/cobertura/cobertura.xml -p:GitRevisionNumber="$(Build.SourceVersion)" -p:GitBranch="$(Build.SourceBranch)" -p:BuildNumber="$(Build.BuildNumber)" -p:CIBuilder="VSTS" -p:IncludeFullFramework="$(Build.IncludeFullFramework)" -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)"'
+    publishTestResults: true
     testRunTitle: 'TestRun-$(Build.BuildNumber)'
 
 - task: CopyFiles@2
@@ -168,15 +167,6 @@ steps:
 #######################################################
 # DOTNET PUBLISH
 #######################################################
-
-#- task: DotNetCoreCLI@2
-#  displayName: 'push to nuget org'
-#  condition: and(succeeded(), eq(variables['Publish.NugetOrg'], 'true'))
-#  inputs:
-#    command: 'push'
-#    packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg'
-#   nuGetFeedType: 'external'
-#    publishFeedCredentials: 'nuget.org'
 
 - task: DotNetCoreCLI@2
   displayName: 'push to nuget org (binaries)'
