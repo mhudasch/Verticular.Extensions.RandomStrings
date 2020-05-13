@@ -1,20 +1,45 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <Import Project="$(MSBuildThisFileDirectory)..\dir.props" />
   <PropertyGroup>
+    <TargetFrameworks>$(TargetFrameworks);netstandard2.0</TargetFrameworks>
     <TargetFrameworks Condition="'$(IncludeFullFramework)' == 'true'">$(TargetFrameworks);net45;net451;net452</TargetFrameworks>
     <TargetFrameworks Condition="'$(IncludeFullFramework)' == 'true'">$(TargetFrameworks);net46;net461;net462</TargetFrameworks>
     <TargetFrameworks Condition="'$(IncludeFullFramework)' == 'true'">$(TargetFrameworks);net47;net471;net472</TargetFrameworks>
-    <TargetFrameworks>$(TargetFrameworks);netstandard2.0</TargetFrameworks>
     <TargetFrameworks Condition="'$(IncludeLatestFullFramework)' == 'true'">$(TargetFrameworks);net48;net50</TargetFrameworks>
     <TargetFrameworks Condition="'$(IncludeLatestStandardFramework)' == 'true'">$(TargetFrameworks);netstandard2.1</TargetFrameworks>
-    <Configurations>Debug;Release;CI</Configurations>
-    <ProjectGuid>{3AD9B722-6AFC-409F-8ACB-82007C0C8DA7}</ProjectGuid>
-    
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <IncludeSymbols>true</IncludeSymbols>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <Configurations>$(Configurations);CI</Configurations>
     <RootNamespace>Verticular.Extensions.RandomStrings</RootNamespace>
+    <ProjectGuid>{3AD9B722-6AFC-409F-8ACB-82007C0C8DA7}</ProjectGuid>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
+  <ItemGroup>
+    <SourceRoot Include="$(MSBuildThisFileDirectory)/" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="**\*.orig" />
+    <None Include="..\..\LICENSE.md" Pack="true" PackagePath="LICENSE.md" Visible="false" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="$(MicrosoftCodeAnalysisFxCopAnalyzersPackageVersion)">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Net.Compilers.Toolset" Version="$(MicrosoftNetCompilersToolsetPackageVersion)">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="$(MicrosoftSourceLinkGitHubPackageVersion)">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+      <_Parameter1>Verticular.Extensions.RandomStrings.UnitTests</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
 </Project>
