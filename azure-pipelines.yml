@@ -65,7 +65,9 @@ steps:
     command: 'test'
     projects: '**/test/**/*.csproj'
     arguments: '--configuration $(Build.Configuration) --no-build --no-restore --collect "Code coverage" --results-directory "$(System.DefaultWorkingDirectory)/tr/trx" --logger trx /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOuput=$(System.DefaultWorkingDirectory)/tr/cobertura/cobertura.xml'
-
+    publishTestResults: false
+    testRunTitle: 'TestRun-$(Build.BuildNumber)'
+    
 - task: PublishTestResults@2
   displayName: 'publish test results'
   inputs:
