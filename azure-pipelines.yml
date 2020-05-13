@@ -144,7 +144,7 @@ steps:
 
 - task: DotNetCoreCLI@2
   displayName: 'dotnet build (sonar)'
-  condition: and(succeeded(), or(contains(variables['Build.SourceBranch'], 'master'), contains(variables['Build.SourceBranch'], 'release')))
+  condition: and(succeeded(), or(contains(variables['Build.SourceBranch'], 'master'), contains(variables['Build.SourceBranch'], 'release'), contains(variables['Build.SourceBranch'], 'sonar')))
   inputs:
     command: 'build'
     projects: '**/src/**/*.csproj'
@@ -152,6 +152,7 @@ steps:
 
 - task: DotNetCoreCLI@2
   displayName: 'dotnet test (sonar)'
+  condition: and(succeeded(), or(contains(variables['Build.SourceBranch'], 'master'), contains(variables['Build.SourceBranch'], 'release'), contains(variables['Build.SourceBranch'], 'sonar')))
   inputs:
     command: 'test'
     projects: '**/test/**/*.csproj'
@@ -160,11 +161,11 @@ steps:
 
 - task: SonarCloudAnalyze@1
   displayName: 'execute analysis (sonar)'
-  condition: and(succeeded(), or(contains(variables['Build.SourceBranch'], 'master'), contains(variables['Build.SourceBranch'], 'release')))
+  condition: and(succeeded(), or(contains(variables['Build.SourceBranch'], 'master'), contains(variables['Build.SourceBranch'], 'release'), contains(variables['Build.SourceBranch'], 'sonar')))
 
 - task: SonarCloudPublish@1
   displayName: 'end analysis (sonar)'
-  condition: and(succeeded(), or(contains(variables['Build.SourceBranch'], 'master'), contains(variables['Build.SourceBranch'], 'release')))
+  condition: and(succeeded(), or(contains(variables['Build.SourceBranch'], 'master'), contains(variables['Build.SourceBranch'], 'release'), contains(variables['Build.SourceBranch'], 'sonar')))
   inputs:
     pollingTimeoutSec: '300'
 
