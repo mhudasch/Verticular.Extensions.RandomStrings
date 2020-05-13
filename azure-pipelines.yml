@@ -127,7 +127,7 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
-      Get-ChildItem -Path "$(agent.TempDirectory)" -Recurse | Remove-Item -Recurse -Force;
+      Get-ChildItem -Path "$(agent.TempDirectory)" -Recurse | Remove-Item -Force;
 
 - task: SonarCloudPrepare@1
   displayName: 'begin analysis (sonar)'
@@ -148,14 +148,14 @@ steps:
   inputs:
     command: 'build'
     projects: '**/src/**/*.csproj'
-    arguments: '--configuration $(Build.Configuration) --no-restore --no-incremental --framework net462 -p:GitRevisionNumber="$(Build.SourceVersion)" -p:GitBranch="$(Build.SourceBranch)" -p:BuildNumber="$(Build.BuildNumber)" -p:CIBuilder="VSTS" -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)"'
+    arguments: '--configuration $(Build.Configuration) --runtime win -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)"'
 
 - task: DotNetCoreCLI@2
   displayName: 'dotnet test (sonar)'
   inputs:
     command: 'test'
     projects: '**/test/**/*.csproj'
-    arguments: '--configuration $(Build.Configuration) --no-build --no-restore --framework net462 --logger trx --results-directory $(System.DefaultWorkingDirectory)/TestResults --collect "Code coverage" -p:GitRevisionNumber="$(Build.SourceVersion)" -p:GitBranch="$(Build.SourceBranch)" -p:BuildNumber="$(Build.BuildNumber)" -p:CIBuilder="VSTS" -p:IncludeFullFramework="$(Build.IncludeFullFramework)" -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)"'
+    arguments: '--configuration $(Build.Configuration) --runtime win --logger trx --results-directory $(agent.TempDirectory) --collect "Code coverage" -p:IncludeFullFramework="$(Build.IncludeFullFramework)" -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)"'
     publishTestResults: false
 
 - task: SonarCloudAnalyze@1
