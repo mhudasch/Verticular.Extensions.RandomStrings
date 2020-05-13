@@ -1,19 +1,20 @@
 namespace System
 {
-  using System.Collections.Generic;
   using System.Linq;
   using Verticular.Extensions.RandomStrings;
 
   /// <summary>
   /// The base class for generating a random string.
   /// </summary>
-  public abstract class RandomStringGeneratorBase
+  public abstract class RandomStringGeneratorBase : IRandomStringGenerator
   {
-    private readonly IRandomNumberGenerator randomNumberGenerator;
+    private readonly Func<IRandomNumberGenerator> randomNumberGeneratorFactory;
+    private const int MaxLength = 5000;
 
-    internal RandomStringGeneratorBase(IRandomNumberGenerator randomNumberGenerator)
+    internal RandomStringGeneratorBase(Func<IRandomNumberGenerator> randomNumberGeneratorFactory)
     {
-      this.randomNumberGenerator = randomNumberGenerator ?? throw new ArgumentNullException(nameof(randomNumberGenerator));
+      this.randomNumberGeneratorFactory = randomNumberGeneratorFactory
+        ?? throw new ArgumentNullException(nameof(randomNumberGeneratorFactory));
     }
 
     /// <summary>
@@ -42,36 +43,68 @@ namespace System
         throw new ArgumentOutOfRangeException(nameof(length), "The length of the random string must be a positive non-zero integer.");
       }
 
+      if(length > MaxLength)
+      {
+        throw new ArgumentOutOfRangeException(nameof(length), $"To prevent memory issues the maximum length for random strings is {MaxLength}.");
+      }
+
+      if (allowedCharacters is null)
+      {
+        throw new ArgumentNullException(nameof(allowedCharacters));
+      }
+
       if (allowedCharacters.Length <= 0)
       {
         throw new ArgumentOutOfRangeException(nameof(allowedCharacters), "There must be at least one allowed character to create a random string.");
       }
 
+      if (allowedCharacters.Length > MaxLength)
+      {
+        throw new ArgumentOutOfRangeException(nameof(allowedCharacters), $"To prevent memory issues the maximum size of the allowed characters array is {MaxLength}.");
+      }
+
+      // ensure that every generate call has its own new random number generator instance
+      var randomNumberGenerator = this.randomNumberGeneratorFactory();
+
       var result = new char[length];
-      // remove any double occurences of the allowed characters
-      var uniqueAllowedCharacters = new HashSet<char>(allowedCharacters).ToArray();
+
       if (eachCharacterMustOccurAtLeastOnce)
       {
         if (allowedCharacters.Length > length)
         {
           throw new InvalidOperationException("When the flag for 'each character must occur at least once' is used the desired length of the " +
-            "random string must be at least as long as the number of allowed characters.");
+            $"random string must be at least as long as the number of allowed characters (requested length: {length} - minimum required length: {allowedCharacters.Length}).");
         }
 
-        var availableIndices = Enumerable.Range(0, length).ToList();
+        // shuffle the indizes of the target array so the placing is random when we have to
+        // use all allowed characters
+        var randomizedIndizes = Enumerable.Range(0, length).OrderBy(_ => randomNumberGenerator.GetNextRandomNumber(length)).ToArray();
         for (var i = 0; i < length; i++)
         {
-          var setIndex = availableIndices.ElementAt(this.randomNumberGenerator.GetNextRandomNumber(availableIndices.Count));
-          result[setIndex] = uniqueAllowedCharacters[i % uniqueAllowedCharacters.Length];
-          availableIndices.Remove(setIndex);
+          // use all allowed characters once an place them at a rantom index
+          // in the target array
+          if (i < allowedCharacters.Length)
+          {
+            result[randomizedIndizes[i]] = allowedCharacters[i];
+          }
+          else
+          {
+            // when all allowed characters are places once randomize both the index and the used character
+            result[randomizedIndizes[i]] = allowedCharacters[randomNumberGenerator.GetNextRandomNumber(allowedCharacters.Length)];
+          }
         }
       }
       else
       {
         for (var i = 0; i < length; i++)
         {
-          result[i] = uniqueAllowedCharacters[this.randomNumberGenerator.GetNextRandomNumber(uniqueAllowedCharacters.Length)];
+          result[i] = allowedCharacters[randomNumberGenerator.GetNextRandomNumber(allowedCharacters.Length)];
         }
+      }
+
+      if (randomNumberGenerator is IDisposable disposable)
+      {
+        disposable.Dispose();
       }
       return new string(result);
     }
