@@ -33,7 +33,10 @@
         "test",
         "${workspaceFolder}/test/Verticular.Extensions.RandomStrings.UnitTests/Verticular.Extensions.RandomStrings.UnitTests.csproj",
         "/p:GenerateFullPaths=true",
-        "/consoleloggerparameters:NoSummary"
+        "/consoleloggerparameters:NoSummary",
+        "/p:CollectCoverage=true",
+        "/p:CoverletOutputFormat=lcov",
+        "/p:CoverletOutput=\"${workspaceFolder}/TestResults/lcov.info\""
       ],
       "problemMatcher": "$msCompile",
       "group": {

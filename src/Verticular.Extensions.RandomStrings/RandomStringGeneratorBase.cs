@@ -9,6 +9,7 @@ namespace System
   public abstract class RandomStringGeneratorBase : IRandomStringGenerator
   {
     private readonly Func<IRandomNumberGenerator> randomNumberGeneratorFactory;
+    private const int MaxLength = 5000;
 
     internal RandomStringGeneratorBase(Func<IRandomNumberGenerator> randomNumberGeneratorFactory)
     {
@@ -42,6 +43,11 @@ namespace System
         throw new ArgumentOutOfRangeException(nameof(length), "The length of the random string must be a positive non-zero integer.");
       }
 
+      if(length > MaxLength)
+      {
+        throw new ArgumentOutOfRangeException(nameof(length), $"To prevent memory issues the maximum length for random strings is {MaxLength}.");
+      }
+
       if (allowedCharacters is null)
       {
         throw new ArgumentNullException(nameof(allowedCharacters));
@@ -50,6 +56,11 @@ namespace System
       if (allowedCharacters.Length <= 0)
       {
         throw new ArgumentOutOfRangeException(nameof(allowedCharacters), "There must be at least one allowed character to create a random string.");
+      }
+
+      if (allowedCharacters.Length > MaxLength)
+      {
+        throw new ArgumentOutOfRangeException(nameof(allowedCharacters), $"To prevent memory issues the maximum size of the allowed characters array is {MaxLength}.");
       }
 
       // ensure that every generate call has its own new random number generator instance
@@ -65,8 +76,8 @@ namespace System
             $"random string must be at least as long as the number of allowed characters (requested length: {length} - minimum required length: {allowedCharacters.Length}).");
         }
 
-        // shuffle the indizes of the target array so the placing is random when we have to 
-        // use all allowed characters 
+        // shuffle the indizes of the target array so the placing is random when we have to
+        // use all allowed characters
         var randomizedIndizes = Enumerable.Range(0, length).OrderBy(_ => randomNumberGenerator.GetNextRandomNumber(length)).ToArray();
         for (var i = 0; i < length; i++)
         {
@@ -91,7 +102,7 @@ namespace System
         }
       }
 
-      if(randomNumberGenerator is IDisposable disposable)
+      if (randomNumberGenerator is IDisposable disposable)
       {
         disposable.Dispose();
       }
