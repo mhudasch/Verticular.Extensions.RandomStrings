@@ -147,7 +147,7 @@ steps:
     projectName: '$(Sonar.ProjectName)'
     projectVersion: '$(Sonar.AnalyzedVersion)'
     extraProperties: |
-      sonar.verbose=true
+      sonar.verbose=$(Sonar.Verbose)
       sonar.cs.opencover.reportsPaths="$(Build.SourcesDirectory)\TestResults\Coverage\coverage.netcoreapp2.1.opencover.xml"
 
 - task: DotNetCoreCLI@2
@@ -156,8 +156,8 @@ steps:
   inputs:
     command: 'test'
     projects: '**/test/**/*.csproj'
-    arguments: '--configuration $(Build.Configuration) /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=$(Build.SourcesDirectory)/TestResults/Coverage/ -p:GitRevisionNumber="$(Build.SourceVersion)" -p:GitBranch="$(Build.SourceBranch)" -p:BuildNumber="$(Build.BuildNumber)" -p:CIBuilder="VSTS" -p:IncludeFullFramework="$(Build.IncludeFullFramework)" -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)"'
-    publishTestResults: true
+    arguments: '--configuration $(Build.Configuration) --logger trx --results-directory $(Build.SourcesDirectory)/TestResults /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=$(Build.SourcesDirectory)/TestResults/Coverage/ -p:GitRevisionNumber="$(Build.SourceVersion)" -p:GitBranch="$(Build.SourceBranch)" -p:BuildNumber="$(Build.BuildNumber)" -p:CIBuilder="VSTS" -p:IncludeFullFramework="$(Build.IncludeFullFramework)" -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)"'
+    publishTestResults: false
 
 - task: SonarCloudAnalyze@1
   displayName: 'execute analysis (sonar)'
