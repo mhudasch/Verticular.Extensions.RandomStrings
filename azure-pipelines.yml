@@ -51,7 +51,7 @@ steps:
   displayName: 'dotnet build (tests)'
   inputs:
     command: 'build'
-    projects: '**/*UnitTests?.csproj'
+    projects: '**/test/**/*.csproj'
     arguments: '--configuration $(Build.Configuration) --no-restore --no-incremental -p:ContinuousIntegrationBuild=true -p:GitRevisionNumber="$(Build.SourceVersion)" -p:GitBranch="$(Build.SourceBranch)" -p:BuildNumber="$(Build.BuildNumber)" -p:CIBuilder="VSTS" -p:IncludeFullFramework="$(Build.IncludeFullFramework)" -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)"'
 
 #######################################################
@@ -62,7 +62,7 @@ steps:
   displayName: 'dotnet test'
   inputs:
     command: 'test'
-    projects: '**/*UnitTests?.csproj'
+    projects: '**/test/**/*.csproj'
     arguments: '--configuration $(Build.Configuration) --no-build --no-restore --collect "Code coverage" /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=$(Build.SourcesDirectory)/TestResults/Covareage/ -p:GitRevisionNumber="$(Build.SourceVersion)" -p:GitBranch="$(Build.SourceBranch)" -p:BuildNumber="$(Build.BuildNumber)" -p:CIBuilder="VSTS" -p:IncludeFullFramework="$(Build.IncludeFullFramework)" -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)"'
     publishTestResults: true
     testRunTitle: 'TestRun-$(Build.BuildNumber)'
@@ -125,7 +125,6 @@ steps:
     Contents: |
       **/*.trx
       **/*.coverage
-      **/cobertura/**
     TargetFolder: '$(Build.ArtifactStagingDirectory)/tr'
     CleanTargetFolder: true
     OverWrite: true
@@ -163,7 +162,7 @@ steps:
   condition: and(succeeded(), or(contains(variables['Build.SourceBranch'], 'master'), contains(variables['Build.SourceBranch'], 'release'), contains(variables['Build.SourceBranch'], 'sonar')))
   inputs:
     command: 'test'
-    projects: '**/*UnitTests?.csproj'
+    projects: '**/test/**/*.csproj'
     arguments: '--configuration $(Build.Configuration) /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=$(Build.SourcesDirectory)/TestResults/Coverage/opencover.xml -p:IncludeFullFramework="$(Build.IncludeFullFramework)" -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)"'
     publishTestResults: false
 
