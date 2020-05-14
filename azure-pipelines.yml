@@ -67,13 +67,6 @@ steps:
     publishTestResults: true
     testRunTitle: 'TestRun-$(Build.BuildNumber)'
 
-#- task: Palmmedia.reportgenerator.reportgenerator-build-release-task.reportgenerator@4
-#  displayName: 'html test report'
-#  inputs:
-#    reports: '$(Build.SourcesDirectory)/TestResults/Coverage/coverage.*.xml'
-#    targetdir: '$(Build.SourcesDirectory)/TestResults/Coverage'
-#    sourcedirs: '$(Build.SourcesDirectory)'
-
 - task: PublishCodeCoverageResults@1
   displayName: 'publish code coverage'
   inputs:
@@ -156,14 +149,6 @@ steps:
     extraProperties: |
       sonar.verbose=true
       sonar.cs.opencover.reportsPaths="$(Build.SourcesDirectory)\TestResults\Coverage\coverage.netcoreapp2.1.opencover.xml"
-
-#- task: DotNetCoreCLI@2
-#  displayName: 'dotnet build (sonar)'
-#  condition: and(succeeded(), or(contains(variables['Build.SourceBranch'], 'master'), contains(variables['Build.SourceBranch'], 'release'), contains(variables['Build.SourceBranch'], 'sonar')))
-#  inputs:
-#    command: 'build'
-#    projects: '**/src/**/*.csproj'
-#    arguments: '--configuration $(Build.Configuration) -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)"'
 
 - task: DotNetCoreCLI@2
   displayName: 'dotnet test (sonar)'
