@@ -70,7 +70,7 @@ steps:
 #- task: Palmmedia.reportgenerator.reportgenerator-build-release-task.reportgenerator@4
 #  displayName: 'html test report'
 #  inputs:
-#    reports: '$(Build.SourcesDirectory)/TestResults/Coverage/cobertura.*.xml'
+#    reports: '$(Build.SourcesDirectory)/TestResults/Coverage/coverage.*.xml'
 #    targetdir: '$(Build.SourcesDirectory)/TestResults/Coverage'
 #    sourcedirs: '$(Build.SourcesDirectory)'
 
@@ -78,7 +78,7 @@ steps:
   displayName: 'publish code coverage'
   inputs:
     codeCoverageTool: cobertura
-    summaryFileLocation: '$(Build.SourcesDirectory)/TestResults/Covareage/cobertura.*.xml'
+    summaryFileLocation: '$(Build.SourcesDirectory)/TestResults/Covareage/coverage.*.xml'
     reportDirectory: '$(Build.SourcesDirectory)/TestResults/Covareage'
 
 #######################################################
@@ -137,7 +137,7 @@ steps:
 
 - task: SonarCloudPrepare@1
   displayName: 'begin analysis (sonar)'
-  condition: and(succeeded(), or(contains(variables['Build.SourceBranch'], 'master'), contains(variables['Build.SourceBranch'], 'release')))
+  condition: and(succeeded(), or(contains(variables['Build.SourceBranch'], 'master'), contains(variables['Build.SourceBranch'], 'release'), contains(variables['Build.SourceBranch'], 'sonar')))
   inputs:
     SonarCloud: 'mhudasch-sonar'
     organization: '$(Sonar.Organization)'
