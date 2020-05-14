@@ -136,6 +136,7 @@ steps:
 
 - task: PowerShell@2
   displayName: 'clean the agent temp'
+  condition: and(succeeded(), or(contains(variables['Build.SourceBranch'], 'master'), contains(variables['Build.SourceBranch'], 'release'), contains(variables['Build.SourceBranch'], 'sonar')))
   inputs:
     targetType: 'inline'
     script: |
