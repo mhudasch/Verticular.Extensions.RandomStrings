@@ -63,7 +63,7 @@ steps:
   inputs:
     command: 'test'
     projects: '**/test/**/*.csproj'
-    arguments: '--configuration $(Build.Configuration) --no-build --no-restore --collect "Code coverage" /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=$(Build.SourcesDirectory)/TestResults/Covareage/ -p:GitRevisionNumber="$(Build.SourceVersion)" -p:GitBranch="$(Build.SourceBranch)" -p:BuildNumber="$(Build.BuildNumber)" -p:CIBuilder="VSTS" -p:IncludeFullFramework="$(Build.IncludeFullFramework)" -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)"'
+    arguments: '--configuration $(Build.Configuration) --no-build --no-restore /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=$(Build.SourcesDirectory)/TestResults/Covareage/ -p:GitRevisionNumber="$(Build.SourceVersion)" -p:GitBranch="$(Build.SourceBranch)" -p:BuildNumber="$(Build.BuildNumber)" -p:CIBuilder="VSTS" -p:IncludeFullFramework="$(Build.IncludeFullFramework)" -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)"'
     publishTestResults: true
     testRunTitle: 'TestRun-$(Build.BuildNumber)'
 
@@ -116,7 +116,6 @@ steps:
     CleanTargetFolder: true
     OverWrite: true
     flattenFolders: true
-    preserveTimestamp: true
 
 - task: CopyFiles@2
   displayName: 'stage test results'
@@ -129,7 +128,6 @@ steps:
     CleanTargetFolder: true
     OverWrite: true
     flattenFolders: true
-    preserveTimestamp: true
 
 #######################################################
 # HERE BEGINS THE SONAR BLOCK
@@ -146,8 +144,7 @@ steps:
     projectName: '$(Sonar.ProjectName)'
     projectVersion: '$(Sonar.AnalyzedVersion)'
     extraProperties: |
-      sonar.verbose=$(Sonar.Verbose)
-      sonar.cs.opencover.reportPaths=$(Build.SourcesDirectory)/TestResults/Coverage/opencover.*.xml
+      sonar.verbose=true
 
 #- task: DotNetCoreCLI@2
 #  displayName: 'dotnet build (sonar)'
@@ -163,8 +160,8 @@ steps:
   inputs:
     command: 'test'
     projects: '**/test/**/*.csproj'
-    arguments: '--configuration $(Build.Configuration) /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=$(Build.SourcesDirectory)/TestResults/Coverage/opencover.xml -p:IncludeFullFramework="$(Build.IncludeFullFramework)" -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)"'
-    publishTestResults: false
+    arguments: '--configuration $(Build.Configuration) --collect "Code Coverage" -p:IncludeFullFramework="$(Build.IncludeFullFramework)" -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)"'
+    publishTestResults: true
 
 - task: SonarCloudAnalyze@1
   displayName: 'execute analysis (sonar)'
