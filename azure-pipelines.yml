@@ -51,7 +51,7 @@ steps:
   displayName: 'dotnet build (tests)'
   inputs:
     command: 'build'
-    projects: '**/test/**/*.csproj'
+    projects: '**/*UnitTests?.csproj'
     arguments: '--configuration $(Build.Configuration) --no-restore --no-incremental -p:ContinuousIntegrationBuild=true -p:GitRevisionNumber="$(Build.SourceVersion)" -p:GitBranch="$(Build.SourceBranch)" -p:BuildNumber="$(Build.BuildNumber)" -p:CIBuilder="VSTS" -p:IncludeFullFramework="$(Build.IncludeFullFramework)" -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)"'
 
 #######################################################
@@ -62,10 +62,24 @@ steps:
   displayName: 'dotnet test'
   inputs:
     command: 'test'
-    projects: '**/test/**/*.csproj'
-    arguments: '--configuration $(Build.Configuration) --no-build --no-restore --collect "Code coverage" /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=$(agent.TempDirectory)/cobertura/cobertura.xml -p:GitRevisionNumber="$(Build.SourceVersion)" -p:GitBranch="$(Build.SourceBranch)" -p:BuildNumber="$(Build.BuildNumber)" -p:CIBuilder="VSTS" -p:IncludeFullFramework="$(Build.IncludeFullFramework)" -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)"'
+    projects: '**/*UnitTests?.csproj'
+    arguments: '--configuration $(Build.Configuration) --no-build --no-restore --collect "Code coverage" /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=$(Build.SourcesDirectory)/TestResults/Covareage/ -p:GitRevisionNumber="$(Build.SourceVersion)" -p:GitBranch="$(Build.SourceBranch)" -p:BuildNumber="$(Build.BuildNumber)" -p:CIBuilder="VSTS" -p:IncludeFullFramework="$(Build.IncludeFullFramework)" -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)"'
     publishTestResults: true
     testRunTitle: 'TestRun-$(Build.BuildNumber)'
+
+- task: Palmmedia.reportgenerator.reportgenerator-build-release-task.reportgenerator@4
+  displayName: 'html test report'
+  inputs:
+    reports: '$(Build.SourcesDirectory)/TestResults/Coverage/cobertura.*.xml'
+    targetdir: '$(Build.SourcesDirectory)/TestResults/Coverage'
+    sourcedirs: '$(Build.SourcesDirectory)'
+
+- task: PublishCodeCoverageResults@1
+  displayName: 'publish code coverage'
+  inputs:
+    codeCoverageTool: cobertura
+    summaryFileLocation: '$(Build.SourcesDirectory)/TestResults/Covareage/cobertura.*.xml'
+    reportDirectory: '$(Build.SourcesDirectory)/TestResults/Covareage'
 
 #######################################################
 # DOTNET PACK
@@ -122,13 +136,6 @@ steps:
 # HERE BEGINS THE SONAR BLOCK
 #######################################################
 
-- task: PowerShell@2
-  displayName: 'clean the agent temp'
-  inputs:
-    targetType: 'inline'
-    script: |
-      Get-ChildItem -Path "$(agent.TempDirectory)" -Recurse | Remove-Item -Recurse -Force;
-
 - task: SonarCloudPrepare@1
   displayName: 'begin analysis (sonar)'
   condition: and(succeeded(), or(contains(variables['Build.SourceBranch'], 'master'), contains(variables['Build.SourceBranch'], 'release')))
@@ -141,22 +148,23 @@ steps:
     projectVersion: '$(Sonar.AnalyzedVersion)'
     extraProperties: |
       sonar.verbose=$(Sonar.Verbose)
+      sonar.cs.opencover.reportPaths=$(Build.SourcesDirectory)/TestResults/Coverage/opencover.*.xml
 
-- task: DotNetCoreCLI@2
-  displayName: 'dotnet build (sonar)'
-  condition: and(succeeded(), or(contains(variables['Build.SourceBranch'], 'master'), contains(variables['Build.SourceBranch'], 'release'), contains(variables['Build.SourceBranch'], 'sonar')))
-  inputs:
-    command: 'build'
-    projects: '**/src/**/*.csproj'
-    arguments: '--configuration $(Build.Configuration) --runtime win -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)"'
+#- task: DotNetCoreCLI@2
+#  displayName: 'dotnet build (sonar)'
+#  condition: and(succeeded(), or(contains(variables['Build.SourceBranch'], 'master'), contains(variables['Build.SourceBranch'], 'release'), contains(variables['Build.SourceBranch'], 'sonar')))
+#  inputs:
+#    command: 'build'
+#    projects: '**/src/**/*.csproj'
+#    arguments: '--configuration $(Build.Configuration) -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)"'
 
 - task: DotNetCoreCLI@2
   displayName: 'dotnet test (sonar)'
   condition: and(succeeded(), or(contains(variables['Build.SourceBranch'], 'master'), contains(variables['Build.SourceBranch'], 'release'), contains(variables['Build.SourceBranch'], 'sonar')))
   inputs:
     command: 'test'
-    projects: '**/test/**/*.csproj'
-    arguments: '--configuration $(Build.Configuration) --runtime win --logger trx --results-directory $(agent.TempDirectory) --collect "Code coverage" -p:IncludeFullFramework="$(Build.IncludeFullFramework)" -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)"'
+    projects: '**/*UnitTests?.csproj'
+    arguments: '--configuration $(Build.Configuration) /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=$(Build.SourcesDirectory)/TestResults/Coverage/opencover.xml -p:IncludeFullFramework="$(Build.IncludeFullFramework)" -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)"'
     publishTestResults: false
 
 - task: SonarCloudAnalyze@1
