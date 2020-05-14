@@ -67,12 +67,12 @@ steps:
     publishTestResults: true
     testRunTitle: 'TestRun-$(Build.BuildNumber)'
 
-- task: Palmmedia.reportgenerator.reportgenerator-build-release-task.reportgenerator@4
-  displayName: 'html test report'
-  inputs:
-    reports: '$(Build.SourcesDirectory)/TestResults/Coverage/cobertura.*.xml'
-    targetdir: '$(Build.SourcesDirectory)/TestResults/Coverage'
-    sourcedirs: '$(Build.SourcesDirectory)'
+#- task: Palmmedia.reportgenerator.reportgenerator-build-release-task.reportgenerator@4
+#  displayName: 'html test report'
+#  inputs:
+#    reports: '$(Build.SourcesDirectory)/TestResults/Coverage/cobertura.*.xml'
+#    targetdir: '$(Build.SourcesDirectory)/TestResults/Coverage'
+#    sourcedirs: '$(Build.SourcesDirectory)'
 
 - task: PublishCodeCoverageResults@1
   displayName: 'publish code coverage'
