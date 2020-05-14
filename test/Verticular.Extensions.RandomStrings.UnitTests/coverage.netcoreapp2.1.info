@@ -1,0 +1,467 @@
+SF:C:\Users\Martin\.code\00_Home\2020\Verticular.Extensions.RandomStrings\src\Verticular.Extensions.RandomStrings\CharacterGroupsExtensions.cs
+FN:17,System.Char[] System.CharacterGroupsExtensions::ToCharArray(System.CharacterGroups)
+FNDA:1,System.Char[] System.CharacterGroupsExtensions::ToCharArray(System.CharacterGroups)
+DA:18,1
+LF:1
+LH:1
+BRF:0
+BRH:0
+FNF:1
+FNH:1
+end_of_record
+SF:C:\Users\Martin\.code\00_Home\2020\Verticular.Extensions.RandomStrings\src\Verticular.Extensions.RandomStrings\RandomString.cs
+FN:20,System.IRandomStringGenerator System.RandomString::get_PseudoRandom()
+FNDA:51,System.IRandomStringGenerator System.RandomString::get_PseudoRandom()
+DA:21,51
+DA:22,50
+BRDA:21,5,0,1
+BRDA:21,5,1,50
+FN:35,System.IRandomStringGenerator System.RandomString::get_CryptographicRandom()
+FNDA:4,System.IRandomStringGenerator System.RandomString::get_CryptographicRandom()
+DA:36,4
+DA:37,3
+BRDA:36,5,0,1
+BRDA:36,5,1,3
+LF:4
+LH:4
+BRF:4
+BRH:4
+FNF:2
+FNH:2
+end_of_record
+SF:C:\Users\Martin\.code\00_Home\2020\Verticular.Extensions.RandomStrings\src\Verticular.Extensions.RandomStrings\RandomStringGenerationOptions.cs
+FN:47,System.Int32 System.RandomStringGenerationOptions::get_StringLength()
+FNDA:97,System.Int32 System.RandomStringGenerationOptions::get_StringLength()
+DA:48,97
+FN:52,System.Char[] System.RandomStringGenerationOptions::get_AllowedCharacters()
+FNDA:360,System.Char[] System.RandomStringGenerationOptions::get_AllowedCharacters()
+DA:53,360
+FN:58,System.Boolean System.RandomStringGenerationOptions::get_EachCharacterMustOccurAtLeastOnce()
+FNDA:58,System.Boolean System.RandomStringGenerationOptions::get_EachCharacterMustOccurAtLeastOnce()
+DA:59,58
+FN:24,System.Void System.RandomStringGenerationOptions::.ctor(System.Int32,System.Char[],System.Boolean)
+FNDA:28,System.Void System.RandomStringGenerationOptions::.ctor(System.Int32,System.Char[],System.Boolean)
+DA:25,28
+DA:26,28
+DA:27,28
+DA:28,28
+DA:30,28
+DA:31,28
+DA:32,27
+DA:33,27
+BRDA:31,16,0,1
+BRDA:31,16,1,27
+FN:37,System.Void System.RandomStringGenerationOptions::.ctor()
+FNDA:1,System.Void System.RandomStringGenerationOptions::.ctor()
+DA:38,1
+DA:40,1
+DA:41,1
+DA:42,1
+DA:43,1
+FN:12,System.Void System.RandomStringGenerationOptions::.cctor()
+FNDA:1,System.Void System.RandomStringGenerationOptions::.cctor()
+DA:13,1
+DA:14,1
+DA:15,1
+LF:19
+LH:19
+BRF:2
+BRH:2
+FNF:6
+FNH:6
+end_of_record
+SF:C:\Users\Martin\.code\00_Home\2020\Verticular.Extensions.RandomStrings\src\Verticular.Extensions.RandomStrings\RandomStringGeneratorBase.cs
+FN:28,System.String System.RandomStringGeneratorBase::CoreCreate(System.Int32,System.CharacterGroups,System.Boolean)
+FNDA:7,System.String System.RandomStringGeneratorBase::CoreCreate(System.Int32,System.CharacterGroups,System.Boolean)
+DA:29,7
+FN:40,System.String System.RandomStringGeneratorBase::CoreCreate(System.Int32,System.Char[],System.Boolean)
+FNDA:40,System.String System.RandomStringGeneratorBase::CoreCreate(System.Int32,System.Char[],System.Boolean)
+DA:41,40
+DA:43,4
+DA:46,36
+DA:48,4
+DA:51,32
+DA:53,1
+DA:56,31
+DA:58,1
+DA:61,30
+DA:63,1
+DA:67,29
+DA:69,29
+DA:71,29
+DA:73,3
+DA:75,1
+DA:76,1
+DA:81,326
+DA:82,652
+DA:86,324
+DA:88,122
+DA:89,122
+DA:93,202
+DA:96,2
+DA:99,5608
+DA:101,2778
+DA:105,28
+DA:107,3
+DA:109,28
+BRDA:41,20,0,4
+BRDA:41,20,1,36
+BRDA:46,49,0,4
+BRDA:46,49,1,32
+BRDA:51,83,0,1
+BRDA:51,83,1,31
+BRDA:56,98,0,1
+BRDA:56,98,1,30
+BRDA:61,124,0,1
+BRDA:61,124,1,29
+BRDA:71,187,0,3
+BRDA:73,201,0,1
+BRDA:73,201,1,2
+BRDA:82,343,1,324
+BRDA:86,293,0,122
+BRDA:86,293,1,202
+BRDA:71,187,1,26
+BRDA:99,386,1,2778
+BRDA:82,343,0,28
+BRDA:99,386,0,28
+BRDA:105,401,0,3
+BRDA:105,401,1,28
+FN:120,System.String System.RandomStringGeneratorBase::Generate(System.Int32,System.Char[],System.Boolean)
+FNDA:5,System.String System.RandomStringGeneratorBase::Generate(System.Int32,System.Char[],System.Boolean)
+DA:121,5
+FN:131,System.String System.RandomStringGeneratorBase::Generate(System.Int32,System.CharacterGroups,System.Boolean)
+FNDA:7,System.String System.RandomStringGeneratorBase::Generate(System.Int32,System.CharacterGroups,System.Boolean)
+DA:132,7
+FN:139,System.String System.RandomStringGeneratorBase::Generate(System.Int32)
+FNDA:1,System.String System.RandomStringGeneratorBase::Generate(System.Int32)
+DA:140,1
+FN:148,System.String System.RandomStringGeneratorBase::Generate(System.Action`1<System.IRandomStringGenerationBuilder>)
+FNDA:35,System.String System.RandomStringGeneratorBase::Generate(System.Action`1<System.IRandomStringGenerationBuilder>)
+DA:149,35
+DA:151,1
+DA:154,34
+DA:155,34
+DA:156,26
+BRDA:149,1,0,1
+BRDA:149,1,1,34
+FN:165,System.String System.RandomStringGeneratorBase::Generate(System.RandomStringGenerationOptions)
+FNDA:30,System.String System.RandomStringGeneratorBase::Generate(System.RandomStringGenerationOptions)
+DA:166,30
+DA:168,1
+DA:171,29
+BRDA:166,1,0,1
+BRDA:166,1,1,29
+FN:177,System.String System.RandomStringGeneratorBase::Generate()
+FNDA:2,System.String System.RandomStringGeneratorBase::Generate()
+DA:178,2
+FN:13,System.Void System.RandomStringGeneratorBase::.ctor(System.Func`1<Verticular.Extensions.RandomStrings.IRandomNumberGenerator>)
+FNDA:2,System.Void System.RandomStringGeneratorBase::.ctor(System.Func`1<Verticular.Extensions.RandomStrings.IRandomNumberGenerator>)
+DA:14,2
+DA:16,2
+DA:17,2
+DA:18,2
+BRDA:16,9,0,0
+BRDA:16,9,1,2
+LF:45
+LH:45
+BRF:28
+BRH:27
+FNF:9
+FNH:9
+end_of_record
+SF:C:\Users\Martin\.code\00_Home\2020\Verticular.Extensions.RandomStrings\src\Verticular.Extensions.RandomStrings\CharacterGroup.cs
+FN:35,System.Char[] Verticular.Extensions.RandomStrings.CharacterGroup::Get(System.CharacterGroups)
+FNDA:57,System.Char[] Verticular.Extensions.RandomStrings.CharacterGroup::Get(System.CharacterGroups)
+DA:36,57
+DA:38,3
+DA:39,3
+DA:42,54
+DA:43,54
+DA:45,38
+DA:48,54
+DA:50,41
+DA:53,54
+DA:55,32
+DA:58,54
+DA:60,8
+DA:63,54
+DA:65,8
+DA:68,54
+DA:70,3
+DA:73,54
+DA:75,6
+DA:78,54
+DA:80,6
+DA:83,54
+DA:84,54
+DA:86,54
+DA:88,38
+DA:89,38
+DA:92,54
+DA:94,41
+DA:95,41
+DA:98,54
+DA:100,32
+DA:101,32
+DA:104,54
+DA:106,8
+DA:107,8
+DA:110,54
+DA:112,8
+DA:113,8
+DA:116,54
+DA:118,3
+DA:119,3
+DA:122,54
+DA:124,6
+DA:125,6
+DA:128,54
+DA:130,6
+DA:131,6
+DA:135,54
+BRDA:36,1,0,3
+BRDA:36,1,1,54
+BRDA:43,38,0,38
+BRDA:43,38,1,54
+BRDA:48,67,0,41
+BRDA:48,67,1,54
+BRDA:53,96,0,32
+BRDA:53,96,1,54
+BRDA:58,125,0,8
+BRDA:58,125,1,54
+BRDA:63,155,0,8
+BRDA:63,155,1,54
+BRDA:68,185,0,3
+BRDA:68,185,1,54
+BRDA:73,215,0,6
+BRDA:73,215,1,54
+BRDA:78,248,0,6
+BRDA:78,248,1,54
+BRDA:86,286,0,38
+BRDA:86,286,1,54
+BRDA:92,339,0,41
+BRDA:92,339,1,54
+BRDA:98,392,0,32
+BRDA:98,392,1,54
+BRDA:104,445,0,8
+BRDA:104,445,1,54
+BRDA:110,499,0,8
+BRDA:110,499,1,54
+BRDA:116,553,0,3
+BRDA:116,553,1,54
+BRDA:122,607,0,6
+BRDA:122,607,1,54
+BRDA:128,664,0,6
+BRDA:128,664,1,54
+FN:6,System.Void Verticular.Extensions.RandomStrings.CharacterGroup::.cctor()
+FNDA:1,System.Void Verticular.Extensions.RandomStrings.CharacterGroup::.cctor()
+DA:7,1
+DA:8,1
+DA:9,1
+DA:10,1
+DA:11,1
+DA:12,1
+DA:14,1
+DA:15,1
+DA:16,1
+DA:17,1
+DA:18,1
+DA:19,1
+DA:21,1
+DA:22,1
+DA:23,1
+DA:24,1
+DA:26,1
+DA:27,1
+DA:28,1
+DA:29,1
+DA:30,1
+DA:32,1
+LF:69
+LH:69
+BRF:34
+BRH:34
+FNF:2
+FNH:2
+end_of_record
+SF:C:\Users\Martin\.code\00_Home\2020\Verticular.Extensions.RandomStrings\src\Verticular.Extensions.RandomStrings\CryptographicRandomNumberGenerator.cs
+FN:16,System.Int32 Verticular.Extensions.RandomStrings.CryptographicRandomNumberGenerator::GetNextRandomNumber(System.Int32)
+FNDA:228,System.Int32 Verticular.Extensions.RandomStrings.CryptographicRandomNumberGenerator::GetNextRandomNumber(System.Int32)
+DA:17,228
+DA:19,228
+DA:20,228
+DA:21,228
+DA:23,228
+DA:24,464
+DA:26,236
+DA:28,236
+DA:29,236
+DA:30,236
+DA:32,228
+DA:33,228
+DA:54,228
+BRDA:21,65,0,0
+BRDA:21,65,1,228
+BRDA:24,128,1,236
+BRDA:30,117,0,228
+BRDA:30,117,1,464
+BRDA:24,128,0,228
+FN:66,System.Void Verticular.Extensions.RandomStrings.CryptographicRandomNumberGenerator::Dispose(System.Boolean)
+FNDA:3,System.Void Verticular.Extensions.RandomStrings.CryptographicRandomNumberGenerator::Dispose(System.Boolean)
+DA:67,3
+DA:69,3
+DA:71,3
+DA:74,3
+DA:76,3
+BRDA:67,6,0,3
+BRDA:69,9,0,3
+BRDA:69,9,1,3
+BRDA:67,6,1,3
+FN:80,System.Void Verticular.Extensions.RandomStrings.CryptographicRandomNumberGenerator::Dispose()
+FNDA:3,System.Void Verticular.Extensions.RandomStrings.CryptographicRandomNumberGenerator::Dispose()
+DA:81,3
+DA:82,3
+FN:9,System.Void Verticular.Extensions.RandomStrings.CryptographicRandomNumberGenerator::.ctor()
+FNDA:3,System.Void Verticular.Extensions.RandomStrings.CryptographicRandomNumberGenerator::.ctor()
+DA:10,3
+DA:12,3
+DA:13,3
+LF:23
+LH:23
+BRF:10
+BRH:9
+FNF:4
+FNH:4
+end_of_record
+SF:C:\Users\Martin\.code\00_Home\2020\Verticular.Extensions.RandomStrings\src\Verticular.Extensions.RandomStrings\CryptographicRandomStringGenerator.cs
+FN:14,System.Void Verticular.Extensions.RandomStrings.CryptographicRandomStringGenerator::.ctor()
+FNDA:4,System.Void Verticular.Extensions.RandomStrings.CryptographicRandomStringGenerator::.ctor()
+DA:15,4
+DA:17,1
+LF:2
+LH:2
+BRF:0
+BRH:0
+FNF:1
+FNH:1
+end_of_record
+SF:C:\Users\Martin\.code\00_Home\2020\Verticular.Extensions.RandomStrings\src\Verticular.Extensions.RandomStrings\PseudoRandomNumberGenerator.cs
+FN:15,System.Int32 Verticular.Extensions.RandomStrings.PseudoRandomNumberGenerator::GetNextRandomNumber(System.Int32)
+FNDA:3076,System.Int32 Verticular.Extensions.RandomStrings.PseudoRandomNumberGenerator::GetNextRandomNumber(System.Int32)
+DA:16,3076
+FN:8,System.Void Verticular.Extensions.RandomStrings.PseudoRandomNumberGenerator::.ctor()
+FNDA:26,System.Void Verticular.Extensions.RandomStrings.PseudoRandomNumberGenerator::.ctor()
+DA:9,26
+DA:11,26
+DA:12,26
+LF:4
+LH:4
+BRF:0
+BRH:0
+FNF:2
+FNH:2
+end_of_record
+SF:C:\Users\Martin\.code\00_Home\2020\Verticular.Extensions.RandomStrings\src\Verticular.Extensions.RandomStrings\PseudoRandomStringGenerator.cs
+FN:15,System.Void Verticular.Extensions.RandomStrings.PseudoRandomStringGenerator::.ctor()
+FNDA:27,System.Void Verticular.Extensions.RandomStrings.PseudoRandomStringGenerator::.ctor()
+DA:16,27
+DA:18,1
+LF:2
+LH:2
+BRF:0
+BRH:0
+FNF:1
+FNH:1
+end_of_record
+SF:C:\Users\Martin\.code\00_Home\2020\Verticular.Extensions.RandomStrings\src\Verticular.Extensions.RandomStrings\RandomStringGenerationBuilder.cs
+FN:20,System.IRandomStringGenerationBuilder Verticular.Extensions.RandomStrings.RandomStringGenerationBuilder::WithLength(System.Int32)
+FNDA:34,System.IRandomStringGenerationBuilder Verticular.Extensions.RandomStrings.RandomStringGenerationBuilder::WithLength(System.Int32)
+DA:21,34
+DA:23,3
+DA:24,3
+DA:27,31
+DA:28,31
+BRDA:21,2,0,3
+BRDA:21,2,1,31
+FN:32,System.IRandomStringGenerationBuilder Verticular.Extensions.RandomStrings.RandomStringGenerationBuilder::AllowCharacters(System.Char[])
+FNDA:11,System.IRandomStringGenerationBuilder Verticular.Extensions.RandomStrings.RandomStringGenerationBuilder::AllowCharacters(System.Char[])
+DA:33,11
+DA:35,1
+DA:38,10
+DA:39,10
+BRDA:33,1,0,1
+BRDA:33,1,1,10
+FN:43,System.IRandomStringGenerationBuilder Verticular.Extensions.RandomStrings.RandomStringGenerationBuilder::AllowCharacters(System.CharacterGroups)
+FNDA:18,System.IRandomStringGenerationBuilder Verticular.Extensions.RandomStrings.RandomStringGenerationBuilder::AllowCharacters(System.CharacterGroups)
+DA:44,18
+DA:45,17
+FN:49,System.IRandomStringGenerationBuilder Verticular.Extensions.RandomStrings.RandomStringGenerationBuilder::AndAllowCharacters(System.Char[])
+FNDA:2,System.IRandomStringGenerationBuilder Verticular.Extensions.RandomStrings.RandomStringGenerationBuilder::AndAllowCharacters(System.Char[])
+DA:50,2
+DA:52,1
+DA:55,8
+DA:57,3
+DA:59,1
+BRDA:50,1,0,1
+BRDA:50,1,1,1
+BRDA:55,44,1,3
+BRDA:55,44,0,1
+FN:63,System.IRandomStringGenerationBuilder Verticular.Extensions.RandomStrings.RandomStringGenerationBuilder::AndAllowCharacters(System.CharacterGroups)
+FNDA:45,System.IRandomStringGenerationBuilder Verticular.Extensions.RandomStrings.RandomStringGenerationBuilder::AndAllowCharacters(System.CharacterGroups)
+DA:64,45
+DA:66,20
+DA:68,2
+BRDA:64,35,1,20
+BRDA:64,35,0,2
+FN:72,System.IRandomStringGenerationBuilder Verticular.Extensions.RandomStrings.RandomStringGenerationBuilder::ExcludeCharacters(System.Char[])
+FNDA:3,System.IRandomStringGenerationBuilder Verticular.Extensions.RandomStrings.RandomStringGenerationBuilder::ExcludeCharacters(System.Char[])
+DA:73,3
+DA:75,1
+DA:78,16
+DA:80,6
+DA:82,2
+BRDA:73,1,0,1
+BRDA:73,1,1,2
+BRDA:78,45,1,6
+BRDA:78,45,0,2
+FN:86,System.IRandomStringGenerationBuilder Verticular.Extensions.RandomStrings.RandomStringGenerationBuilder::EachCharacterMustOccurAtLeastOnce()
+FNDA:2,System.IRandomStringGenerationBuilder Verticular.Extensions.RandomStrings.RandomStringGenerationBuilder::EachCharacterMustOccurAtLeastOnce()
+DA:87,2
+DA:88,2
+FN:92,System.IRandomStringGenerationBuilder Verticular.Extensions.RandomStrings.RandomStringGenerationBuilder::ExcludeSimilarLookingCharacters()
+FNDA:1,System.IRandomStringGenerationBuilder Verticular.Extensions.RandomStrings.RandomStringGenerationBuilder::ExcludeSimilarLookingCharacters()
+DA:93,1
+DA:94,1
+FN:98,System.RandomStringGenerationOptions Verticular.Extensions.RandomStrings.RandomStringGenerationBuilder::Build()
+FNDA:26,System.RandomStringGenerationOptions Verticular.Extensions.RandomStrings.RandomStringGenerationBuilder::Build()
+DA:99,26
+DA:101,16
+DA:103,7
+DA:107,26
+DA:108,26
+DA:110,2
+DA:111,2
+DA:114,24
+DA:115,24
+DA:116,24
+BRDA:99,6,0,1
+BRDA:101,43,1,7
+BRDA:99,6,1,26
+BRDA:101,43,0,26
+BRDA:107,51,0,2
+BRDA:107,70,0,2
+BRDA:107,51,1,24
+BRDA:107,70,1,24
+FN:12,System.Void Verticular.Extensions.RandomStrings.RandomStringGenerationBuilder::.ctor()
+FNDA:34,System.Void Verticular.Extensions.RandomStrings.RandomStringGenerationBuilder::.ctor()
+DA:13,34
+DA:15,34
+DA:16,34
+DA:17,34
+LF:42
+LH:42
+BRF:22
+BRH:22
+FNF:10
+FNH:10
+end_of_record
