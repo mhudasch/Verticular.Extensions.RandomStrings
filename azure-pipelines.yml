@@ -63,9 +63,16 @@ steps:
   inputs:
     command: 'test'
     projects: '**/test/**/*.csproj'
-    arguments: '--configuration $(Build.Configuration) --no-build --no-restore --collect "Code coverage" /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=$(agent.TempDirectory)/cobertura/cobertura.xml -p:GitRevisionNumber="$(Build.SourceVersion)" -p:GitBranch="$(Build.SourceBranch)" -p:BuildNumber="$(Build.BuildNumber)" -p:CIBuilder="VSTS" -p:IncludeFullFramework="$(Build.IncludeFullFramework)" -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)"'
+    arguments: '--configuration $(Build.Configuration) /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=$(Build.SourcesDirectory)/TestResults/Coverage/ -p:GitRevisionNumber="$(Build.SourceVersion)" -p:GitBranch="$(Build.SourceBranch)" -p:BuildNumber="$(Build.BuildNumber)" -p:CIBuilder="VSTS" -p:IncludeFullFramework="$(Build.IncludeFullFramework)" -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)"'
     publishTestResults: true
     testRunTitle: 'TestRun-$(Build.BuildNumber)'
+
+- task: PublishCodeCoverageResults@1
+  displayName: 'publish code coverage'
+  inputs:
+    codeCoverageTool: cobertura
+    summaryFileLocation: '$(Build.SourcesDirectory)/TestResults/Coverage/coverage.net462.cobertura.xml'
+
 
 #######################################################
 # DOTNET PACK
@@ -102,7 +109,6 @@ steps:
     CleanTargetFolder: true
     OverWrite: true
     flattenFolders: true
-    preserveTimestamp: true
 
 - task: CopyFiles@2
   displayName: 'stage test results'
@@ -111,27 +117,28 @@ steps:
     Contents: |
       **/*.trx
       **/*.coverage
-      **/cobertura/**
     TargetFolder: '$(Build.ArtifactStagingDirectory)/tr'
     CleanTargetFolder: true
     OverWrite: true
     flattenFolders: true
-    preserveTimestamp: true
 
 #######################################################
 # HERE BEGINS THE SONAR BLOCK
 #######################################################
 
+
 - task: PowerShell@2
   displayName: 'clean the agent temp'
+  condition: and(succeeded(), or(contains(variables['Build.SourceBranch'], 'master'), contains(variables['Build.SourceBranch'], 'release'), contains(variables['Build.SourceBranch'], 'sonar')))
   inputs:
     targetType: 'inline'
     script: |
-      Get-ChildItem -Path "$(agent.TempDirectory)" -Recurse | Remove-Item -Recurse -Force;
+      Get-ChildItem -Path "$(agent.TempDirectory)" -Recurse | ?{ $_.FullName -notlike "*cchtml*" } | Remove-Item -Recurse -Force;
+      Get-ChildItem -Path "$(Build.SourcesDirectory)/TestResults/Coverage" -Recurse | Remove-Item -Recurse -Force;
 
 - task: SonarCloudPrepare@1
   displayName: 'begin analysis (sonar)'
-  condition: and(succeeded(), or(contains(variables['Build.SourceBranch'], 'master'), contains(variables['Build.SourceBranch'], 'release')))
+  condition: and(succeeded(), or(contains(variables['Build.SourceBranch'], 'master'), contains(variables['Build.SourceBranch'], 'release'), contains(variables['Build.SourceBranch'], 'sonar')))
   inputs:
     SonarCloud: 'mhudasch-sonar'
     organization: '$(Sonar.Organization)'
@@ -140,31 +147,25 @@ steps:
     projectName: '$(Sonar.ProjectName)'
     projectVersion: '$(Sonar.AnalyzedVersion)'
     extraProperties: |
-      sonar.verbose=$(Sonar.Verbose)
-
-- task: DotNetCoreCLI@2
-  displayName: 'dotnet build (sonar)'
-  condition: and(succeeded(), or(contains(variables['Build.SourceBranch'], 'master'), contains(variables['Build.SourceBranch'], 'release')))
-  inputs:
-    command: 'build'
-    projects: '**/src/**/*.csproj'
-    arguments: '--configuration $(Build.Configuration) --no-restore --no-incremental --framework net462 -p:GitRevisionNumber="$(Build.SourceVersion)" -p:GitBranch="$(Build.SourceBranch)" -p:BuildNumber="$(Build.BuildNumber)" -p:CIBuilder="VSTS" -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)"'
+      sonar.verbose=true
+      sonar.cs.opencover.reportsPaths="$(Build.SourcesDirectory)\TestResults\Coverage\coverage.netcoreapp2.1.opencover.xml"
 
 - task: DotNetCoreCLI@2
   displayName: 'dotnet test (sonar)'
+  condition: and(succeeded(), or(contains(variables['Build.SourceBranch'], 'master'), contains(variables['Build.SourceBranch'], 'release'), contains(variables['Build.SourceBranch'], 'sonar')))
   inputs:
     command: 'test'
     projects: '**/test/**/*.csproj'
-    arguments: '--configuration $(Build.Configuration) --no-build --no-restore --framework net462 --logger trx --results-directory $(System.DefaultWorkingDirectory)/TestResults --collect "Code coverage" -p:GitRevisionNumber="$(Build.SourceVersion)" -p:GitBranch="$(Build.SourceBranch)" -p:BuildNumber="$(Build.BuildNumber)" -p:CIBuilder="VSTS" -p:IncludeFullFramework="$(Build.IncludeFullFramework)" -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)"'
-    publishTestResults: false
+    arguments: '--configuration $(Build.Configuration) /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=$(Build.SourcesDirectory)/TestResults/Coverage/ -p:GitRevisionNumber="$(Build.SourceVersion)" -p:GitBranch="$(Build.SourceBranch)" -p:BuildNumber="$(Build.BuildNumber)" -p:CIBuilder="VSTS" -p:IncludeFullFramework="$(Build.IncludeFullFramework)" -p:IncludeLatestCoreFramework="$(Build.IncludeLatestCoreFramework)" -p:IncludeLatestFullFramework="$(Build.IncludeLatestFullFramework)" -p:IncludeLatestStandardFramework="$(Build.IncludeLatestStandardFramework)"'
+    publishTestResults: true
 
 - task: SonarCloudAnalyze@1
   displayName: 'execute analysis (sonar)'
-  condition: and(succeeded(), or(contains(variables['Build.SourceBranch'], 'master'), contains(variables['Build.SourceBranch'], 'release')))
+  condition: and(succeeded(), or(contains(variables['Build.SourceBranch'], 'master'), contains(variables['Build.SourceBranch'], 'release'), contains(variables['Build.SourceBranch'], 'sonar')))
 
 - task: SonarCloudPublish@1
   displayName: 'end analysis (sonar)'
-  condition: and(succeeded(), or(contains(variables['Build.SourceBranch'], 'master'), contains(variables['Build.SourceBranch'], 'release')))
+  condition: and(succeeded(), or(contains(variables['Build.SourceBranch'], 'master'), contains(variables['Build.SourceBranch'], 'release'), contains(variables['Build.SourceBranch'], 'sonar')))
   inputs:
     pollingTimeoutSec: '300'
 
@@ -182,17 +183,6 @@ steps:
       push $(Build.ArtifactStagingDirectory)/**/*.nupkg
       -s "https://api.nuget.org/v3/index.json"
       -k "$(Publish.NugetOrg.ApiKey)"
-
-#- task: DotNetCoreCLI@2
-#  displayName: 'push to nuget org (symbols)'
-#  condition: and(succeeded(), eq(variables['Publish.NugetOrg'], 'true'), ne(variables['Publish.NugetOrg.ApiKey'], ''))
-#  inputs:
-#    command: custom
-#    custom: nuget
-#    arguments: >
-#      push $(Build.ArtifactStagingDirectory)/**/*.snupkg
-#      -s "https://api.nuget.org/v3/index.json"
-#      -k "$(Publish.NugetOrg.ApiKey)"
 
 - task: PublishBuildArtifacts@1
   displayName: 'publish build artifacts'
