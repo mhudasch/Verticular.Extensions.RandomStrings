@@ -155,6 +155,7 @@ steps:
     projectVersion: '$(Sonar.AnalyzedVersion)'
     extraProperties: |
       sonar.verbose=true
+      sonar.cs.opencover.reportsPaths="$(Build.SourcesDirectory)\TestResults\Coverage\coverage.netcoreapp2.1.opencover.xml"
 
 #- task: DotNetCoreCLI@2
 #  displayName: 'dotnet build (sonar)'
