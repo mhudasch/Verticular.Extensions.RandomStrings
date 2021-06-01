@@ -5,11 +5,16 @@
     <AppendRuntimeIdentifierToOutputPath>true</AppendRuntimeIdentifierToOutputPath>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
 
-    <!-- Versioning stuff -->
+    <!-- Target Framework Stuff -->
     <IncludeFullFramework Condition="'$(IncludeFullFramework)' == ''">true</IncludeFullFramework>
-    <IncludeLatestFullFramework Condition="'$(IncludeLatestFullFramework)' == ''">false</IncludeLatestFullFramework>
+    <IncludeLatestFullFramework Condition="'$(IncludeLatestFullFramework)' == ''">true</IncludeLatestFullFramework>
     <IncludeLatestCoreFramework Condition="'$(IncludeLatestCoreFramework)' == ''">false</IncludeLatestCoreFramework>
     <IncludeLatestStandardFramework Condition="'$(IncludeLatestStandardFramework)' == ''">false</IncludeLatestStandardFramework>
+
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
 
     <!-- used dev tool versions -->
     <MicrosoftCodeAnalysisFxCopAnalyzersPackageVersion>3.0.0</MicrosoftCodeAnalysisFxCopAnalyzersPackageVersion>
@@ -17,12 +22,8 @@
 
     <!-- This sdk compiler version is the last to seamlessly compatible with sourcelink -->
     <!-- For upgrades see https://github.com/shiftkey/dotnetcore-sourcelink-test-bug/issues/1 -->
-    <MicrosoftNetCompilersToolsetPackageVersion>3.3.1</MicrosoftNetCompilersToolsetPackageVersion>
-
-    <PublishRespositoryUrl>true</PublishRespositoryUrl>
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <IncludeSymbols>true</IncludeSymbols>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <MicrosoftNetCompilersToolsetPackageVersion>3.9.0</MicrosoftNetCompilersToolsetPackageVersion>
+    
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>

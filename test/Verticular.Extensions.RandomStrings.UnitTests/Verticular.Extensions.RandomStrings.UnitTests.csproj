@@ -1,13 +1,27 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <Import Project="$(MSBuildThisFileDirectory)..\dir.props" />
   <PropertyGroup>
-    <TargetFrameworks>$(TargetFrameworks);netcoreapp2.1</TargetFrameworks>
+    <!--################## FRAMEWORK TARGETING AREA ###############-->
+    <!--::: NET45 ::: FULL FRAMEWORK -->
     <TargetFrameworks Condition="'$(IncludeFullFramework)' == 'true'">$(TargetFrameworks);net45;net451;net452</TargetFrameworks>
+    <!--::: NET46 ::: FULL FRAMEWORK -->
     <TargetFrameworks Condition="'$(IncludeFullFramework)' == 'true'">$(TargetFrameworks);net46;net461;net462</TargetFrameworks>
+    <!--::: NET47 ::: FULL FRAMEWORK -->
     <TargetFrameworks Condition="'$(IncludeFullFramework)' == 'true'">$(TargetFrameworks);net47;net471;net472</TargetFrameworks>
-    <TargetFrameworks Condition="'$(IncludeLatestFullFramework)' == 'true'">$(TargetFrameworks);net48;net50</TargetFrameworks>
-    <TargetFrameworks Condition="'$(IncludeLatestCoreFramework)' == 'true'">$(TargetFrameworks);netcoreapp3.1</TargetFrameworks>
-    <Configurations>Debug;Release;CI</Configurations>
+    <!--::: NET48 ::: FULL FRAMEWORK -->
+    <TargetFrameworks Condition="'$(IncludeFullFramework)' == 'true' AND '$(IncludeLatestFullFramework)' == 'true'">$(TargetFrameworks);net48</TargetFrameworks>
+
+    <!-- NETSTANDARD HAS NO TEST RUNNER -->
+
+    <!--::: CORE2.1 ::: CORE FRAMEWORK ::: LTS -->
+    <TargetFrameworks>$(TargetFrameworks);netcoreapp2.1</TargetFrameworks>
+    <!--::: CORE3.1 ::: CORE FRAMEWORK ::: LTS -->
+    <TargetFrameworks>$(TargetFrameworks);netcoreapp3.1</TargetFrameworks>
+    <!--::: CORE5.0 ::: CORE FRAMEWORK ::: -->
+    <TargetFrameworks Condition="'$(IncludeLatestCoreFramework)' == 'true'">$(TargetFrameworks);net5.0</TargetFrameworks>
+    <!--############### END FRAMEWORK TARGETING AREA ###############-->
+    
+    <Configurations>$(Configurations);CI</Configurations>
     <ProjectGuid>{C3C06834-9508-46B9-9F4D-57FF14BFF16C}</ProjectGuid>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
@@ -17,15 +31,19 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.6.1" />
-    <PackageReference Include="MSTest.TestAdapter" Version="2.1.1" />
-    <PackageReference Include="MSTest.TestFramework" Version="2.1.1" />
-    <PackageReference Include="coverlet.collector" Version="1.2.1">
+    <None Remove="**\*coverage*.xml" Visible="false" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="$(MicrosoftTestSdkVersion)" />
+    <PackageReference Include="MSTest.TestAdapter" Version="$(MSTestAdapterVersion)" />
+    <PackageReference Include="MSTest.TestFramework" Version="$(MSTestFrameworkVersion)" />
+    <PackageReference Include="coverlet.collector" Version="$(CoverletCollectorVersion)">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="coverlet.msbuild" Version="2.8.1" />
-    <PackageReference Include="ReportGenerator" Version="4.5.8" />
+    <PackageReference Include="coverlet.msbuild" Version="$(CoverletMsBuildVersion)" />
+    <PackageReference Include="FluentAssertions" Version="$(FluentAssertionsVersion)" />
   </ItemGroup>
 
   <ItemGroup>

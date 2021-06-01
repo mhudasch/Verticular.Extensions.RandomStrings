@@ -11,8 +11,7 @@ namespace System
     /// The default options for random string generation.
     /// </summary>
     public static readonly RandomStringGenerationOptions Default =
-      new RandomStringGenerationOptions(32,
-        CharacterGroup.Get(CharacterGroups.AllAlphaNumeric | CharacterGroups.Minus | CharacterGroups.Underscore));
+      new RandomStringGenerationOptions(32, CharacterGroup.Get(CharacterGroups.AllAlphaNumeric | CharacterGroups.Minus | CharacterGroups.Underscore));
 
     /// <summary>
     /// Initializes a new instance of the <see cref="RandomStringGenerationOptions"/> class.
