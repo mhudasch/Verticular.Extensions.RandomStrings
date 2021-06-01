@@ -19,9 +19,9 @@
     <Nullable>disable</Nullable>
 
     <!-- Common Test Framework Versioning -->
-    <MicrosoftTestSdkVersion Condition="'$(MicrosoftTestSdkVersion)' == ''">16.6.1</MicrosoftTestSdkVersion>
-    <MSTestAdapterVersion Condition="'$(MSTestAdapterVersion)' == ''">2.2.4</MSTestAdapterVersion>
-    <MSTestFrameworkVersion Condition="'$(MSTestFrameworkVersion)' == ''">2.2.4</MSTestFrameworkVersion>
+    <MicrosoftTestSdkVersion Condition="'$(MicrosoftTestSdkVersion)' == ''">16.10.0</MicrosoftTestSdkVersion>
+    <MSTestAdapterVersion Condition="'$(MSTestAdapterVersion)' == ''">2.2.3</MSTestAdapterVersion>
+    <MSTestFrameworkVersion Condition="'$(MSTestFrameworkVersion)' == ''">2.2.3</MSTestFrameworkVersion>
     <CoverletCollectorVersion Condition="'$(CoverletCollectorVersion)' == ''">3.0.3</CoverletCollectorVersion>
     <CoverletMsBuildVersion Condition="'$(CoverletMsBuildVersion)' == ''">3.0.3</CoverletMsBuildVersion>
     <FluentAssertionsVersion Condition="'$(FluentAssertionsVersion)' == ''">5.10.3</FluentAssertionsVersion>
