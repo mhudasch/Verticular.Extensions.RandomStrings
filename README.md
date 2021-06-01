@@ -26,10 +26,10 @@ Currently supported frameworks are:
 - [x] net45, net451, net452
 - [x] net46, net461, net462
 - [x] net47, net471, net472
-- [ ] net48, net50
+- [x] net48
 - [x] netstandard2.0, netstandard2.1
 
-The standard versions of the package can be used in any netcoreapp2.0+.
+The standard versions of the package can be used in any netcoreapp like netcoreapp2.1/3.1 and net5.0.
 
 ## Usage
 

@@ -3,15 +3,29 @@
   <PropertyGroup>
     <AppendTargetFrameworkToOutputPath>true</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>true</AppendRuntimeIdentifierToOutputPath>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
 
-    <!-- Versioning stuff -->
+    <!-- Target Framework Stuff -->
     <IncludeFullFramework Condition="'$(IncludeFullFramework)' == ''">true</IncludeFullFramework>
-    <IncludeLatestFullFramework Condition="'$(IncludeLatestFullFramework)' == ''">false</IncludeLatestFullFramework>
+    <IncludeLatestFullFramework Condition="'$(IncludeLatestFullFramework)' == ''">true</IncludeLatestFullFramework>
     <IncludeLatestCoreFramework Condition="'$(IncludeLatestCoreFramework)' == ''">false</IncludeLatestCoreFramework>
     <IncludeLatestStandardFramework Condition="'$(IncludeLatestStandardFramework)' == ''">false</IncludeLatestStandardFramework>
 
-    <!-- Ignore nullable reference type warnings because we want to test agaist null arguments -->
+    <!-- Unit tests cannot be packed -->
+    <IsPackable>false</IsPackable>
+    <!-- Ignore nullable reference type warnings because we want to test against null arguments -->
     <Nullable>disable</Nullable>
+
+    <!-- Common Test Framework Versioning -->
+    <MicrosoftTestSdkVersion Condition="'$(MicrosoftTestSdkVersion)' == ''">16.6.1</MicrosoftTestSdkVersion>
+    <MSTestAdapterVersion Condition="'$(MSTestAdapterVersion)' == ''">2.2.4</MSTestAdapterVersion>
+    <MSTestFrameworkVersion Condition="'$(MSTestFrameworkVersion)' == ''">2.2.4</MSTestFrameworkVersion>
+    <CoverletCollectorVersion Condition="'$(CoverletCollectorVersion)' == ''">3.0.3</CoverletCollectorVersion>
+    <CoverletMsBuildVersion Condition="'$(CoverletMsBuildVersion)' == ''">3.0.3</CoverletMsBuildVersion>
+    <FluentAssertionsVersion Condition="'$(FluentAssertionsVersion)' == ''">5.10.3</FluentAssertionsVersion>
+
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
