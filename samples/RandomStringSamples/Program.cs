@@ -1,13 +1,12 @@
-using System;
-using Newtonsoft.Json;
-
 namespace RandomStringSamples
 {
-  class Program
+  using System;
+
+  internal class Program
   {
-    static void Main(string[] args)
+    private static void Main(string[] _)
     {
-      Console.WriteLine(JsonConvert.SerializeObject(RandomString.PseudoRandom.Generate(12)));
+      Console.WriteLine(RandomString.PseudoRandom.Generate(12));
     }
   }
 }
